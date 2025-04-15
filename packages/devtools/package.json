@@ -33,6 +33,7 @@
     "dev:prepare": "nuxi prepare src"
   },
   "dependencies": {
+    "@rolldown/debug": "catalog:deps",
     "ansis": "catalog:deps",
     "birpc": "catalog:deps",
     "cac": "catalog:deps",

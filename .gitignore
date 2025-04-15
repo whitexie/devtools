@@ -9,3 +9,4 @@ dist
 .vite-devtools
 packages/devtools/src/app/public/fonts
 packages/devtools/runtime
+.rolldown

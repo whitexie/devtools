@@ -99,6 +99,12 @@ export default defineNuxtConfig({
       headers,
     },
     build: {
+      rollupOptions: {
+        debug: {
+          // buildId: String(Date.now()),
+          buildId: 'dev',
+        },
+      },
       minify: NUXT_DEBUG_BUILD ? false : undefined,
     },
     optimizeDeps: {
