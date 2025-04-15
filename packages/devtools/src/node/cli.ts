@@ -1,8 +1,8 @@
-import type { ServerFunctionsDump } from '../shared/types'
+import type { ServerFunctionsDump } from './rpc'
 import { existsSync } from 'node:fs'
+
 import fs from 'node:fs/promises'
 import process from 'node:process'
-
 import c from 'ansis'
 import cac from 'cac'
 import { getPort } from 'get-port-please'
@@ -31,13 +31,13 @@ cli
     const cwd = process.cwd()
     const outDir = resolve(cwd, options.outDir)
 
-    const rpc = await import('./rpc').then(r => r.createServerFunctions({
-      cwd,
-      configFile: options.config,
-      mode: 'build',
-    }))
+    const rpc = await import('./functions')
+      .then(async r => await r.createServerFunctions({
+        cwd,
+        mode: 'build',
+      }))
     const rpcDump: ServerFunctionsDump = {
-      getPayload: await rpc.getPayload(),
+      'vite:get-payload': await rpc['vite:get-payload'](),
     }
 
     let baseURL = options.base
@@ -89,13 +89,12 @@ cli
 
     const { server, ws } = await createHostServer({
       cwd: options.root,
-      configFile: options.config,
       mode: 'dev',
     })
 
     // Warm up the payload
     setTimeout(() => {
-      ws.serverFunctions.getPayload()
+      ws.serverFunctions['vite:get-payload']()
     }, 1)
 
     server.listen(port, host, async () => {

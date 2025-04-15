@@ -1,14 +1,14 @@
 import type { ChannelOptions } from 'birpc'
 import type { WebSocket } from 'ws'
 import type { ConnectionMeta } from '../shared/types'
-import type { CreateServerFunctionsOptions } from './rpc'
+import type { CreateServerFunctionsOptions } from './functions'
 import c from 'ansis'
 import { createBirpcGroup } from 'birpc'
 import { getPort } from 'get-port-please'
 import { parse, stringify } from 'structured-clone-es'
 import { WebSocketServer } from 'ws'
 import { MARK_CHECK } from './constants'
-import { createServerFunctions } from './rpc'
+import { createServerFunctions } from './functions'
 
 export interface CreateWsServerOptions extends CreateServerFunctionsOptions {
   cwd: string
@@ -22,7 +22,7 @@ export async function createWsServer(options: CreateWsServerOptions) {
   })
   const wsClients = new Set<WebSocket>()
 
-  const serverFunctions = createServerFunctions(options)
+  const serverFunctions = await createServerFunctions(options)
   const rpc = createBirpcGroup(
     serverFunctions,
     [],
@@ -35,6 +35,8 @@ export async function createWsServer(options: CreateWsServerOptions) {
       timeout: 120_000,
     },
   )
+
+  console.log(serverFunctions)
 
   wss.on('connection', (ws) => {
     wsClients.add(ws)

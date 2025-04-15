@@ -1,4 +1,5 @@
-import type { ClientFunctions, ServerFunctions } from '../../shared/types'
+import type { ServerFunctions } from '../../node/rpc'
+import type { ClientFunctions } from '../../shared/types'
 import type { Backend } from '../types/backend'
 import { createBirpc } from 'birpc'
 import { parse, stringify } from 'structured-clone-es'
@@ -86,17 +87,17 @@ export function createWebSocketBackend(options: WebSocketBackendOptions): Backen
     },
     isDynamic: true,
     functions: {
-      getPayload: async () => {
+      'vite:get-payload': async () => {
         try {
-          return await rpc.getPayload()
+          return await rpc['vite:get-payload']()
         }
         catch (err) {
           error.value = err
           throw err
         }
       },
-      openInEditor: (filename: string) => rpc.openInEditor.asEvent(filename),
-      openInFinder: (filename: string) => rpc.openInFinder.asEvent(filename),
+      'vite:open-in-editor': async (filename: string) => rpc['vite:open-in-editor'].asEvent(filename),
+      'vite:open-in-finder': async (filename: string) => rpc['vite:open-in-finder'].asEvent(filename),
     },
   }
 }

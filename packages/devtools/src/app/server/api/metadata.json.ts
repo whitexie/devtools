@@ -10,7 +10,7 @@ const ws = createWsServer({
 }).then((ws) => {
   // Warm up the payload
   setTimeout(() => {
-    ws.serverFunctions.getPayload()
+    ws.serverFunctions['vite:get-payload']()
   }, 1)
   return ws
 })

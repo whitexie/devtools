@@ -1,4 +1,4 @@
-import type { ServerFunctionsDump } from '../../shared/types'
+import type { ServerFunctionsDump } from '../../node/rpc'
 import type { Backend } from '../types/backend'
 import { useRuntimeConfig } from '#app/nuxt'
 import { parse } from 'structured-clone-es'
@@ -29,8 +29,8 @@ export function createStaticBackend(): Backend {
     connectionError: error,
     connect() {},
     functions: {
-      getPayload: () => {
-        return getDump.then(dump => dump.getPayload)
+      'vite:get-payload': async () => {
+        return getDump.then(dump => dump['vite:get-payload'])
       },
     },
   }
