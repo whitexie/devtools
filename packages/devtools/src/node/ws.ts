@@ -36,8 +36,6 @@ export async function createWsServer(options: CreateWsServerOptions) {
     },
   )
 
-  console.log(serverFunctions)
-
   wss.on('connection', (ws) => {
     wsClients.add(ws)
     const channel: ChannelOptions = {

@@ -3,7 +3,7 @@ import { useHead } from '#app/composables/head'
 import { shallowRef } from 'vue'
 import { createDevBackend } from './backends/dev'
 import { backend } from './state/backend'
-import { fetchData, rawEvents } from './state/data'
+import { fetchData } from './state/data'
 
 import 'floating-vue/dist/style.css'
 import './styles/global.css'
@@ -29,7 +29,13 @@ createDevBackend()
 </script>
 
 <template>
-  <div>
-    {{ rawEvents }}
+  <div v-if="error" text-red>
+    {{ error }}
+  </div>
+  <div v-else-if="!backend">
+    Connecting...
+  </div>
+  <div v-else>
+    <NuxtPage />
   </div>
 </template>

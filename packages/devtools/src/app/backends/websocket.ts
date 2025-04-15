@@ -86,18 +86,6 @@ export function createWebSocketBackend(options: WebSocketBackendOptions): Backen
       await connectPromise
     },
     isDynamic: true,
-    functions: {
-      'vite:get-payload': async () => {
-        try {
-          return await rpc['vite:get-payload']()
-        }
-        catch (err) {
-          error.value = err
-          throw err
-        }
-      },
-      'vite:open-in-editor': async (filename: string) => rpc['vite:open-in-editor'].asEvent(filename),
-      'vite:open-in-finder': async (filename: string) => rpc['vite:open-in-finder'].asEvent(filename),
-    },
+    functions: rpc,
   }
 }

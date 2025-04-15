@@ -3,6 +3,6 @@
 
 <template>
   <div>
-    Redirecting...
+    <PanelSelectBuild />
   </div>
 </template>

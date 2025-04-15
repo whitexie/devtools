@@ -67,6 +67,9 @@ catalogs:
     publint:
       specifier: ^0.3.11
       version: 0.3.11
+    stream-json:
+      specifier: ^1.9.1
+      version: 1.9.1
     structured-clone-es:
       specifier: ^1.0.0
       version: 1.0.0
@@ -187,6 +190,9 @@ catalogs:
     '@types/d3-hierarchy':
       specifier: ^3.1.7
       version: 3.1.7
+    '@types/stream-json':
+      specifier: ^1.7.8
+      version: 1.7.8
     '@types/ws':
       specifier: ^8.18.1
       version: 8.18.1
@@ -364,6 +370,9 @@ importers:
       publint:
         specifier: catalog:deps
         version: 0.3.11
+      stream-json:
+        specifier: catalog:deps
+        version: 1.9.1
       structured-clone-es:
         specifier: catalog:deps
         version: 1.0.0
@@ -380,6 +389,9 @@ importers:
         specifier: catalog:deps
         version: 8.18.1
     devDependencies:
+      '@types/stream-json':
+        specifier: catalog:types
+        version: 1.7.8
       '@unocss/nuxt':
         specifier: catalog:build
         version: 66.1.0-beta.10(magicast@0.3.5)(postcss@8.5.3)(vite@6.2.6(@types/node@22.13.9)(jiti@2.4.2)(lightningcss@1.29.3)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.8.3))(webpack@5.98.0(esbuild@0.25.2))
@@ -1635,6 +1647,12 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@types/stream-chain@2.1.0':
+    resolution: {integrity: sha512-guDyAl6s/CAzXUOWpGK2bHvdiopLIwpGu8v10+lb9hnQOyo4oj/ZUQFOvqFjKGsE3wJP1fpIesCcMvbXuWsqOg==}
+
+  '@types/stream-json@1.7.8':
+    resolution: {integrity: sha512-MU1OB1eFLcYWd1LjwKXrxdoPtXSRzRmAnnxs4Js/ayB5O/NvHraWwuOaqMWIebpYwM6khFlsJOHEhI9xK/ab4Q==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -5100,6 +5118,12 @@ packages:
   std-env@3.8.1:
     resolution: {integrity: sha512-vj5lIj3Mwf9D79hBkltk5qmkFI+biIKWS2IBxEyEU3AX1tUf7AoL8nSazCOiiqQsGKIq01SClsKEzweu34uwvA==}
 
+  stream-chain@2.2.5:
+    resolution: {integrity: sha512-1TJmBx6aSWqZ4tx7aTpBDXK0/e2hhcNSTV8+CbFJtDjbb+I1mZ8lHit0Grw9GRT+6JbIrrDd8esncgBi8aBXGA==}
+
+  stream-json@1.9.1:
+    resolution: {integrity: sha512-uWkjJ+2Nt/LO9Z/JyKZbMusL8Dkh97uUBTv3AJQ74y07lVahLY4eEFsPsE97pxYBwr8nnjMAIch5eqI0gPShyw==}
+
   streamx@2.22.0:
     resolution: {integrity: sha512-sLh1evHOzBy/iWRiR6d1zRcLao4gGZr3C1kzNz4fopCOKJb6xD9ub8Mpi9Mr1R6id5o43S+d93fI48UC5uM9aw==}
 
@@ -7260,6 +7284,15 @@ snapshots:
   '@types/parse-path@7.0.3': {}
 
   '@types/resolve@1.20.2': {}
+
+  '@types/stream-chain@2.1.0':
+    dependencies:
+      '@types/node': 22.13.9
+
+  '@types/stream-json@1.7.8':
+    dependencies:
+      '@types/node': 22.13.9
+      '@types/stream-chain': 2.1.0
 
   '@types/unist@3.0.3': {}
 
@@ -11542,6 +11575,12 @@ snapshots:
   statuses@2.0.1: {}
 
   std-env@3.8.1: {}
+
+  stream-chain@2.2.5: {}
+
+  stream-json@1.9.1:
+    dependencies:
+      stream-chain: 2.2.5
 
   streamx@2.22.0:
     dependencies:

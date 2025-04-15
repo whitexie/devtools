@@ -47,6 +47,7 @@
     "p-limit": "catalog:deps",
     "pathe": "catalog:deps",
     "publint": "catalog:deps",
+    "stream-json": "catalog:deps",
     "structured-clone-es": "catalog:deps",
     "tinyglobby": "catalog:deps",
     "unconfig": "catalog:deps",
@@ -54,6 +55,7 @@
     "ws": "catalog:deps"
   },
   "devDependencies": {
+    "@types/stream-json": "catalog:types",
     "@unocss/nuxt": "catalog:build",
     "@vueuse/nuxt": "catalog:build",
     "d3": "catalog:frontend",

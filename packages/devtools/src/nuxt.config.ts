@@ -100,10 +100,7 @@ export default defineNuxtConfig({
     },
     build: {
       rollupOptions: {
-        debug: {
-          // buildId: String(Date.now()),
-          buildId: 'dev',
-        },
+        debug: {},
       },
       minify: NUXT_DEBUG_BUILD ? false : undefined,
     },
