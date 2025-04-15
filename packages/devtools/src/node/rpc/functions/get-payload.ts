@@ -1,4 +1,4 @@
-import { defineRpcFunction } from '../types'
+import { defineRpcFunction } from '../utils'
 
 export const getPayload = defineRpcFunction({
   name: 'vite:get-payload',

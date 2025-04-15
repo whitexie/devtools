@@ -1,4 +1,4 @@
-import { defineRpcFunction } from '../types'
+import { defineRpcFunction } from '../utils'
 
 export const openInEditor = defineRpcFunction({
   name: 'vite:open-in-editor',

@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import { join } from 'pathe'
-import { defineRpcFunction } from '../types'
+import { defineRpcFunction } from '../utils'
 
 export interface BuildInfo {
   id: string

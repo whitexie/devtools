@@ -28,22 +28,23 @@ export function parseJsonStream<T>(
   })
 }
 
-export function parseJsonStreamWithConcatArrays<T>(
+export function parseJsonStreamWithConcatArrays<T, K = T>(
   stream: NodeJS.ReadableStream,
-): Promise<T[]> {
+  processor?: (value: T) => K,
+): Promise<K[]> {
   const assembler = new Assembler()
   const parser = StreamJSON.parser({
     jsonStreaming: true,
   })
 
-  const values: T[] = []
+  const values: K[] = []
 
-  return new Promise<T[]>((resolve) => {
+  return new Promise<K[]>((resolve) => {
     parser.on('data', (chunk) => {
       // @ts-expect-error casting
       assembler[chunk.name]?.(chunk.value)
       if (assembler.done) {
-        values.push(assembler.current)
+        values.push(processor ? processor(assembler.current) : assembler.current)
       }
     })
     stream.pipe(parser)

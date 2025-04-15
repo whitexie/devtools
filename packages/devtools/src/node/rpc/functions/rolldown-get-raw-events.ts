@@ -1,8 +1,6 @@
-import type { Event } from '@rolldown/debug'
-import fs from 'node:fs/promises'
 import { join } from 'pathe'
-import { parseJsonStreamWithConcatArrays } from '../../utils/json-parse-stream'
-import { defineRpcFunction } from '../types'
+import { RolldownEventsReader } from '../../rolldown/events-reader'
+import { defineRpcFunction } from '../utils'
 
 export const rolldownGetRawEvents = defineRpcFunction({
   name: 'vite:rolldown:get-raw-events',
@@ -10,10 +8,9 @@ export const rolldownGetRawEvents = defineRpcFunction({
   setup: ({ cwd }) => {
     return {
       handler: async ({ buildId }) => {
-        const raw = await fs.open(join(cwd, '.rolldown', buildId, 'log.json'), 'r')
-        const stream = raw.createReadStream()
-        const events = await parseJsonStreamWithConcatArrays(stream) as Event[]
-        return events
+        const reader = RolldownEventsReader.get(join(cwd, '.rolldown', buildId, 'log.json'))
+        await reader.read()
+        return reader.manager.events
       },
     }
   },

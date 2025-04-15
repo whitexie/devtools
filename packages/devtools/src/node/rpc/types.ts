@@ -8,6 +8,13 @@ export type RpcFunctionType = 'static' | 'action' | 'query'
 
 export type Thenable<T> = T | Promise<T>
 
+export interface RpcFunctionSetupResult<
+  ARGS extends any[],
+  RETURN = void,
+> {
+  handler: (...args: ARGS) => RETURN
+}
+
 export interface RpcFunctionDefinition<
   NAME extends string,
   TYPE extends RpcFunctionType,
@@ -16,25 +23,14 @@ export interface RpcFunctionDefinition<
 > {
   name: NAME
   type: TYPE
-  setup: (context: RpcContext) => Thenable<{
-    handler: (...args: ARGS) => RETURN
-  }>
+  setup: (context: RpcContext) => Thenable<RpcFunctionSetupResult<ARGS, RETURN>>
+  handler?: (...args: ARGS) => RETURN
+  __resolved?: RpcFunctionSetupResult<ARGS, RETURN>
 }
 
 export interface RpcContext {
   cwd: string
   mode: 'dev' | 'build'
-}
-
-export function defineRpcFunction<
-  NAME extends string,
-  TYPE extends RpcFunctionType,
-  ARGS extends any[],
-  RETURN = void,
->(
-  definition: RpcFunctionDefinition<NAME, TYPE, ARGS, RETURN>,
-): RpcFunctionDefinition<NAME, TYPE, ARGS, RETURN> {
-  return definition
 }
 
 export type EntriesToObject<T extends readonly [string, any][]> = {

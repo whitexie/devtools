@@ -12,7 +12,7 @@ catalogs:
     nitropack: ^2.11.8
     nuxt: ^3.16.2
     nuxt-mcp: ^0.1.0
-    rolldown: 1.0.0-beta.7-commit.a1a360c
+    rolldown: https://pkg.pr.new/rolldown@4117
     rollup: ^4.39.0
     rollup-plugin-esbuild: ^6.2.1
     unbuild: ^3.5.0
