@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div>
+  <div p4>
     <PanelSelectBuild />
   </div>
 </template>

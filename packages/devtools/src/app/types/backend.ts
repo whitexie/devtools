@@ -1,9 +1,7 @@
 import type { Ref } from 'vue'
 import type { ServerFunctions } from '../../node/rpc'
 
-export type Functions =
-  & Partial<ServerFunctions>
-  & Pick<ServerFunctions, 'vite:get-payload'>
+export type Functions = ServerFunctions
 
 export interface Backend {
   name: string

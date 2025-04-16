@@ -12,7 +12,7 @@ const builds = await backend.value!.functions['vite:rolldown:list-builds']()
       :to="`/build/${build.id}`"
       hover="bg-active"
       border="~ base rounded-md"
-      p="x-2 y-1"
+      p="x-2 y-1" font-mono
     >
       {{ build.id }}
     </NuxtLink>

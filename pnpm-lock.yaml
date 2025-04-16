@@ -30,6 +30,10 @@ catalogs:
     unbuild:
       specifier: ^3.5.0
       version: 3.5.0
+  default:
+    vue:
+      specifier: ^3.5.13
+      version: 3.5.13
   deps:
     ansis:
       specifier: ^3.17.0
@@ -322,6 +326,9 @@ importers:
       vitest:
         specifier: catalog:testing
         version: 3.1.1(@types/debug@4.1.12)(@types/node@22.13.9)(esbuild@0.25.2)(jiti@2.4.2)(terser@5.39.0)(typescript@5.8.3)(yaml@2.7.0)
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.13(typescript@5.8.3)
       vue-tsc:
         specifier: catalog:devtools
         version: 2.2.8(typescript@5.8.3)
