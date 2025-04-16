@@ -9,7 +9,7 @@ const props = defineProps<{
   override?: string
 }>()
 
-const root = '/'
+const root = '/Users/antfu/i/vite-devtools/' // TODO: get from cwd
 const parsed = computed(() => (props.filepath && root)
   ? parseReadablePath(props.filepath, root)
   : { path: props.filepath || '' })

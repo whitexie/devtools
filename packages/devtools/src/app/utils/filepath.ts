@@ -33,13 +33,23 @@ export function isBuiltInModule(name: string | undefined) {
 }
 
 export function parseReadablePath(path: string, root: string) {
-  path = path.replace(/\\/g, '/')
+  path = path
+    .replace(/%2F/g, '/')
+    .replace(/\\/g, '/')
   if (isPackageName(path)) {
     return {
       moduleName: path,
       path,
     }
   }
+
+  if (path.match(/^\w+:/)) {
+    return {
+      moduleName: path,
+      path,
+    }
+  }
+
   const moduleName = getModuleNameFromPath(path)
   const subpath = getModuleSubpathFromPath(path)
   if (moduleName && subpath) {
