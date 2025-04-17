@@ -34,6 +34,7 @@ export default defineConfig({
 
       'icon-catppuccin': 'light:filter-invert-100 light:filter-hue-rotate-180 light:filter-brightness-80',
 
+      'z-flowmap-line': 'z--1',
       'z-graph-bg': 'z-5',
       'z-graph-link': 'z-10',
       'z-graph-node': 'z-11',

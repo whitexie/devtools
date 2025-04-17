@@ -4,6 +4,7 @@ import { openInEditor } from './functions/open-in-editor'
 import { openInFinder } from './functions/open-in-finder'
 import { rolldownGetModuleInfo } from './functions/rolldown-get-module-info'
 import { rolldownGetModuleList } from './functions/rolldown-get-module-list'
+import { rolldownGetModuleRawEvents } from './functions/rolldown-get-module-raw-events'
 import { rolldownGetRawEvents } from './functions/rolldown-get-raw-events'
 import { rolldownListBuilds } from './functions/rolldown-list-builds'
 
@@ -15,6 +16,7 @@ export const rpcFunctions = [
   rolldownGetRawEvents,
   rolldownGetModuleList,
   rolldownGetModuleInfo,
+  rolldownGetModuleRawEvents,
 ] as const
 
 export type ServerFunctions = DefinitionsToFunctions<typeof rpcFunctions>

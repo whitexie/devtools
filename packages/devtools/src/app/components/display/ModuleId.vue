@@ -131,8 +131,8 @@ const gridStyles = computed(() => {
 
   // todo: handle slot, not being used
 
-  if (isVirtual.value)
-    gridColumns.push('min-content')
+  // if (isVirtual.value)
+  //   gridColumns.push('min-content')
 
   return `grid-template-columns: ${gridColumns.join(' ')};`
 })
