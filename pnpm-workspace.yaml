@@ -1,8 +1,6 @@
 packages:
   - packages/*
 
-catalog:
-  vue: ^3.5.13
 catalogs:
   build:
     '@rollup/plugin-alias': ^5.1.1
@@ -54,15 +52,21 @@ catalogs:
     vite-plugin-inspect: ^11.0.0
     vue-tsc: ^2.2.8
   frontend:
+    codemirror: ^5.0.0
+    codemirror-theme-vars: ^0.1.2
+    comlink: ^4.4.2
     d3: ^7.9.0
     d3-hierarchy: ^3.1.2
     d3-shape: ^3.2.0
+    diff-match-patch-es: ^1.0.1
     floating-vue: ^5.2.2
     fuse.js: ^7.1.0
     idb-keyval: ^6.2.1
     nanovis: ^0.1.0
+    splitpanes: ^4.0.3
     theme-vitesse: ^0.8.3
     vite-hot-client: ^2.0.4
+    vue: ^3.5.13
   icons:
     '@iconify-json/carbon': ^1.2.8
     '@iconify-json/catppuccin': ^1.2.10
@@ -76,6 +80,7 @@ catalogs:
     mlly: ^1.7.4
     vitest: ^3.1.1
   types:
+    '@types/codemirror': ^5.60.15
     '@types/connect': ^3.4.38
     '@types/d3': ^7.4.3
     '@types/d3-hierarchy': ^3.1.7

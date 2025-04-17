@@ -31,7 +31,7 @@ export interface RolldownModuleTransformInfo {
   duration: number
 }
 
-const DURATION_THRESHOLD = 10
+const DURATION_THRESHOLD = 50
 
 export const rolldownGetModuleInfo = defineRpcFunction({
   name: 'vite:rolldown:get-module-info',

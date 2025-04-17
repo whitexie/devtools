@@ -53,7 +53,7 @@
     "vite": "catalog:build",
     "vite-plugin-inspect": "catalog:devtools",
     "vitest": "catalog:testing",
-    "vue": "catalog:",
+    "vue": "catalog:frontend",
     "vue-tsc": "catalog:devtools"
   },
   "resolutions": {

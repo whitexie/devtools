@@ -6,6 +6,8 @@ import { backend } from './state/backend'
 import { fetchData } from './state/data'
 
 import 'floating-vue/dist/style.css'
+import './styles/cm.css'
+import './styles/splitpanes.css'
 import './styles/global.css'
 import './composables/dark'
 

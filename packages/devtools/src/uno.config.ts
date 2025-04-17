@@ -17,7 +17,7 @@ export default defineConfig({
       'color-base': 'color-neutral-800 dark:color-neutral-300',
       'bg-base': 'bg-white dark:bg-#111',
       'bg-secondary': 'bg-#eee dark:bg-#222',
-      'border-base': 'border-#8882',
+      'border-base': 'border-#8883',
 
       'bg-tooltip': 'bg-white:75 dark:bg-#111:75 backdrop-blur-8',
       'bg-code': 'bg-gray5:5',

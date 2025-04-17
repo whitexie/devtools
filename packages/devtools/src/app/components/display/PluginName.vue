@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h } from 'vue'
-import { getHashColorFromString } from '../../utils/color'
+import { getPluginColor } from '../../utils/color'
 
 const props = defineProps<{
   name: string
@@ -40,7 +40,7 @@ function render() {
   const parts = props.name.split(':')
   if (parts.length > 1) {
     return h('span', [
-      h('span', { style: { color: getHashColorFromString(parts[0]) } }, `${parts[0]}:`),
+      h('span', { style: { color: getPluginColor(parts[0]) } }, `${parts[0]}:`),
       h('span', parts.slice(1).join(':')),
     ])
   }
