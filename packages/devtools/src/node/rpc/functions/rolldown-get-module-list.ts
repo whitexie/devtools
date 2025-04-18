@@ -20,6 +20,7 @@ export const rolldownGetModuleList = defineRpcFunction({
               id,
             }
           })
+          .sort((a, b) => a.id.localeCompare(b.id))
       },
     }
   },

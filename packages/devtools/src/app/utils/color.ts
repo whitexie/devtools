@@ -48,6 +48,7 @@ const predefinedColorMap = {
 } as Record<string, number>
 
 export function getPluginColor(name: string, opacity = 1): string {
+  name = name.replace(/[^a-z]+/gi, '').toLowerCase()
   if (predefinedColorMap[name]) {
     const color = predefinedColorMap[name]
     if (typeof color === 'number') {

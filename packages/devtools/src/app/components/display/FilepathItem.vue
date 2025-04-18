@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { parseReadablePath } from '~/utils/filepath'
+import { parseReadablePath } from '../../utils/filepath'
 
 const props = defineProps<{
   filepath?: string
