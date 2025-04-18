@@ -38,28 +38,34 @@ function select(transform: RolldownModuleTransformInfo) {
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true, bottom: true }" pl4 py2>
+    <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
       <template #content>
         <div i-ph-magnifying-glass-duotone /> Resolve Id
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true }" pl4 py2>
+    <FlowmapNode
+      :lines="{ top: true, bottom: info.loads.length === 0 }" pl6 py2
+      :class-node-outer="info.loads.length === 0 ? 'border-dashed' : ''"
+    >
       <template #content>
         <div i-ph-upload-simple-duotone /> Load
+        <span op50 text-xs>({{ info.loads.length }})</span>
       </template>
-      <template #inline-after>
+      <template v-if="info.loads.length > 0" #inline-before>
+        <button w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center">
+          <div i-ph-caret-down text-sm op50 />
+        </button>
+      </template>
+      <template v-if="info.loads.length > 0" #inline-after>
         <div w-8 relative>
           <div absolute top="1/2" left-0 bottom--4 right="1/2" border="t r base rounded-rt-2xl" z-flowmap-line />
         </div>
-        <button>
-          <div i-ph-caret-down />
-        </button>
       </template>
-      <template #after>
+      <template v-if="info.loads.length > 0" #after>
         <div pl-12 pt2>
           <template v-for="(load, idx) of info.loads" :key="load.plugin_name">
-            <FlowmapNode :lines="{ top: idx > 0, bottom: idx < info.loads.length - 1 }" pl4 py1>
+            <FlowmapNode :lines="{ top: idx > 0, bottom: idx < info.loads.length - 1 }" pl6 py1>
               <template #content>
                 <DisplayPluginName :name="load.plugin_name" class="font-mono text-sm" />
               </template>
@@ -69,17 +75,23 @@ function select(transform: RolldownModuleTransformInfo) {
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true }" pl4 py2>
+    <FlowmapNode
+      :lines="{ top: true, bottom: info.transforms.length === 0 }" pl6 py2
+      :class-node-outer="info.transforms.length === 0 ? 'border-dashed' : ''"
+    >
       <template #content>
         <div i-ph-magic-wand-duotone /> Transform
+        <span op50 text-xs>({{ info.transforms.length }})</span>
       </template>
-      <template #inline-after>
+      <template v-if="info.transforms.length > 0" #inline-before>
+        <button w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center">
+          <div i-ph-caret-down text-sm op50 />
+        </button>
+      </template>
+      <template v-if="info.transforms.length > 0" #inline-after>
         <div w-8 relative>
           <div absolute top="1/2" left-0 bottom--4 right="1/2" border="t r base rounded-rt-2xl" z-flowmap-line />
         </div>
-        <button>
-          <div i-ph-caret-down />
-        </button>
       </template>
       <template #after>
         <div pl-12 pt2>
@@ -88,7 +100,7 @@ function select(transform: RolldownModuleTransformInfo) {
               :lines="{ top: idx > 0, bottom: idx < info.transforms.length - 1 }"
               class-node-inline="gap-2 items-center"
               :class-node-outer="transform.source_from === transform.source_to ? 'border-dashed' : ''"
-              pl4 py1
+              pl6 py1
             >
               <template #inner>
                 <button
@@ -111,19 +123,19 @@ function select(transform: RolldownModuleTransformInfo) {
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true, bottom: true }" pl4 py2>
+    <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
       <template #content>
         <div i-ph-shapes-duotone /> Chunk
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true, bottom: true }" pl4 py2>
+    <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
       <template #content>
         <div i-ph-tree-duotone /> Tree shake
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true }" pl4 py2>
+    <FlowmapNode :lines="{ top: true }" pl6 py2>
       <template #content>
         <div i-ph-package-duotone /> Generate
       </template>
