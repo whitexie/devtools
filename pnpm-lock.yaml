@@ -425,6 +425,9 @@ importers:
       '@vueuse/nuxt':
         specifier: catalog:build
         version: 13.1.0(magicast@0.3.5)(nuxt@3.16.2(@parcel/watcher@2.5.1)(@types/node@22.13.9)(db0@0.3.1)(eslint@9.24.0(jiti@2.4.2))(idb-keyval@6.2.1)(ioredis@5.6.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.39.0)(terser@5.39.0)(typescript@5.8.3)(vite@6.2.6(@types/node@22.13.9)(jiti@2.4.2)(lightningcss@1.29.3)(terser@5.39.0)(yaml@2.7.0))(vue-tsc@2.2.8(typescript@5.8.3))(yaml@2.7.0))(vue@3.5.13(typescript@5.8.3))
+      '@vueuse/router':
+        specifier: ^13.1.0
+        version: 13.1.0(vue-router@4.5.0(vue@3.5.13(typescript@5.8.3)))(vue@3.5.13(typescript@5.8.3))
       codemirror:
         specifier: catalog:frontend
         version: 5.65.19
@@ -2121,6 +2124,12 @@ packages:
     peerDependencies:
       nuxt: ^3.16.2
       vue: ^3.5.0
+
+  '@vueuse/router@13.1.0':
+    resolution: {integrity: sha512-rfSIK1VMmKO+M+vo6PMcL3hSmvqFbTbQ7hdAYHKSba8E6V2fV8xXTjho3OM3rjguIsl7Ml9FU7tSuKQFUvkApg==}
+    peerDependencies:
+      vue: ^3.5.0
+      vue-router: ^4.0.0
 
   '@vueuse/shared@13.1.0':
     resolution: {integrity: sha512-IVS/qRRjhPTZ6C2/AM3jieqXACGwFZwWTdw5sNTSKk2m/ZpkuuN+ri+WCVUP8TqaKwJYt/KuMwmXspMAw8E6ew==}
@@ -8013,6 +8022,12 @@ snapshots:
       vue: 3.5.13(typescript@5.8.3)
     transitivePeerDependencies:
       - magicast
+
+  '@vueuse/router@13.1.0(vue-router@4.5.0(vue@3.5.13(typescript@5.8.3)))(vue@3.5.13(typescript@5.8.3))':
+    dependencies:
+      '@vueuse/shared': 13.1.0(vue@3.5.13(typescript@5.8.3))
+      vue: 3.5.13(typescript@5.8.3)
+      vue-router: 4.5.0(vue@3.5.13(typescript@5.8.3))
 
   '@vueuse/shared@13.1.0(vue@3.5.13(typescript@5.8.3))':
     dependencies:

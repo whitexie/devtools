@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from '#app/composables/router'
-import { onMounted, shallowRef } from 'vue'
+import Fuse from 'fuse.js'
+import { computed, onMounted, reactive, shallowRef } from 'vue'
 import { backend } from '../../../state/backend'
 
 const params = useRoute().params as {
@@ -8,17 +9,42 @@ const params = useRoute().params as {
 }
 
 const modules = shallowRef<{ id: string }[]>([])
+const filters = reactive({
+  search: '',
+})
+
+const fuse = new Fuse(modules.value, {
+  includeScore: true,
+  threshold: 0.2,
+  keys: ['module_id'],
+})
+
+const filtered = computed(() => {
+  if (filters.search === '') {
+    return modules.value
+  }
+  return fuse.search(filters.search).map(r => r.item)
+})
 
 onMounted(async () => {
   modules.value = await backend.value!.functions['vite:rolldown:get-module-list']!({
     build: params.build,
   })
+  fuse.setCollection(modules.value)
 })
 </script>
 
 <template>
   <div flex="~ col gap-2" p4>
-    <template v-for="mod of modules" :key="mod">
+    <div>
+      <input
+        v-model="filters.search"
+        border="~ base rounded-full"
+        p2 px4 w-full outline-none
+        placeholder="Search"
+      >
+    </div>
+    <template v-for="mod of filtered" :key="mod">
       <NuxtLink
         :to="{ path: `/build/${params.build}/flow`, query: { module: mod.id } }"
         hover="bg-active" block px2 p1
@@ -27,5 +53,8 @@ onMounted(async () => {
         <DisplayModuleId :id="mod.id" />
       </NuxtLink>
     </template>
+    <div text-center text-xs op50 m4>
+      {{ filtered.length }} of {{ modules.length }}
+    </div>
   </div>
 </template>

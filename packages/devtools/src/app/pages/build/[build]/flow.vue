@@ -61,142 +61,89 @@ function select(transform: RolldownModuleTransformInfo | RolldownModuleLoadInfo 
       </template>
     </FlowmapNode>
 
-    <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
-      <template #content>
+    <FlowmapExpandable :items="info.resolve_ids">
+      <template #node>
         <div i-ph-magnifying-glass-duotone /> Resolve Id
       </template>
-    </FlowmapNode>
-
-    <FlowmapNode
-      :lines="{ top: true, bottom: info.resolve_ids.length === 0 }" pl6 py2
-      :class-node-outer="info.resolve_ids.length === 0 ? 'border-dashed' : ''"
-    >
-      <template #content>
-        <div i-ph-magnifying-glass-duotone /> Resolve Id
-        <span op50 text-xs>({{ info.resolve_ids.length }})</span>
-      </template>
-      <template v-if="info.resolve_ids.length > 0" #inline-before>
-        <button w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center">
-          <div i-ph-caret-down text-sm op50 />
-        </button>
-      </template>
-      <template v-if="info.resolve_ids.length > 0" #inline-after>
-        <div w-8 relative>
-          <div absolute top="1/2" left-0 bottom--4 right="1/2" border="t r base rounded-rt-2xl" z-flowmap-line />
-        </div>
-      </template>
-      <template #after>
-        <div pl-12 pt2>
-          <template v-for="(resolve_id, idx) of info.resolve_ids" :key="resolve_id.plugin_name">
-            <FlowmapNode
-              :lines="{ top: idx > 0, bottom: idx < info.resolve_ids.length - 1 }"
-              class-node-inline="gap-2 items-center"
-              pl6 py1
+      <template #item="{ item, index }">
+        <FlowmapNode
+          :lines="{ top: index > 0, bottom: index < info.resolve_ids.length - 1 }"
+          class-node-inline="gap-2 items-center"
+          pl6 py1
+        >
+          <template #inner>
+            <button
+              px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
+              @click="select(item)"
             >
-              <template #inner>
-                <button
-                  px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
-                  @click="select(resolve_id)"
-                >
-                  <DisplayPluginName :name="resolve_id.plugin_name" class="font-mono text-sm" />
-                </button>
-              </template>
-              <template #inline-after>
-                <DisplayDuration :duration="resolve_id.duration" :color="true" :factor="5" text-xs />
-                <!-- <div v-if="resolve_id.source_from === resolve_id.source_to" text-xs op50>
-                  no changes
-                </div> -->
-              </template>
-            </FlowmapNode>
+              <DisplayPluginName :name="item.plugin_name" class="font-mono text-sm" />
+            </button>
           </template>
-        </div>
+          <template #inline-after>
+            <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
+          </template>
+        </FlowmapNode>
       </template>
-    </FlowmapNode>
+    </FlowmapExpandable>
 
-    <FlowmapNode
-      :lines="{ top: true, bottom: info.loads.length === 0 }" pl6 py2
-      :class-node-outer="info.loads.length === 0 ? 'border-dashed' : ''"
-    >
-      <template #content>
+    <FlowmapExpandable :items="info.loads">
+      <template #node>
         <div i-ph-upload-simple-duotone /> Load
-        <span op50 text-xs>({{ info.loads.length }})</span>
       </template>
-      <template v-if="info.loads.length > 0" #inline-before>
-        <button w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center">
-          <div i-ph-caret-down text-sm op50 />
-        </button>
-      </template>
-      <template v-if="info.loads.length > 0" #inline-after>
-        <div w-8 relative>
-          <div absolute top="1/2" left-0 bottom--4 right="1/2" border="t r base rounded-rt-2xl" z-flowmap-line />
-        </div>
-      </template>
-      <template v-if="info.loads.length > 0" #after>
-        <div pl-12 pt2>
-          <template v-for="(load, idx) of info.loads" :key="load.plugin_name">
-            <FlowmapNode :lines="{ top: idx > 0, bottom: idx < info.loads.length - 1 }" pl6 py1>
-              <template #inner>
-                <button
-                  :class="load.source ? '' : 'op75'"
-                  px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
-                  @click="select(load)"
-                >
-                  <DisplayPluginName :name="load.plugin_name" class="font-mono text-sm" />
-                </button>
-              </template>
-            </FlowmapNode>
-          </template>
-        </div>
-      </template>
-    </FlowmapNode>
-
-    <FlowmapNode
-      :lines="{ top: true, bottom: info.transforms.length === 0 }" pl6 py2
-      :class-node-outer="info.transforms.length === 0 ? 'border-dashed' : ''"
-    >
-      <template #content>
-        <div i-ph-magic-wand-duotone /> Transform
-        <span op50 text-xs>({{ info.transforms.length }})</span>
-      </template>
-      <template v-if="info.transforms.length > 0" #inline-before>
-        <button w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center">
-          <div i-ph-caret-down text-sm op50 />
-        </button>
-      </template>
-      <template v-if="info.transforms.length > 0" #inline-after>
-        <div w-8 relative>
-          <div absolute top="1/2" left-0 bottom--4 right="1/2" border="t r base rounded-rt-2xl" z-flowmap-line />
-        </div>
-      </template>
-      <template #after>
-        <div pl-12 pt2>
-          <template v-for="(transform, idx) of info.transforms" :key="transform.plugin_name">
-            <FlowmapNode
-              :lines="{ top: idx > 0, bottom: idx < info.transforms.length - 1 }"
-              class-node-inline="gap-2 items-center"
-              :class-node-outer="transform.source_from === transform.source_to ? 'border-dashed' : ''"
-              pl6 py1
+      <template #item="{ item }">
+        <FlowmapNode
+          :lines="{ top: true, bottom: true }"
+          class-node-inline="gap-2 items-center"
+          pl6 py1
+        >
+          <template #inner>
+            <button
+              :class="item.source ? '' : 'op75'"
+              px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
+              @click="select(item)"
             >
-              <template #inner>
-                <button
-                  :class="transform.source_from === transform.source_to ? 'op75' : ''"
-                  px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
-                  @click="select(transform)"
-                >
-                  <DisplayPluginName :name="transform.plugin_name" class="font-mono text-sm" />
-                </button>
-              </template>
-              <template #inline-after>
-                <DisplayDuration :duration="transform.duration" :color="true" :factor="5" text-xs />
-                <div v-if="transform.source_from === transform.source_to" text-xs op50>
-                  no changes
-                </div>
-              </template>
-            </FlowmapNode>
+              <DisplayPluginName :name="item.plugin_name" class="font-mono text-sm" />
+            </button>
           </template>
-        </div>
+          <template #inline-after>
+            <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
+            <div v-if="item.source === null" text-xs op50>
+              no source
+            </div>
+          </template>
+        </FlowmapNode>
       </template>
-    </FlowmapNode>
+    </FlowmapExpandable>
+
+    <FlowmapExpandable :items="info.transforms">
+      <template #node>
+        <div i-ph-magic-wand-duotone /> Transform
+      </template>
+      <template #item="{ item }">
+        <FlowmapNode
+          :lines="{ top: true, bottom: true }"
+          class-node-inline="gap-2 items-center"
+          :class-node-outer="item.source_from === item.source_to ? 'border-dashed' : ''"
+          pl6 py1
+        >
+          <template #inner>
+            <button
+              :class="item.source_from === item.source_to ? 'op75' : ''"
+              px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
+              @click="select(item)"
+            >
+              <DisplayPluginName :name="item.plugin_name" class="font-mono text-sm" />
+            </button>
+          </template>
+          <template #inline-after>
+            <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
+            <div v-if="item.source_from === item.source_to" text-xs op50>
+              no changes
+            </div>
+          </template>
+        </FlowmapNode>
+      </template>
+    </FlowmapExpandable>
 
     <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
       <template #content>
@@ -218,13 +165,13 @@ function select(transform: RolldownModuleTransformInfo | RolldownModuleLoadInfo 
 
     <div
       v-if="selected"
-      absolute right-5 top-5 bottom-5 w-200
+      absolute right-3 top-3 bottom-3 w-100
       border="~ base rounded-lg" bg-glass of-hidden
       grid="~ rows-[max-content_1fr]"
     >
-      <div px2 p1 font-mono border="b base" flex="~ items-center gap-2">
+      <div px4 p2 font-mono border="b base" flex="~ items-center gap-2">
         <PluginName :name="selected.plugin_name" />
-        <span text-xs op50>
+        <span op50 text-xs>
           {{ selected.type === 'load' ? 'Load' : 'Transform' }}
         </span>
       </div>

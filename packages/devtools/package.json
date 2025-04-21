@@ -59,6 +59,7 @@
     "@types/stream-json": "catalog:types",
     "@unocss/nuxt": "catalog:build",
     "@vueuse/nuxt": "catalog:build",
+    "@vueuse/router": "^13.1.0",
     "codemirror": "catalog:frontend",
     "codemirror-theme-vars": "catalog:frontend",
     "comlink": "catalog:frontend",

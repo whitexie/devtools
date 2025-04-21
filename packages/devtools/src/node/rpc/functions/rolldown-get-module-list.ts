@@ -12,7 +12,9 @@ export const rolldownGetModuleList = defineRpcFunction({
         await reader.read()
         const modules = new Set<string>()
         for (const event of reader.manager.events) {
-          modules.add(event.module_id)
+          if ('module_id' in event) {
+            modules.add(event.module_id)
+          }
         }
         return Array.from(modules)
           .map((id) => {
