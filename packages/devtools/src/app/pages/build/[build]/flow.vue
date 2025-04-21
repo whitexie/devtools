@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RolldownModuleTransformInfo } from '@@/node/rpc/functions/rolldown-get-module-info'
+import type { RolldownModuleLoadInfo, RolldownModuleTransformInfo, RolldownResolveInfo } from '../../../../node/rpc/functions/rolldown-get-module-info'
 import { useRoute } from '#app/composables/router'
 import PluginName from '@/components/display/PluginName.vue'
 import { useAsyncState } from '@vueuse/core'
@@ -11,7 +11,12 @@ const params = useRoute().params as {
 }
 const query = useRoute().query
 
-const selected = ref<RolldownModuleTransformInfo | null>(null)
+const selected = ref<{
+  type: 'load' | 'transform'
+  plugin_name: string
+  from: string | null
+  to: string | null
+} | null>()
 
 const { state: info } = useAsyncState(
   async () => {
@@ -23,8 +28,26 @@ const { state: info } = useAsyncState(
   null,
 )
 
-function select(transform: RolldownModuleTransformInfo) {
-  selected.value = transform
+function select(transform: RolldownModuleTransformInfo | RolldownModuleLoadInfo | RolldownResolveInfo) {
+  if ('source_from' in transform) {
+    selected.value = {
+      type: 'transform',
+      plugin_name: transform.plugin_name,
+      from: transform.source_from,
+      to: transform.source_to,
+    }
+  }
+  else if ('source' in transform) {
+    selected.value = {
+      type: 'load',
+      plugin_name: transform.plugin_name,
+      from: transform.source,
+      to: transform.source,
+    }
+  }
+  else {
+    selected.value = null
+  }
 }
 </script>
 
@@ -41,6 +64,52 @@ function select(transform: RolldownModuleTransformInfo) {
     <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
       <template #content>
         <div i-ph-magnifying-glass-duotone /> Resolve Id
+      </template>
+    </FlowmapNode>
+
+    <FlowmapNode
+      :lines="{ top: true, bottom: info.resolve_ids.length === 0 }" pl6 py2
+      :class-node-outer="info.resolve_ids.length === 0 ? 'border-dashed' : ''"
+    >
+      <template #content>
+        <div i-ph-magnifying-glass-duotone /> Resolve Id
+        <span op50 text-xs>({{ info.resolve_ids.length }})</span>
+      </template>
+      <template v-if="info.resolve_ids.length > 0" #inline-before>
+        <button w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center">
+          <div i-ph-caret-down text-sm op50 />
+        </button>
+      </template>
+      <template v-if="info.resolve_ids.length > 0" #inline-after>
+        <div w-8 relative>
+          <div absolute top="1/2" left-0 bottom--4 right="1/2" border="t r base rounded-rt-2xl" z-flowmap-line />
+        </div>
+      </template>
+      <template #after>
+        <div pl-12 pt2>
+          <template v-for="(resolve_id, idx) of info.resolve_ids" :key="resolve_id.plugin_name">
+            <FlowmapNode
+              :lines="{ top: idx > 0, bottom: idx < info.resolve_ids.length - 1 }"
+              class-node-inline="gap-2 items-center"
+              pl6 py1
+            >
+              <template #inner>
+                <button
+                  px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
+                  @click="select(resolve_id)"
+                >
+                  <DisplayPluginName :name="resolve_id.plugin_name" class="font-mono text-sm" />
+                </button>
+              </template>
+              <template #inline-after>
+                <DisplayDuration :duration="resolve_id.duration" :color="true" :factor="5" text-xs />
+                <!-- <div v-if="resolve_id.source_from === resolve_id.source_to" text-xs op50>
+                  no changes
+                </div> -->
+              </template>
+            </FlowmapNode>
+          </template>
+        </div>
       </template>
     </FlowmapNode>
 
@@ -66,8 +135,14 @@ function select(transform: RolldownModuleTransformInfo) {
         <div pl-12 pt2>
           <template v-for="(load, idx) of info.loads" :key="load.plugin_name">
             <FlowmapNode :lines="{ top: idx > 0, bottom: idx < info.loads.length - 1 }" pl6 py1>
-              <template #content>
-                <DisplayPluginName :name="load.plugin_name" class="font-mono text-sm" />
+              <template #inner>
+                <button
+                  :class="load.source ? '' : 'op75'"
+                  px3 py1 hover="bg-active" flex="~ inline gap-2 items-center"
+                  @click="select(load)"
+                >
+                  <DisplayPluginName :name="load.plugin_name" class="font-mono text-sm" />
+                </button>
               </template>
             </FlowmapNode>
           </template>
@@ -144,16 +219,19 @@ function select(transform: RolldownModuleTransformInfo) {
     <div
       v-if="selected"
       absolute right-5 top-5 bottom-5 w-200
-      border="~ base rounded-lg" bg-base of-hidden
+      border="~ base rounded-lg" bg-glass of-hidden
       grid="~ rows-[max-content_1fr]"
     >
-      <div px2 p1 font-mono border="b base">
+      <div px2 p1 font-mono border="b base" flex="~ items-center gap-2">
         <PluginName :name="selected.plugin_name" />
+        <span text-xs op50>
+          {{ selected.type === 'load' ? 'Load' : 'Transform' }}
+        </span>
       </div>
       <CodeDiffEditor
         v-if="selected"
-        :from="selected.source_from ?? ''"
-        :to="selected.source_to ?? ''"
+        :from="selected.from ?? ''"
+        :to="selected.to ?? ''"
         :diff="true"
         :one-column="true"
       />

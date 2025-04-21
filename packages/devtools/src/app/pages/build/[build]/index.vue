@@ -20,7 +20,7 @@ onMounted(async () => {
   <div flex="~ col gap-2" p4>
     <template v-for="mod of modules" :key="mod">
       <NuxtLink
-        :to="{ path: `/build/${params.build}/transform`, query: { module: mod.id } }"
+        :to="{ path: `/build/${params.build}/flow`, query: { module: mod.id } }"
         hover="bg-active" block px2 p1
         border="~ base rounded"
       >

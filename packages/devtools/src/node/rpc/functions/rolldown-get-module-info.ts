@@ -6,10 +6,20 @@ export interface ModuleInfo {
   id: string
   loads: RolldownModuleLoadInfo[]
   transforms: RolldownModuleTransformInfo[]
+  resolve_ids: RolldownResolveInfo[]
 
   // TODO: Awaits https://github.com/rolldown/rolldown/issues/4135
   deps: string[]
   importers: string[]
+}
+
+export interface RolldownResolveInfo {
+  id: string
+  plugin_name: string
+  resolved_id: string | null
+  timestamp_start: number
+  timestamp_end: number
+  duration: number
 }
 
 export interface RolldownModuleLoadInfo {
@@ -52,12 +62,13 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           transforms: [],
           deps: [],
           importers: [],
+          resolve_ids: [],
         }
 
         for (const event of events) {
           if (event.kind === 'HookLoadCallEnd') {
             // TODO: use ID to pair start and end
-            const start = events.find(e => e.kind === 'HookLoadCallStart' && e.module_id === event.module_id && e.plugin_name === event.plugin_name)
+            const start = events.find(e => e.kind === 'HookLoadCallStart' && e.module_id === event.module_id && e.plugin_index === event.plugin_index)
             if (!start) {
               console.error(`[rolldown] Load call start not found for ${event.event_id}`)
               continue
@@ -79,7 +90,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
         for (const event of events) {
           if (event.kind === 'HookTransformCallEnd') {
             // TODO: use ID to pair start and end
-            const start = events.find(e => e.kind === 'HookTransformCallStart' && e.module_id === event.module_id && e.plugin_name === event.plugin_name)
+            const start = events.find(e => e.kind === 'HookTransformCallStart' && e.module_id === event.module_id && e.plugin_index === event.plugin_index)
             if (!start || start.kind !== 'HookTransformCallStart') {
               console.error(`[rolldown] Transform call start not found for ${event.event_id}`)
               continue
@@ -99,8 +110,29 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           }
         }
 
-        info.loads.sort((a, b) => a.timestamp_start - b.timestamp_start)
-        info.transforms.sort((a, b) => a.timestamp_start - b.timestamp_start)
+        for (const event of events) {
+          if (event.kind === 'HookResolveIdCallEnd') {
+            // TODO: use ID to pair start and end
+            const start = events.find(e => e.kind === 'HookResolveIdCallStart' && e.module_id === event.module_id && e.plugin_index === event.plugin_index)
+            if (!start || start.kind !== 'HookResolveIdCallStart') {
+              console.error(`[rolldown] resolveId call start not found for ${event.event_id}`)
+              continue
+            }
+            const duration = +event.timestamp - +start.timestamp
+            info.resolve_ids.push({
+              id: event.event_id,
+              plugin_name: event.plugin_name,
+              resolved_id: event.resolved_id,
+              timestamp_start: +start.timestamp,
+              timestamp_end: +event.timestamp,
+              duration,
+            })
+          }
+        }
+
+        info.loads.sort((a, b) => a.plugin_index - b.plugin_index)
+        info.transforms.sort((a, b) => a.plugin_index - b.plugin_index)
+        info.resolve_ids.sort((a, b) => a.plugin_index - b.plugin_index)
 
         return info
       },

@@ -1,6 +1,7 @@
 import { defineComponent, h } from 'vue'
 import { getPluginColor } from '../../utils/color'
 
+// @unocss-include
 export default defineComponent({
   name: 'HighlightedPath',
   props: {
@@ -11,8 +12,8 @@ export default defineComponent({
   },
   setup(props) {
     return () => {
-      const parts = props.path.split(/([/?&:=])/g)
-      let type: 'start' | 'path' | 'query' = 'start'
+      const parts = props.path.split(/([?/&:=])/g)
+      let type: 'path' | 'query' = 'path'
 
       const classes: string[][] = parts.map(() => [])
       const styles: string[][] = parts.map(() => [])
@@ -26,20 +27,11 @@ export default defineComponent({
         if (part === '?')
           type = 'query'
 
-        if (type === 'start') {
+        if (type === 'path') {
           if (part.match(/^\.+$/)) {
             classes[index].push('op50')
           }
           else if (part === '/') {
-            classes[index].push('op50')
-          }
-          else if (part !== '/') {
-            type = 'path'
-          }
-        }
-
-        if (type === 'path') {
-          if (part === '/') {
             classes[index].push('op50')
           }
           else if (part === 'node_modules' || part === 'dist' || part === 'lib' || part.match(/^\.\w/)) {
