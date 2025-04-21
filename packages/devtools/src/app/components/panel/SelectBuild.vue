@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { backend } from '../../state/backend'
 
-const builds = await backend.value!.functions['vite:rolldown:list-builds']()
+const builds = await backend.value!.functions['vite:rolldown:list-sessions']()
 </script>
 
 <template>

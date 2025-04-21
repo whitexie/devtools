@@ -7,16 +7,16 @@ export interface BuildInfo {
   createdAt: number
 }
 
-export const rolldownListBuilds = defineRpcFunction({
-  name: 'vite:rolldown:list-builds',
+export const rolldownListSessions = defineRpcFunction({
+  name: 'vite:rolldown:list-sessions',
   type: 'query',
   setup: ({ cwd }) => {
     return {
       handler: async (): Promise<BuildInfo[]> => {
-        const builds = await fs.readdir(join(cwd, '.rolldown'), {
+        const sessions = await fs.readdir(join(cwd, '.rolldown'), {
           withFileTypes: true,
         })
-        return await Promise.all(builds
+        return await Promise.all(sessions
           .filter(d => d.isDirectory())
           .map(async (d): Promise<BuildInfo> => {
             // TODO: read from meta.json

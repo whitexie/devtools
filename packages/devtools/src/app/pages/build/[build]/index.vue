@@ -28,7 +28,7 @@ const filtered = computed(() => {
 
 onMounted(async () => {
   modules.value = await backend.value!.functions['vite:rolldown:get-module-list']!({
-    build: params.build,
+    session: params.build,
   })
   fuse.setCollection(modules.value)
 })

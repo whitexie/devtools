@@ -21,7 +21,7 @@ const selected = ref<{
 const { state: info } = useAsyncState(
   async () => {
     return await backend.value!.functions['vite:rolldown:get-module-info']?.({
-      build: params.build as string,
+      session: params.build as string,
       module: query.module as string,
     })
   },

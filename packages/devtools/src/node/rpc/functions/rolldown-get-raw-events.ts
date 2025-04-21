@@ -7,8 +7,8 @@ export const rolldownGetRawEvents = defineRpcFunction({
   type: 'query',
   setup: ({ cwd }) => {
     return {
-      handler: async ({ build }: { build: string }) => {
-        const reader = RolldownEventsReader.get(join(cwd, '.rolldown', build, 'log.json'))
+      handler: async ({ session }: { session: string }) => {
+        const reader = RolldownEventsReader.get(join(cwd, '.rolldown', session, 'log.json'))
         await reader.read()
         return reader.manager.events
       },

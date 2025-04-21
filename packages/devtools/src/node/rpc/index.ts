@@ -6,13 +6,13 @@ import { rolldownGetModuleInfo } from './functions/rolldown-get-module-info'
 import { rolldownGetModuleList } from './functions/rolldown-get-module-list'
 import { rolldownGetModuleRawEvents } from './functions/rolldown-get-module-raw-events'
 import { rolldownGetRawEvents } from './functions/rolldown-get-raw-events'
-import { rolldownListBuilds } from './functions/rolldown-list-builds'
+import { rolldownListSessions } from './functions/rolldown-list-sessions'
 
 export const rpcFunctions = [
   openInEditor,
   openInFinder,
   getPayload,
-  rolldownListBuilds,
+  rolldownListSessions,
   rolldownGetRawEvents,
   rolldownGetModuleList,
   rolldownGetModuleInfo,
