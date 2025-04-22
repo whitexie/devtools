@@ -1,3 +1,4 @@
+import { diffLines } from 'diff'
 import { join } from 'pathe'
 import { RolldownEventsReader } from '../../rolldown/events-reader'
 import { defineRpcFunction } from '../utils'
@@ -41,6 +42,8 @@ export interface RolldownModuleTransformInfo {
   plugin_index: number
   source_from: string | null
   source_to: string | null
+  diff_added: number
+  diff_removed: number
   timestamp_start: number
   timestamp_end: number
   duration: number
@@ -118,6 +121,15 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             const duration = +event.timestamp - +start.timestamp
             if (start.source === event.transformed_source && duration < DURATION_THRESHOLD)
               continue
+
+            let diff_added = 0
+            let diff_removed = 0
+            if (event.transformed_source !== start.source && event.transformed_source != null && start.source != null) {
+              const delta = diffLines(start.source, event.transformed_source)
+              diff_added = delta.filter(d => d.added).map(d => d.value).join('').split(/\n/g).length
+              diff_removed = delta.filter(d => d.removed).map(d => d.value).join('').split(/\n/g).length
+            }
+
             info.transforms.push({
               type: 'transform',
               id: event.event_id,
@@ -125,6 +137,8 @@ export const rolldownGetModuleInfo = defineRpcFunction({
               plugin_index: event.plugin_index,
               source_from: start.source,
               source_to: event.transformed_source,
+              diff_added,
+              diff_removed,
               timestamp_start: +start.timestamp,
               timestamp_end: +event.timestamp,
               duration,

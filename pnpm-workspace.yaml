@@ -22,6 +22,7 @@ catalogs:
     ansis: ^3.17.0
     birpc: ^2.3.0
     cac: ^6.7.14
+    diff: ^7.0.0
     get-port-please: ^3.1.2
     h3: ^1.15.1
     launch-editor: ^2.10.0
@@ -52,6 +53,7 @@ catalogs:
     vite-plugin-inspect: ^11.0.0
     vue-tsc: ^2.2.8
   frontend:
+    '@vueuse/router': ^13.1.0
     codemirror: ^5.0.0
     codemirror-theme-vars: ^0.1.2
     comlink: ^4.4.2
@@ -84,6 +86,7 @@ catalogs:
     '@types/connect': ^3.4.38
     '@types/d3': ^7.4.3
     '@types/d3-hierarchy': ^3.1.7
+    '@types/diff': ^7.0.2
     '@types/stream-json': ^1.7.8
     '@types/ws': ^8.18.1
 

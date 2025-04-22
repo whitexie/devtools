@@ -83,9 +83,17 @@ function down() {
     </template>
     <template #inline-after>
       <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
-      <div v-if="item.type === 'transform' && item.source_from === item.source_to" text-xs op50>
-        no changes
-      </div>
+      <template v-if="item.type === 'transform'">
+        <div v-if="item.source_from === item.source_to" text-xs op50>
+          no changes
+        </div>
+        <div v-else>
+          <div font-mono text-xs flex="~ gap-1 items-center">
+            <span text-green>+{{ item.diff_added }}</span>
+            <span text-red>-{{ item.diff_removed }}</span>
+          </div>
+        </div>
+      </template>
     </template>
   </FlowmapNode>
 </template>
