@@ -18,7 +18,14 @@ export default defineConfig({
       'bg-base': 'bg-white dark:bg-#111',
       'bg-secondary': 'bg-#eee dark:bg-#222',
       'border-base': 'border-#8884',
-      'border-flowmap-active': 'border-primary-700/50 dark:border-primary-300/50',
+
+      'border-flow': 'border-#8885',
+      'border-flow-line': 'border-#222',
+      'border-flow-active': 'border-primary-700/50 dark:border-primary-300/50',
+      'border-flow-line-active': 'border-primary-700/30 dark:border-primary-300/30',
+
+      'fg-flow-line': 'color-#222',
+      'fg-flow-line-active': 'color-primary-700/30 dark:color-primary-300/30',
 
       'bg-tooltip': 'bg-white:75 dark:bg-#111:75 backdrop-blur-8',
       'bg-code': 'bg-gray5:5',

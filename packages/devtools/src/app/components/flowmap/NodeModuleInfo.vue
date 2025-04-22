@@ -38,12 +38,12 @@ function down() {
 <template>
   <div v-if="item.type === 'transform_no_changes'" pl10>
     <div
-      flex="~ gap-2 items-center" text-sm border="l" py2
-      :class="active ? 'border-flowmap-active' : 'border-base'"
+      flex="~ gap-2 items-center" text-sm border="l" py1
+      :class="active ? 'border-flow-line-active' : 'border-flow-line'"
     >
       <div
         w-2 h-2 border="4" rounded-full ml--1 translate-x--0.5px
-        :class="active ? 'border-flowmap-active' : 'border-base'"
+        :class="active ? 'border-flow-line-active' : 'border-flow-line'"
       />
       <span op50>{{ item.count }} plugins did not change the content but cost</span>
       <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
@@ -62,7 +62,7 @@ function down() {
     :class-node-outer="isDashed ? 'border-dashed' : ''"
     :active="active"
     class-node-inline="gap-2 items-center"
-    pl6 py1
+    pl6
     @pointerenter="enter"
   >
     <template #inner>

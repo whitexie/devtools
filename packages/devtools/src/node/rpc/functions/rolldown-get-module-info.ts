@@ -62,7 +62,7 @@ export type RolldownModuleFlowNode =
   | RolldownModuleTransformNoChanges
   | RolldownResolveInfo
 
-const DURATION_THRESHOLD = 50
+const DURATION_THRESHOLD = 10
 
 export const rolldownGetModuleInfo = defineRpcFunction({
   name: 'vite:rolldown:get-module-info',

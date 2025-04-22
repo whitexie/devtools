@@ -15,11 +15,11 @@ const props = defineProps<{
   <div flex="~ col" relative>
     <div
       v-if="props.lines?.top" absolute top-0 left-10 border="r" h="1/2" max-h-4 z-flowmap-line
-      :class="active ? 'border-flowmap-active' : 'border-base'"
+      :class="active ? 'border-flow-line-active' : 'border-flow-line'"
     />
     <div
       v-if="props.lines?.bottom" absolute bottom-0 left-10 border="r" h="1/2" max-h-4 z-flowmap-line
-      :class="active ? 'border-flowmap-active' : 'border-base'"
+      :class="active ? 'border-flow-line-active' : 'border-flow-line'"
     />
     <slot name="before" />
     <div flex="~" :class="props.classNodeInline">
@@ -27,7 +27,7 @@ const props = defineProps<{
       <div
         :class="[
           props.classNodeOuter,
-          active ? 'border-flowmap-active' : 'border-base',
+          active ? 'border-flow-active' : 'border-flow',
         ]"
         border="~ rounded-full" bg-base of-hidden
       >

@@ -13,7 +13,7 @@ const isExpanded = ref(true)
 
 <template>
   <FlowmapNode
-    :lines="{ top: true, bottom: !expandable || !isExpanded }" pl6 py2
+    :lines="{ top: true, bottom: !expandable || !isExpanded }" pl6 pt4
     :class-node-outer="classRootNode"
     :active="activeStart"
   >
@@ -31,16 +31,29 @@ const isExpanded = ref(true)
     </template>
 
     <template v-if="expandable && isExpanded" #after>
-      <div mb--1px>
-        <div h-8 relative mb--1px translate-x-1px>
-          <div :class="activeStart ? 'border-flowmap-active' : 'border-base'" border="l b rounded-lb-2xl" h-5 absolute left-4 w-3 top-0 />
-          <div :class="activeStart ? 'border-flowmap-active' : 'border-base'" border="r t rounded-rt-2xl" h-3 absolute left-7 w-3 top-5 translate-y--1px />
+      <div>
+        <svg
+          ml-1em w-27px h-30px
+          viewBox="0 0 27 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+          :class="activeStart ? 'fg-flow-line-active' : 'fg-flow-line'"
+        >
+          <g>
+            <path d="M0.5 0C0.5 18 26.5 12 26.5 30" stroke="currentColor" stroke-width="1px" />
+          </g>
+        </svg>
+        <div ml-2px>
+          <slot name="container" />
         </div>
-        <slot name="container" />
-        <div h-6 relative mb--2>
-          <div :class="activeEnd ? 'border-flowmap-active' : 'border-base'" border="b r rounded-br-2xl" h-3 absolute left-7 w-3 top-0 translate-x-1px />
-          <div :class="activeEnd ? 'border-flowmap-active' : 'border-base'" border="t l rounded-lt-2xl" h-3 absolute left-4 w="[calc(0.75rem+1px)]" top-3 translate-y--1px />
-        </div>
+        <svg
+          ml-1em w-27px h-30px
+          style="transform: scaleX(-1)"
+          viewBox="0 0 27 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+          :class="activeEnd ? 'fg-flow-line-active' : 'fg-flow-line'"
+        >
+          <g>
+            <path d="M0.5 0C0.5 18 26.5 12 26.5 30" stroke="currentColor" stroke-width="1px" />
+          </g>
+        </svg>
       </div>
     </template>
   </FlowmapNode>

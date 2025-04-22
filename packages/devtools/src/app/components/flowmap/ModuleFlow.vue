@@ -85,19 +85,18 @@ const codeDisplay = computed(() => {
 
 <template>
   <div of-auto>
+    <FlowmapNode
+      :lines="{ bottom: true }" pt4
+      :active="selected != null"
+    >
+      <template #content>
+        <div p2>
+          <DisplayModuleId :id="info.id" />
+        </div>
+      </template>
+    </FlowmapNode>
     <div w-max flex="~ gap-4">
       <div select-none>
-        <FlowmapNode
-          :lines="{ bottom: true }" py2
-          :active="selected != null"
-        >
-          <template #content>
-            <div p2>
-              <DisplayModuleId :id="info.id" />
-            </div>
-          </template>
-        </FlowmapNode>
-
         <FlowmapExpandable
           :items="resolveIds"
           :expandable="resolveIds.length > 0"
@@ -112,10 +111,11 @@ const codeDisplay = computed(() => {
           <template #container>
             <div>
               <FlowmapNodeModuleInfo
-                v-for="item of resolveIds"
+                v-for="(item, index) of resolveIds"
                 :key="item.id"
                 :item="item"
                 :active="isSelectedAncestor(item)"
+                :class="index > 0 ? 'pt-2' : ''"
                 @select="select"
                 @activate="activate"
               />
@@ -137,10 +137,11 @@ const codeDisplay = computed(() => {
           <template #container>
             <div>
               <FlowmapNodeModuleInfo
-                v-for="item of loads"
+                v-for="(item, index) of loads"
                 :key="item.id"
                 :item="item"
                 :active="isSelectedAncestor(item)"
+                :class="index > 0 ? 'pt-2' : ''"
                 @select="select"
                 @activate="activate"
               />
@@ -161,10 +162,11 @@ const codeDisplay = computed(() => {
           <template #container>
             <div>
               <FlowmapNodeModuleInfo
-                v-for="item of transforms"
+                v-for="(item, index) of transforms"
                 :key="item.id"
                 :item="item"
                 :active="isSelectedAncestor(item)"
+                :class="index > 0 ? 'pt-2' : ''"
                 @select="select"
                 @activate="activate"
               />
@@ -172,19 +174,19 @@ const codeDisplay = computed(() => {
           </template>
         </FlowmapExpandable>
 
-        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
+        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 pt4>
           <template #content>
             <div i-ph-shapes-duotone /> Chunk
           </template>
         </FlowmapNode>
 
-        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
+        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 pt4>
           <template #content>
             <div i-ph-tree-duotone /> Tree shake
           </template>
         </FlowmapNode>
 
-        <FlowmapNode :lines="{ top: true }" pl6 py2>
+        <FlowmapNode :lines="{ top: true }" pl6 pt4>
           <template #content>
             <div i-ph-package-duotone /> Generate
           </template>
@@ -193,7 +195,7 @@ const codeDisplay = computed(() => {
 
       <div
         v-if="codeDisplay"
-        w-200
+        w-200 m4
         border="~ base rounded-lg" bg-glass of-hidden
         grid="~ rows-[max-content_1fr]"
       >
