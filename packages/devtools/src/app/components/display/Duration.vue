@@ -11,7 +11,7 @@ const props = withDefaults(
   {
     factor: 1,
     color: true,
-    unit: 'ns',
+    unit: 'ms',
   },
 )
 
@@ -30,7 +30,7 @@ function getDurationColor(ms: number | undefined) {
     return ''
   ms = ms * props.factor
   if (ms < 1)
-    return ''
+    return 'op50'
   if (ms > 10000)
     return 'color-scale-critical'
   if (ms > 1000)
