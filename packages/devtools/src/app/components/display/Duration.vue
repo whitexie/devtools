@@ -5,46 +5,59 @@ const props = withDefaults(
   defineProps<{
     duration: number | undefined
     factor?: number
+    unit?: 'ms' | 'ns'
     color?: boolean
   }>(),
   {
     factor: 1,
     color: true,
+    unit: 'ns',
   },
 )
 
-function getDurationColor(duration: number | undefined) {
+const ms = computed(() => {
+  if (props.duration == null)
+    return undefined
+  if (props.unit === 'ns')
+    return props.duration / 1000
+  return props.duration
+})
+
+function getDurationColor(ms: number | undefined) {
   if (!props.color)
     return ''
-  if (duration == null)
+  if (ms == null)
     return ''
-  duration = duration * props.factor
-  if (duration < 1)
+  ms = ms * props.factor
+  if (ms < 1)
     return ''
-  if (duration > 10000)
+  if (ms > 10000)
     return 'color-scale-critical'
-  if (duration > 1000)
+  if (ms > 1000)
     return 'color-scale-high'
-  if (duration > 500)
+  if (ms > 500)
     return 'color-scale-medium'
-  if (duration > 200)
+  if (ms > 200)
     return 'color-scale-low'
   return 'color-scale-neutral'
 }
 
 const units = computed(() => {
-  if (!props.duration)
+  if (ms.value == null)
     return ['', '-']
-  if (props.duration < 1)
+  if (ms.value < 1)
     return ['<1', 'ms']
-  if (props.duration < 1000)
-    return [props.duration.toFixed(0), 'ms']
-  if (props.duration < 1000 * 60)
-    return [(props.duration / 1000).toFixed(1), 's']
-  return [(props.duration / 1000 / 60).toFixed(1), 'min']
+  if (ms.value < 1000)
+    return [ms.value.toFixed(0), 'ms']
+  if (ms.value < 1000 * 60)
+    return [(ms.value / 1000).toFixed(1), 's']
+  return [(ms.value / 1000 / 60).toFixed(1), 'min']
 })
 </script>
 
 <template>
-  <DisplayNumberWithUnit :class="getDurationColor(duration)" :number="units[0]" :unit="units[1]" />
+  <DisplayNumberWithUnit
+    :class="getDurationColor(ms)"
+    :number="units[0]" :unit="units[1]"
+  />
 </template>

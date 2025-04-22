@@ -12,8 +12,8 @@ export interface ModuleInfo {
   deps: string[]
   importers: string[]
 }
-
 export interface RolldownResolveInfo {
+  type: 'resolve'
   id: string
   plugin_name: string
   plugin_index: number
@@ -24,6 +24,7 @@ export interface RolldownResolveInfo {
 }
 
 export interface RolldownModuleLoadInfo {
+  type: 'load'
   id: string
   plugin_name: string
   plugin_index: number
@@ -34,6 +35,7 @@ export interface RolldownModuleLoadInfo {
 }
 
 export interface RolldownModuleTransformInfo {
+  type: 'transform'
   id: string
   plugin_name: string
   plugin_index: number
@@ -43,6 +45,19 @@ export interface RolldownModuleTransformInfo {
   timestamp_end: number
   duration: number
 }
+
+export interface RolldownModuleTransformNoChanges {
+  type: 'transform_no_changes'
+  id: string
+  count: number
+  duration: number
+}
+
+export type RolldownModuleFlowNode =
+  | RolldownModuleLoadInfo
+  | RolldownModuleTransformInfo
+  | RolldownModuleTransformNoChanges
+  | RolldownResolveInfo
 
 const DURATION_THRESHOLD = 50
 
@@ -80,6 +95,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             if (!event.source && duration < DURATION_THRESHOLD)
               continue
             info.loads.push({
+              type: 'load',
               id: event.event_id,
               plugin_name: event.plugin_name,
               plugin_index: event.plugin_index,
@@ -103,6 +119,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             if (start.source === event.transformed_source && duration < DURATION_THRESHOLD)
               continue
             info.transforms.push({
+              type: 'transform',
               id: event.event_id,
               plugin_name: event.plugin_name,
               plugin_index: event.plugin_index,
@@ -125,6 +142,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             }
             const duration = +event.timestamp - +start.timestamp
             info.resolve_ids.push({
+              type: 'resolve',
               id: event.event_id,
               plugin_name: event.plugin_name,
               plugin_index: event.plugin_index,

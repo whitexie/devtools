@@ -1,0 +1,222 @@
+<script setup lang="ts">
+import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges } from '../../../node/rpc/functions/rolldown-get-module-info'
+import { computed, ref, shallowRef, toRefs } from 'vue'
+import PluginName from '../display/PluginName.vue'
+
+const props = defineProps<{
+  info: ModuleInfo
+}>()
+const { info } = toRefs(props)
+
+const expandNoChangesTransform = ref(false)
+const selected = shallowRef<RolldownModuleFlowNode | null>(null)
+
+const resolveIds = computed(() => info?.value?.resolve_ids ?? [])
+
+const loads = computed(() => info?.value?.loads ?? [])
+
+const transforms = computed((): (RolldownModuleTransformNoChanges | RolldownModuleTransformInfo)[] => {
+  if (expandNoChangesTransform.value)
+    return info?.value?.transforms ?? []
+
+  const unchanged = info?.value?.transforms?.filter(t => t.source_from === t.source_to)
+  const changed = info?.value?.transforms?.filter(t => t.source_from !== t.source_to)
+
+  if (!unchanged?.length)
+    return changed ?? []
+  return [
+    ({
+      type: 'transform_no_changes',
+      id: 'transform_no_changes',
+      count: unchanged?.length ?? 0,
+      duration: unchanged?.reduce((acc, t) => acc + t.duration, 0) ?? 0,
+    } satisfies RolldownModuleTransformNoChanges),
+    ...(changed ?? []),
+  ]
+})
+
+const nodes = computed(() => [
+  ...resolveIds.value,
+  ...loads.value,
+  ...transforms.value,
+])
+
+function isSelectedAncestor(node?: RolldownModuleFlowNode) {
+  if (!selected.value || !node)
+    return false
+  const indexSelected = nodes.value.indexOf(selected.value)
+  const indexNode = nodes.value.indexOf(node)
+  if (indexSelected >= indexNode)
+    return true
+  return false
+}
+
+function select(node: RolldownModuleFlowNode) {
+  selected.value = node
+}
+
+function activate(node: RolldownModuleFlowNode) {
+  if (node.type === 'transform_no_changes')
+    expandNoChangesTransform.value = !expandNoChangesTransform.value
+}
+
+const codeDisplay = computed(() => {
+  if (!selected.value)
+    return null
+  if (selected.value.type === 'transform') {
+    return {
+      type: 'transform',
+      plugin_name: selected.value.plugin_name,
+      from: selected.value.source_from,
+      to: selected.value.source_to,
+    }
+  }
+  else if (selected.value.type === 'load') {
+    return {
+      type: 'load',
+      from: '',
+      plugin_name: selected.value.plugin_name,
+      to: selected.value.source,
+    }
+  }
+  return null
+})
+</script>
+
+<template>
+  <div of-auto>
+    <div w-max flex="~ gap-4">
+      <div select-none>
+        <FlowmapNode
+          :lines="{ bottom: true }" py2
+          :active="selected != null"
+        >
+          <template #content>
+            <div p2>
+              <DisplayModuleId :id="info.id" />
+            </div>
+          </template>
+        </FlowmapNode>
+
+        <FlowmapExpandable
+          :items="resolveIds"
+          :expandable="resolveIds.length > 0"
+          :class-root-node="resolveIds.length === 0 ? 'border-dashed' : ''"
+          :active-start="isSelectedAncestor(resolveIds[0] || loads[0])"
+          :active-end="isSelectedAncestor(loads[0])"
+        >
+          <template #node>
+            <div i-ph-magnifying-glass-duotone /> Resolve Id
+            <span op50 text-xs>({{ info.resolve_ids.length }})</span>
+          </template>
+          <template #container>
+            <div>
+              <FlowmapNodeModuleInfo
+                v-for="item of resolveIds"
+                :key="item.id"
+                :item="item"
+                :active="isSelectedAncestor(item)"
+                @select="select"
+                @activate="activate"
+              />
+            </div>
+          </template>
+        </FlowmapExpandable>
+
+        <FlowmapExpandable
+          :items="loads"
+          :expandable="loads.length > 0"
+          :class-root-node="loads.length === 0 ? 'border-dashed' : ''"
+          :active-start="isSelectedAncestor(loads[0])"
+          :active-end="isSelectedAncestor(transforms[0])"
+        >
+          <template #node>
+            <div i-ph-upload-simple-duotone /> Load
+            <span op50 text-xs>({{ info.loads.length }})</span>
+          </template>
+          <template #container>
+            <div>
+              <FlowmapNodeModuleInfo
+                v-for="item of loads"
+                :key="item.id"
+                :item="item"
+                :active="isSelectedAncestor(item)"
+                @select="select"
+                @activate="activate"
+              />
+            </div>
+          </template>
+        </FlowmapExpandable>
+
+        <FlowmapExpandable
+          :expandable="transforms.length > 0"
+          :class-root-node="transforms.length === 0 ? 'border-dashed' : ''"
+          :active-start="isSelectedAncestor(transforms[0])"
+          :active-end="isSelectedAncestor(transforms.at(-1))"
+        >
+          <template #node>
+            <div i-ph-magic-wand-duotone /> Transform
+            <span op50 text-xs>({{ info.transforms.length }})</span>
+          </template>
+          <template #container>
+            <div>
+              <FlowmapNodeModuleInfo
+                v-for="item of transforms"
+                :key="item.id"
+                :item="item"
+                :active="isSelectedAncestor(item)"
+                @select="select"
+                @activate="activate"
+              />
+            </div>
+          </template>
+        </FlowmapExpandable>
+
+        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
+          <template #content>
+            <div i-ph-shapes-duotone /> Chunk
+          </template>
+        </FlowmapNode>
+
+        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 py2>
+          <template #content>
+            <div i-ph-tree-duotone /> Tree shake
+          </template>
+        </FlowmapNode>
+
+        <FlowmapNode :lines="{ top: true }" pl6 py2>
+          <template #content>
+            <div i-ph-package-duotone /> Generate
+          </template>
+        </FlowmapNode>
+      </div>
+
+      <div
+        v-if="codeDisplay"
+        w-200
+        border="~ base rounded-lg" bg-glass of-hidden
+        grid="~ rows-[max-content_1fr]"
+      >
+        <div pl4 p2 font-mono border="b base" flex="~ items-center gap-2">
+          <PluginName :name="codeDisplay.plugin_name" />
+          <span op50 text-xs>
+            {{ codeDisplay.type === 'load' ? 'Load' : 'Transform' }}
+          </span>
+          <div flex-auto />
+          <button
+            rounded-full p1 hover="bg-active"
+            @click="selected = null"
+          >
+            <div i-ph-x />
+          </button>
+        </div>
+        <CodeDiffEditor
+          :from="codeDisplay.from ?? ''"
+          :to="codeDisplay.to ?? ''"
+          :diff="true"
+          :one-column="false"
+        />
+      </div>
+    </div>
+  </div>
+</template>
