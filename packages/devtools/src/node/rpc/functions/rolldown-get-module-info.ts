@@ -1,3 +1,4 @@
+import type { HookResolveIdCallStart } from '@rolldown/debug'
 import { diffLines } from 'diff'
 import { join } from 'pathe'
 import { RolldownEventsReader } from '../../rolldown/events-reader'
@@ -13,11 +14,15 @@ export interface ModuleInfo {
   deps: string[]
   importers: string[]
 }
+
 export interface RolldownResolveInfo {
   type: 'resolve'
   id: string
   plugin_name: string
   plugin_index: number
+  importer: string | null
+  module_request: string
+  import_kind: HookResolveIdCallStart['import_kind']
   resolved_id: string | null
   timestamp_start: number
   timestamp_end: number
@@ -72,7 +77,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
       handler: async ({ session, module }: { session: string, module: string }) => {
         const reader = RolldownEventsReader.get(join(cwd, '.rolldown', session, 'logs.json'))
         await reader.read()
-        const events = reader.manager.events.filter(event => 'module_id' in event && event.module_id === module)
+        const events = reader.manager.events
 
         if (!events.length)
           return null
@@ -86,87 +91,91 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           resolve_ids: [],
         }
 
-        for (const event of events) {
-          if (event.action === 'HookLoadCallEnd') {
-            // TODO: use ID to pair start and end
-            const start = events.find(e => e.action === 'HookLoadCallStart' && e.module_id === event.module_id && e.plugin_index === event.plugin_index)
-            if (!start) {
-              console.error(`[rolldown] Load call start not found for ${event.event_id}`)
-              continue
-            }
-            const duration = +event.timestamp - +start.timestamp
-            if (!event.source && duration < DURATION_THRESHOLD)
-              continue
-            info.loads.push({
-              type: 'load',
-              id: event.event_id,
-              plugin_name: event.plugin_name,
-              plugin_index: event.plugin_index,
-              source: event.source,
-              timestamp_start: +start.timestamp,
-              timestamp_end: +event.timestamp,
-              duration,
-            })
+        events.forEach((start, index) => {
+          if (start.action !== 'HookLoadCallStart' || start.module_id !== module)
+            return
+
+          const end = events.find(e => e.action === 'HookLoadCallEnd' && e.call_id === start.call_id, index)
+          if (!end || end.action !== 'HookLoadCallEnd') {
+            console.error(`[rolldown] Load call end not found for ${start.call_id}`)
+            return
           }
-        }
+          const duration = +end.timestamp - +start.timestamp
+          if (!end.source && duration < DURATION_THRESHOLD)
+            return
 
-        for (const event of events) {
-          if (event.action === 'HookTransformCallEnd') {
-            // TODO: use ID to pair start and end
-            const start = events.find(e => e.action === 'HookTransformCallStart' && e.module_id === event.module_id && e.plugin_index === event.plugin_index)
-            if (!start || start.action !== 'HookTransformCallStart') {
-              console.error(`[rolldown] Transform call start not found for ${event.event_id}`)
-              continue
-            }
-            const duration = +event.timestamp - +start.timestamp
-            if (start.source === event.transformed_source && duration < DURATION_THRESHOLD)
-              continue
+          info.loads.push({
+            type: 'load',
+            id: start.event_id,
+            plugin_name: start.plugin_name,
+            plugin_index: start.plugin_index,
+            source: end.source,
+            timestamp_start: +start.timestamp,
+            timestamp_end: +end.timestamp,
+            duration,
+          })
+        })
 
-            let diff_added = 0
-            let diff_removed = 0
-            if (event.transformed_source !== start.source && event.transformed_source != null && start.source != null) {
-              const delta = diffLines(start.source, event.transformed_source)
-              diff_added = delta.filter(d => d.added).map(d => d.value).join('').split(/\n/g).length
-              diff_removed = delta.filter(d => d.removed).map(d => d.value).join('').split(/\n/g).length
-            }
+        events.forEach((start, index) => {
+          if (start.action !== 'HookTransformCallStart' || start.module_id !== module)
+            return
 
-            info.transforms.push({
-              type: 'transform',
-              id: event.event_id,
-              plugin_name: event.plugin_name,
-              plugin_index: event.plugin_index,
-              source_from: start.source,
-              source_to: event.transformed_source,
-              diff_added,
-              diff_removed,
-              timestamp_start: +start.timestamp,
-              timestamp_end: +event.timestamp,
-              duration,
-            })
+          const end = events.find(e => e.action === 'HookTransformCallEnd' && e.call_id === start.call_id, index)
+          if (!end || end.action !== 'HookTransformCallEnd') {
+            console.error(`[rolldown] Transform call end not found for ${start.event_id}`)
+            return
           }
-        }
+          const duration = +end.timestamp - +start.timestamp
+          if (end.transformed_source === start.source && duration < DURATION_THRESHOLD)
+            return
 
-        for (const event of events) {
-          if (event.action === 'HookResolveIdCallEnd') {
-            // TODO: use ID to pair start and end
-            const start = events.find(e => e.action === 'HookResolveIdCallStart' && e.plugin_index === event.plugin_index)
-            if (!start || start.action !== 'HookResolveIdCallStart') {
-              console.error(`[rolldown] resolveId call start not found for ${event.event_id}`)
-              continue
-            }
-            const duration = +event.timestamp - +start.timestamp
-            info.resolve_ids.push({
-              type: 'resolve',
-              id: event.event_id,
-              plugin_name: event.plugin_name,
-              plugin_index: event.plugin_index,
-              resolved_id: event.resolved_id,
-              timestamp_start: +start.timestamp,
-              timestamp_end: +event.timestamp,
-              duration,
-            })
+          let diff_added = 0
+          let diff_removed = 0
+          if (start.source !== end.transformed_source && start.source != null && end.transformed_source != null) {
+            const delta = diffLines(end.transformed_source, start.source)
+            diff_added = delta.filter(d => d.added).map(d => d.value).join('').split(/\n/g).length
+            diff_removed = delta.filter(d => d.removed).map(d => d.value).join('').split(/\n/g).length
           }
-        }
+
+          info.transforms.push({
+            type: 'transform',
+            id: start.event_id,
+            plugin_name: start.plugin_name,
+            plugin_index: start.plugin_index,
+            source_from: start.source,
+            source_to: end.transformed_source,
+            diff_added,
+            diff_removed,
+            timestamp_start: +start.timestamp,
+            timestamp_end: +end.timestamp,
+            duration,
+          })
+        })
+
+        events.forEach((end) => {
+          if (end.action !== 'HookResolveIdCallEnd' || end.resolved_id !== module)
+            return
+          const start = events.find(e => e.action === 'HookResolveIdCallStart' && e.call_id === end.call_id)
+          if (!start || start.action !== 'HookResolveIdCallStart') {
+            console.error(`[rolldown] resolveId call start not found for ${end.event_id}`)
+            return
+          }
+
+          const duration = +end.timestamp - +start.timestamp
+          info.resolve_ids.push({
+            type: 'resolve',
+            id: end.event_id,
+            importer: start.importer,
+            module_request: start.module_request,
+            import_kind: start.import_kind,
+            plugin_name: end.plugin_name,
+            plugin_index: end.plugin_index,
+            resolved_id: end.resolved_id,
+            timestamp_start: +start.timestamp,
+            timestamp_end: +end.timestamp,
+            duration,
+          })
+        })
 
         info.loads.sort((a, b) => a.plugin_index - b.plugin_index)
         info.transforms.sort((a, b) => a.plugin_index - b.plugin_index)

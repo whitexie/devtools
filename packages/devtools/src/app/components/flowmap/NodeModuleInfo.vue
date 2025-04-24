@@ -58,7 +58,7 @@ function down() {
   </div>
   <FlowmapNode
     v-else
-    :lines="{ top: true, bottom: true }"
+    :lines="{ top: true }"
     :class-node-outer="isDashed ? 'border-dashed' : ''"
     :active="active"
     class-node-inline="gap-2 items-center"
@@ -94,6 +94,23 @@ function down() {
           </div>
         </div>
       </template>
+    </template>
+    <template
+      v-if="item.type === 'resolve' && item.resolved_id && item.importer"
+      #after
+    >
+      <div
+        p2 ml4 border="l" flex="~ col gap-2"
+        :class="active ? 'border-flow-line-active' : 'border-flow-line'"
+      >
+        <DisplayModuleId :id="item.importer" />
+        <div flex="~ gap-1 items-center" pl1>
+          <div i-ph-arrow-bend-down-right text-sm op50 />
+          <DisplayModuleId :id="item.module_request" />
+        </div>
+        <div i-ph-arrow-down ml6 text-sm op50 />
+        <DisplayModuleId :id="item.resolved_id" ml6 />
+      </div>
     </template>
   </FlowmapNode>
 </template>

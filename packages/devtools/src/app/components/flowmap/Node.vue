@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
   lines?: {
-    top?: boolean
-    bottom?: boolean
+    top?: boolean | number
+    bottom?: boolean | number
   }
   classNodeInline?: string
   classNodeOuter?: string
@@ -16,10 +16,12 @@ const props = defineProps<{
     <div
       v-if="props.lines?.top" absolute top-0 left-10 border="r" h="1/2" max-h-4 z-flowmap-line
       :class="active ? 'border-flow-line-active' : 'border-flow-line'"
+      :style="typeof props.lines?.top === 'number' ? `height: ${props.lines.top}px` : ''"
     />
     <div
       v-if="props.lines?.bottom" absolute bottom-0 left-10 border="r" h="1/2" max-h-4 z-flowmap-line
       :class="active ? 'border-flow-line-active' : 'border-flow-line'"
+      :style="typeof props.lines?.bottom === 'number' ? `height: ${props.lines.bottom}px` : ''"
     />
     <slot name="before" />
     <div flex="~" :class="props.classNodeInline">
