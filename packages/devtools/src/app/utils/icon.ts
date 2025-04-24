@@ -14,6 +14,12 @@ export const ModuleTypeRules: ModuleTypeRule[] = [
     icon: 'i-catppuccin-symlink',
   },
   {
+    match: /^@?[\w-]+\/?/,
+    name: 'package',
+    description: 'Package',
+    icon: 'i-catppuccin-java-class-abstract',
+  },
+  {
     match: /[\\/]node_modules[\\/]/i,
     name: 'node_modules',
     description: 'Node Modules',

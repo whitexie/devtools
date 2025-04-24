@@ -100,7 +100,7 @@ function down() {
       #after
     >
       <div
-        p2 ml4 border="l" flex="~ col gap-2"
+        p3 ml4 border="l" flex="~ col gap-2"
         :class="active ? 'border-flow-line-active' : 'border-flow-line'"
       >
         <DisplayModuleId :id="item.importer" />
