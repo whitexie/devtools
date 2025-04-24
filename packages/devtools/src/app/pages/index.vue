@@ -3,6 +3,6 @@
 
 <template>
   <div p4>
-    <PanelSelectBuild />
+    <PanelSessionSelector />
   </div>
 </template>

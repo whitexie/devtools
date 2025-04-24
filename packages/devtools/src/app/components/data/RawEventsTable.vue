@@ -3,7 +3,7 @@ import type { RolldownEvent } from '../../../node/rolldown/events-manager'
 import { Dropdown as VDropdown } from 'floating-vue'
 import { defineProps, withDefaults } from 'vue'
 
-type FIELDS = 'module_id' | 'kind' | 'source' | 'timestamp' | 'event_id' | 'plugin_name' | '*'
+type FIELDS = 'module_id' | 'action' | 'source' | 'timestamp' | 'event_id' | 'plugin_name' | '*'
 
 const props = withDefaults(
   defineProps<{
@@ -13,7 +13,7 @@ const props = withDefaults(
   {
     fields: () => [
       'event_id',
-      'kind',
+      'action',
       'module_id',
       'plugin_name',
       'timestamp',
@@ -38,13 +38,13 @@ function omit(obj: RolldownEvent, inputs: string[]) {
 }
 
 function getSource(event: RolldownEvent) {
-  if (event.kind === 'HookLoadCallEnd') {
+  if (event.action === 'HookLoadCallEnd') {
     return event.source
   }
-  if (event.kind === 'HookTransformCallStart') {
+  if (event.action === 'HookTransformCallStart') {
     return event.source
   }
-  if (event.kind === 'HookTransformCallEnd') {
+  if (event.action === 'HookTransformCallEnd') {
     return event.transformed_source
   }
   return null
@@ -58,7 +58,7 @@ function getSource(event: RolldownEvent) {
         <template v-for="field of props.fields" :key="field">
           <td px2>
             <DisplayModuleId v-if="field === 'module_id'" :id="'module_id' in event ? event.module_id : ''" />
-            <DisplayBadge v-else-if="field === 'kind'" :text="event.kind" />
+            <DisplayBadge v-else-if="field === 'action'" :text="event.action" />
             <div v-else-if="field === 'plugin_name' && 'plugin_name' in event">
               <DisplayPluginName font-mono :name="event.plugin_name" />
               <code op50>#{{ event.plugin_index }}</code>

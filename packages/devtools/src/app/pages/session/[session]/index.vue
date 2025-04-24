@@ -5,7 +5,7 @@ import { computed, onMounted, reactive, shallowRef } from 'vue'
 import { backend } from '../../../state/backend'
 
 const params = useRoute().params as {
-  build: string
+  session: string
 }
 
 const modules = shallowRef<{ id: string }[]>([])
@@ -28,7 +28,7 @@ const filtered = computed(() => {
 
 onMounted(async () => {
   modules.value = await backend.value!.functions['vite:rolldown:get-module-list']!({
-    session: params.build,
+    session: params.session,
   })
   fuse.setCollection(modules.value)
 })
@@ -46,7 +46,7 @@ onMounted(async () => {
     </div>
     <template v-for="mod of filtered" :key="mod">
       <NuxtLink
-        :to="{ path: `/build/${params.build}/flow`, query: { module: mod.id } }"
+        :to="{ path: `/session/${params.session}/flow`, query: { module: mod.id } }"
         hover="bg-active" block px2 p1
         border="~ base rounded"
       >

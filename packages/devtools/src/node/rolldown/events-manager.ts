@@ -1,8 +1,7 @@
-import type { Action, Event } from '@rolldown/debug'
+import type { Event } from '@rolldown/debug'
 
-export type RolldownEvent = Action & {
+export type RolldownEvent = Event & {
   event_id: string
-  timestamp: string
 }
 
 export class RolldownEventsManager {
@@ -10,9 +9,8 @@ export class RolldownEventsManager {
 
   handleEvent(raw: Event) {
     const event = {
-      ...raw.fields.action,
+      ...raw,
       event_id: `${raw.timestamp}#${this.events.length}`,
-      timestamp: raw.timestamp,
     }
     this.events.push(event)
     return event

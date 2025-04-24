@@ -4,14 +4,14 @@ import { useAsyncState } from '@vueuse/core'
 import { backend } from '../../../state/backend'
 
 const params = useRoute().params as {
-  build: string
+  session: string
 }
 const query = useRoute().query
 
 const events = useAsyncState(
   async () => {
     return await backend.value!.functions['vite:rolldown:get-module-raw-events']?.({
-      build: params.build as string,
+      session: params.session as string,
       module: query.module as string,
     })
   },
