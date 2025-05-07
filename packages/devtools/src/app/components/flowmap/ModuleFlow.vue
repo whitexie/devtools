@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges } from '../../../node/rpc/functions/rolldown-get-module-info'
+import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleLoadNoChanges, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges } from '../../../node/rpc/functions/rolldown-get-module-info'
 import { computed, ref, shallowRef, toRefs } from 'vue'
 import PluginName from '../display/PluginName.vue'
 
@@ -9,11 +9,10 @@ const props = defineProps<{
 const { info } = toRefs(props)
 
 const expandNoChangesTransform = ref(false)
+const expandNoChangesLoad = ref(false)
 const selected = shallowRef<RolldownModuleFlowNode | null>(null)
 
 const resolveIds = computed(() => info?.value?.resolve_ids ?? [])
-
-const loads = computed(() => info?.value?.loads ?? [])
 
 const transforms = computed((): (RolldownModuleTransformNoChanges | RolldownModuleTransformInfo)[] => {
   if (expandNoChangesTransform.value)
@@ -35,6 +34,25 @@ const transforms = computed((): (RolldownModuleTransformNoChanges | RolldownModu
   ]
 })
 
+const loads = computed(() => {
+  if (expandNoChangesLoad.value)
+    return info?.value?.loads ?? []
+
+  const unchanged = info?.value?.loads?.filter(l => !l.source)
+  const changed = info?.value?.loads?.filter(l => l.source)
+
+  if (!unchanged?.length)
+    return changed ?? []
+  return [
+    ({
+      type: 'load_no_changes',
+      id: 'load_no_changes',
+      count: unchanged?.length ?? 0,
+      duration: unchanged?.reduce((acc, t) => acc + t.duration, 0) ?? 0,
+    } satisfies RolldownModuleLoadNoChanges),
+    ...(changed ?? []),
+  ]
+})
 const nodes = computed(() => [
   ...resolveIds.value,
   ...loads.value,

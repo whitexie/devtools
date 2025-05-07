@@ -61,11 +61,19 @@ export interface RolldownModuleTransformNoChanges {
   duration: number
 }
 
+export interface RolldownModuleLoadNoChanges {
+  type: 'load_no_changes'
+  id: string
+  count: number
+  duration: number
+}
+
 export type RolldownModuleFlowNode =
+  | RolldownResolveInfo
   | RolldownModuleLoadInfo
+  | RolldownModuleLoadNoChanges
   | RolldownModuleTransformInfo
   | RolldownModuleTransformNoChanges
-  | RolldownResolveInfo
 
 const DURATION_THRESHOLD = 10
 
@@ -162,7 +170,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           }
 
           const duration = +end.timestamp - +start.timestamp
-          info.resolve_ids.push({
+          const data: RolldownResolveInfo = {
             type: 'resolve',
             id: end.event_id,
             importer: start.importer,
@@ -174,7 +182,14 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             timestamp_start: +start.timestamp,
             timestamp_end: +end.timestamp,
             duration,
-          })
+          }
+
+          // In Rolldown, resolveId might be called multiple times with different thread of Rust
+          // If that happens, we only keep the last on
+          const existingIndex = info.resolve_ids.findIndex(r => r.importer === start.importer && r.module_request === start.module_request && r.import_kind === start.import_kind && r.plugin_index === end.plugin_index)
+          if (existingIndex >= 0)
+            info.resolve_ids.splice(existingIndex, 1)
+          info.resolve_ids.push(data)
         })
 
         info.loads.sort((a, b) => a.plugin_index - b.plugin_index)

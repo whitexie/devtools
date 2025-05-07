@@ -36,7 +36,7 @@ function down() {
 </script>
 
 <template>
-  <div v-if="item.type === 'transform_no_changes'" pl10>
+  <div v-if="item.type === 'transform_no_changes' || item.type === 'load_no_changes'" pl10>
     <div
       flex="~ gap-2 items-center" text-sm border="l" py1
       :class="active ? 'border-flow-line-active' : 'border-flow-line'"
