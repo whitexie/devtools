@@ -8,7 +8,6 @@ const props = withDefaults(
     id?: string
     badges?: boolean
     icon?: boolean
-    module?: boolean
   }>(),
   {
     icon: true,
@@ -32,30 +31,8 @@ const relativePath = computed(() => {
   return id
 })
 
-const gridStyles = computed(() => {
-  if (!props.module)
-    return ''
-
-  const gridColumns: string[] = []
-  if (props.icon)
-    gridColumns.push('min-content')
-
-  if (props.module)
-    gridColumns.push('minmax(0,1fr)')
-  else
-    gridColumns.push('100%')
-
-  // todo: handle slot, not being used
-
-  // if (isVirtual.value)
-  //   gridColumns.push('min-content')
-
-  return `grid-template-columns: ${gridColumns.join(' ')};`
-})
 const containerClass = computed(() => {
-  return props.module
-    ? 'grid grid-rows-1 items-center gap-1'
-    : 'flex items-center'
+  return 'flex items-center'
 })
 </script>
 
@@ -65,18 +42,15 @@ const containerClass = computed(() => {
     v-tooltip.bottom-start="{
       content: props.id,
       triggers: ['hover', 'focus'],
-      disabled: !module,
     }"
     my-auto text-sm font-mono
     :class="containerClass"
-    :style="gridStyles"
   >
     <DisplayFileIcon v-if="icon" :filename="id" mr1.5 />
-    <span :class="{ 'overflow-hidden': module, 'text-truncate': module }">
+    <span>
       <DisplayHighlightedPath :path="relativePath" />
     </span>
     <slot />
-
     <!-- <DisplayBadge
       v-if="isVirtual"
       class="ml1"
