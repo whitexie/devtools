@@ -1,4 +1,5 @@
 import { relative } from 'pathe'
+import { makeCachedFunction } from './cache'
 
 export function isNodeModulePath(path: string) {
   return !!path.match(/[/\\]node_modules[/\\]/) || isPackageName(path)
@@ -32,7 +33,7 @@ export function isBuiltInModule(name: string | undefined) {
   return ['nuxt', '#app', '#head', 'vue'].includes(name)
 }
 
-export function parseReadablePath(path: string, root: string) {
+export const parseReadablePath = makeCachedFunction((path: string, root: string) => {
   path = path
     .replace(/%2F/g, '/')
     .replace(/\\/g, '/')
@@ -70,4 +71,4 @@ export function parseReadablePath(path: string, root: string) {
   catch {
     return { path }
   }
-}
+})

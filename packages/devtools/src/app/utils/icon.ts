@@ -117,6 +117,17 @@ export const ModuleTypeRules: ModuleTypeRule[] = [
   },
 ]
 
+const DefaultTypeRule: ModuleTypeRule = {
+  name: 'file',
+  match: /.*/,
+  description: 'File',
+  icon: 'i-catppuccin-file',
+}
+
+export function getFileTypeFromName(name: string) {
+  return ModuleTypeRules.find(rule => rule.name === name) ?? DefaultTypeRule
+}
+
 export function getFileTypeFromModuleId(moduleId: string): ModuleTypeRule {
   moduleId = moduleId
     .replace(/(\?|&)v=[^&]*/, '$1')
@@ -128,10 +139,5 @@ export function getFileTypeFromModuleId(moduleId: string): ModuleTypeRule {
     }
   }
 
-  return {
-    name: 'file',
-    match: /.*/,
-    description: 'File',
-    icon: 'i-catppuccin-file',
-  }
+  return DefaultTypeRule
 }
