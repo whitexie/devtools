@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { SessionContext } from '../../types/data'
+import { NuxtLink } from '#components'
 import { Tooltip } from 'floating-vue'
 import { relative } from 'pathe'
 import { computed } from 'vue'
@@ -8,6 +10,8 @@ const props = withDefaults(
     id?: string
     badges?: boolean
     icon?: boolean
+    link?: boolean
+    session?: SessionContext
   }>(),
   {
     icon: true,
@@ -37,32 +41,37 @@ const containerClass = computed(() => {
 </script>
 
 <template>
-  <Tooltip
-    my-auto text-sm font-mono block w-full
-    :triggers="['hover']"
-    :delay="1200"
-    :disabled="(props.id?.length || 0) < 30"
-    placement="bottom-start"
+  <component
+    :is="link ? NuxtLink : 'div'"
+    :to="link ? { path: `/session/${session?.id}/flow`, query: { module: id } } : undefined"
   >
-    <div
-      v-if="id"
-      :class="containerClass"
+    <Tooltip
+      my-auto text-sm font-mono block w-full
+      :triggers="['hover']"
+      :delay="1200"
+      :disabled="(props.id?.length || 0) < 30"
+      placement="bottom-start"
     >
-      <DisplayFileIcon v-if="icon" :filename="id" mr1.5 />
-      <span>
-        <DisplayHighlightedPath :path="relativePath" />
-      </span>
-      <slot />
-    <!-- <DisplayBadge
-      v-if="isVirtual"
-      class="ml1"
-      text="virtual"
-    /> -->
-    </div>
-    <template #popper>
-      <span font-mono text-sm>
-        {{ props.id }}
-      </span>
-    </template>
-  </Tooltip>
+      <div
+        v-if="id"
+        :class="containerClass"
+      >
+        <DisplayFileIcon v-if="icon" :filename="id" mr1.5 />
+        <span>
+          <DisplayHighlightedPath :path="relativePath" />
+        </span>
+        <slot />
+        <!-- <DisplayBadge
+          v-if="isVirtual"
+          class="ml1"
+          text="virtual"
+        /> -->
+      </div>
+      <template #popper>
+        <span font-mono text-sm>
+          {{ props.id }}
+        </span>
+      </template>
+    </Tooltip>
+  </component>
 </template>

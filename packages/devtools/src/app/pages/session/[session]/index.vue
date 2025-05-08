@@ -41,13 +41,13 @@ const filtered = computed(() => {
       >
     </div>
     <template v-for="mod of filtered" :key="mod">
-      <NuxtLink
-        :to="{ path: `/session/${session.id}/flow`, query: { module: mod.id } }"
+      <DisplayModuleId
+        :id="mod.id"
+        :session
         hover="bg-active" block px2 p1
         border="~ base rounded"
-      >
-        <DisplayModuleId :id="mod.id" />
-      </NuxtLink>
+        :link="true"
+      />
     </template>
     <div text-center text-xs op50 m4>
       {{ filtered.length }} of {{ session.modulesList.length }}

@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import type { SessionContext } from '@/types/data'
 import type { RolldownModuleFlowNode } from '../../../node/rpc/functions/rolldown-get-module-info'
 import { computed } from 'vue'
 import { isFlowmapSwapping } from '../../state/flowmap'
 
 const props = defineProps<{
   item: RolldownModuleFlowNode
+  session: SessionContext
   active?: boolean
 }>()
 
@@ -33,6 +35,13 @@ function down() {
   emit('select', props.item)
   isFlowmapSwapping.value = true
 }
+
+const importterModule = computed(() => {
+  if (props.item.type !== 'resolve')
+    return undefined
+  const id = props.item.importer
+  return props.session.modulesList.find(m => m.id === id)
+})
 </script>
 
 <template>
@@ -100,16 +109,20 @@ function down() {
       #after
     >
       <div
-        p3 ml4 border="l" flex="~ col gap-2"
+        p3 ml4 border="l" flex="~ col gap-1"
         :class="active ? 'border-flow-line-active' : 'border-flow-line'"
       >
-        <DisplayModuleId :id="item.importer" />
-        <div flex="~ gap-1 items-center" pl1>
-          <div i-ph-arrow-bend-down-right text-sm op50 />
-          <DisplayModuleId :id="item.module_request" />
+        <div flex="~ gap-2 items-center">
+          <div i-ph-arrow-elbow-left-down text-base op50 flex-none ml0.8 />
+          <DisplayModuleId
+            :id="item.importer"
+            :session="session"
+            :link="importterModule ? true : false"
+            :class="importterModule ? 'hover:bg-active' : ''"
+            px2 py1 rounded
+          />
         </div>
-        <div i-ph-arrow-down ml6 text-sm op50 />
-        <DisplayModuleId :id="item.resolved_id" ml6 />
+        <DisplayModuleId :id="item.module_request" />
       </div>
     </template>
   </FlowmapNode>
