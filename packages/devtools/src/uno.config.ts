@@ -6,7 +6,7 @@ import {
   presetIcons,
   presetTypography,
   presetWebFonts,
-  presetWind3,
+  presetWind4,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'
@@ -20,11 +20,11 @@ export default defineConfig({
       'border-base': 'border-#8884',
 
       'border-flow': 'border-#8885',
-      'border-flow-line': 'border-#222',
+      'border-flow-line': 'border-#ccc dark:border-#222',
       'border-flow-active': 'border-primary-700/50 dark:border-primary-300/50',
       'border-flow-line-active': 'border-primary-700/30 dark:border-primary-300/30',
 
-      'fg-flow-line': 'color-#222',
+      'fg-flow-line': 'color-#ccc dark:color-#222',
       'fg-flow-line-active': 'color-primary-700/30 dark:color-primary-300/30',
 
       'bg-tooltip': 'bg-white:75 dark:bg-#111:75 backdrop-blur-8',
@@ -59,11 +59,11 @@ export default defineConfig({
       'op-mute': 'op30 dark:op25',
       'color-deprecated': 'text-op85 text-[#b71c1c] dark:text-[#f87171]',
 
-      'color-scale-neutral': 'text-gray7:75 dark:text-gray:75!',
-      'color-scale-low': 'text-lime7:75 dark:text-lime:75! dark:saturate-50',
-      'color-scale-medium': 'text-amber7:85 dark:text-amber:85! dark:saturate-80',
-      'color-scale-high': 'text-orange7:95 dark:text-orange:95!',
-      'color-scale-critical': 'text-red7:95 dark:text-red:95!',
+      'color-scale-neutral': 'text-gray-700:75 dark:text-gray-700:75!',
+      'color-scale-low': 'text-lime-700:75 dark:text-lime-700:75! dark:saturate-50',
+      'color-scale-medium': 'text-amber-700:85 dark:text-amber-700:85! dark:saturate-80',
+      'color-scale-high': 'text-orange-700:95 dark:text-orange-700:95!',
+      'color-scale-critical': 'text-red-700:95 dark:text-red-700:95!',
 
       'page-padding': 'pt-24 pl-112 pr-8 pb-8',
       'page-padding-collapsed': 'pt-24 pl-14 pr-8 pb-8',
@@ -90,7 +90,9 @@ export default defineConfig({
     },
   },
   presets: [
-    presetWind3(),
+    presetWind4({
+
+    }),
     presetAttributify(),
     presetIcons({
       scale: 1.2,

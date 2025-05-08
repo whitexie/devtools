@@ -63,10 +63,6 @@ summary::-webkit-details-marker {
   --at-apply: text-sm;
 }
 
-.v-popper--theme-tooltip {
-  max-width: 20rem;
-}
-
 .v-popper--theme-dropdown {
   max-width: 50vw;
   max-height: 50vh;

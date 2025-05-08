@@ -41,10 +41,6 @@ export default defineNuxtConfig({
     inlineStyles: false,
   },
 
-  css: [
-    '@unocss/reset/tailwind.css',
-  ],
-
   nitro: {
     minify: NUXT_DEBUG_BUILD ? false : undefined,
     preset: 'static',

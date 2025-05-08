@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { vTooltip } from 'floating-vue'
+import { Tooltip } from 'floating-vue'
 import { relative } from 'pathe'
 import { computed } from 'vue'
 
@@ -37,24 +37,32 @@ const containerClass = computed(() => {
 </script>
 
 <template>
-  <div
-    v-if="id"
-    v-tooltip.bottom-start="{
-      content: props.id,
-      triggers: ['hover', 'focus'],
-    }"
-    my-auto text-sm font-mono
-    :class="containerClass"
+  <Tooltip
+    my-auto text-sm font-mono block w-full
+    :triggers="['hover']"
+    :delay="1200"
+    :disabled="(props.id?.length || 0) < 30"
+    placement="bottom-start"
   >
-    <DisplayFileIcon v-if="icon" :filename="id" mr1.5 />
-    <span>
-      <DisplayHighlightedPath :path="relativePath" />
-    </span>
-    <slot />
+    <div
+      v-if="id"
+      :class="containerClass"
+    >
+      <DisplayFileIcon v-if="icon" :filename="id" mr1.5 />
+      <span>
+        <DisplayHighlightedPath :path="relativePath" />
+      </span>
+      <slot />
     <!-- <DisplayBadge
       v-if="isVirtual"
       class="ml1"
       text="virtual"
     /> -->
-  </div>
+    </div>
+    <template #popper>
+      <span font-mono text-sm>
+        {{ props.id }}
+      </span>
+    </template>
+  </Tooltip>
 </template>
