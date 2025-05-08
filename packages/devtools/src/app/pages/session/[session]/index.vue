@@ -1,36 +1,32 @@
 <script setup lang="ts">
-import { useRoute } from '#app/composables/router'
+import type { SessionContext } from '../../../types/data'
+import { computedWithControl } from '@vueuse/core'
 import Fuse from 'fuse.js'
-import { computed, onMounted, reactive, shallowRef } from 'vue'
-import { backend } from '../../../state/backend'
+import { computed, reactive } from 'vue'
 
-const params = useRoute().params as {
-  session: string
-}
+const props = defineProps<{
+  session: SessionContext
+}>()
 
-const modules = shallowRef<{ id: string }[]>([])
 const filters = reactive({
   search: '',
 })
 
-const fuse = new Fuse(modules.value, {
-  includeScore: true,
-  threshold: 0.2,
-  keys: ['module_id'],
-})
+const fuse = computedWithControl(
+  () => props.session.modulesList,
+  () => new Fuse(props.session.modulesList, {
+    includeScore: true,
+    keys: ['id'],
+  }),
+)
 
 const filtered = computed(() => {
   if (filters.search === '') {
-    return modules.value
+    return props.session.modulesList
   }
-  return fuse.search(filters.search).map(r => r.item)
-})
-
-onMounted(async () => {
-  modules.value = await backend.value!.functions['vite:rolldown:get-module-list']!({
-    session: params.session,
-  })
-  fuse.setCollection(modules.value)
+  return fuse.value
+    .search(filters.search)
+    .map(r => r.item)
 })
 </script>
 
@@ -46,7 +42,7 @@ onMounted(async () => {
     </div>
     <template v-for="mod of filtered" :key="mod">
       <NuxtLink
-        :to="{ path: `/session/${params.session}/flow`, query: { module: mod.id } }"
+        :to="{ path: `/session/${session.id}/flow`, query: { module: mod.id } }"
         hover="bg-active" block px2 p1
         border="~ base rounded"
       >
@@ -54,7 +50,7 @@ onMounted(async () => {
       </NuxtLink>
     </template>
     <div text-center text-xs op50 m4>
-      {{ filtered.length }} of {{ modules.length }}
+      {{ filtered.length }} of {{ session.modulesList.length }}
     </div>
   </div>
 </template>

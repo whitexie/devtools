@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleLoadNoChanges, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges } from '../../../node/rpc/functions/rolldown-get-module-info'
+import type { SessionContext } from '../../types/data'
 import { computed, ref, shallowRef, toRefs } from 'vue'
 import PluginName from '../display/PluginName.vue'
 
 const props = defineProps<{
   info: ModuleInfo
+  session: SessionContext
 }>()
 const { info } = toRefs(props)
 
