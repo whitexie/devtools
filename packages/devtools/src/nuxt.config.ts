@@ -99,6 +99,7 @@ export default defineNuxtConfig({
         debug: {},
       },
       minify: NUXT_DEBUG_BUILD ? false : undefined,
+      cssMinify: false,
     },
     optimizeDeps: {
       include: [

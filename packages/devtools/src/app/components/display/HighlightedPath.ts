@@ -67,19 +67,19 @@ export default defineComponent({
 
         if (type === 'query') {
           if (part === '?') {
-            classes[index].push('text-red-5 dark:text-red-4')
+            classes[index].push('text-red-500 dark:text-red-400')
           }
           else if (part === '&') {
-            classes[index].push('text-orange-5 dark:text-orange-4')
+            classes[index].push('text-orange-500 dark:text-orange-400')
           }
           if (part === '=') {
-            classes[index].push('text-orange-9 dark:text-orange-2 op50')
+            classes[index].push('text-orange-900 dark:text-orange-200 op50')
           }
           else if (parts[index + 1] === '=') {
-            classes[index].push('text-amber-9 dark:text-amber-2')
+            classes[index].push('text-amber-900 dark:text-amber-200')
           }
           else {
-            classes[index].push('text-orange-9 dark:text-orange-2')
+            classes[index].push('text-orange-900 dark:text-orange-200')
           }
         }
       })
