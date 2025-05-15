@@ -1,4 +1,4 @@
-import type { Event } from '@rolldown/debug'
+import type { Event, Module as ModuleInfo } from '@rolldown/debug'
 
 export type RolldownEvent = Event & {
   event_id: string
@@ -6,6 +6,7 @@ export type RolldownEvent = Event & {
 
 export class RolldownEventsManager {
   events: RolldownEvent[] = []
+  modules: Map<string, ModuleInfo> = new Map()
 
   handleEvent(raw: Event) {
     const event = {
@@ -13,6 +14,23 @@ export class RolldownEventsManager {
       event_id: `${raw.timestamp}#${this.events.length}`,
     }
     this.events.push(event)
+
+    if ('module_id' in event) {
+      if (this.modules.has(event.module_id))
+        return
+      this.modules.set(event.module_id, {
+        id: event.module_id,
+        is_external: false,
+        imports: [],
+        importers: [],
+      })
+    }
+    if (event.action === 'ModuleGraphReady') {
+      for (const module of event.modules) {
+        this.modules.set(module.id, module)
+      }
+    }
+
     return event
   }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleLoadNoChanges, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges } from '../../../node/rpc/functions/rolldown-get-module-info'
 import type { SessionContext } from '../../types/data'
+import { Menu as VMenu } from 'floating-vue'
 import { computed, ref, shallowRef, toRefs } from 'vue'
 import PluginName from '../display/PluginName.vue'
 
@@ -104,17 +105,72 @@ const codeDisplay = computed(() => {
 </script>
 
 <template>
-  <div of-auto>
-    <FlowmapNode
-      :lines="{ bottom: true }" pt4
-      :active="selected != null"
-    >
-      <template #content>
-        <div p2>
-          <DisplayModuleId :id="info.id" />
-        </div>
+  <div of-auto pt4>
+    <div v-if="info.importers?.length" flex="~ gap-2" pb4 text-sm>
+      <VMenu>
+        <FlowmapNode :lines="{ bottom: true }" :active="selected != null" class-node-outer="border-dashed">
+          <template #inner>
+            <div flex="~ items-center gap-1" text-sm text-blue px3 py1>
+              <div i-ph-arrows-merge-duotone rotate-270 />
+              {{ info.importers?.length }} importers
+            </div>
+          </template>
+        </FlowmapNode>
+        <template #popper="{ hide }">
+          <div p2 flex="~ col gap-1">
+            <DisplayModuleId
+              v-for="importer of info.importers"
+              :id="importer"
+              :key="importer"
+              :session="session"
+              :link="true"
+              class="hover:bg-active"
+              px2 py1 rounded
+              @click="hide"
+            />
+          </div>
+        </template>
+      </VMenu>
+    </div>
+    <div flex="~">
+      <FlowmapNode
+        :lines="{ bottom: true }"
+        :active="selected != null"
+      >
+        <template #content>
+          <div p2>
+            <DisplayModuleId :id="info.id" />
+          </div>
+        </template>
+      </FlowmapNode>
+      <template v-if="info.imports?.length">
+        <div w-10 border="t base dashed" mya />
+        <VMenu mya>
+          <FlowmapNode :active="selected != null" class-node-outer="border-dashed">
+            <template #inner>
+              <div flex="~ items-center gap-1" text-sm text-orange px3 py1>
+                <div i-ph-arrows-split-duotone rotate-270 />
+                {{ info.imports?.length }} imports
+              </div>
+            </template>
+          </FlowmapNode>
+          <template #popper="{ hide }">
+            <div p2 flex="~ col gap-1">
+              <DisplayModuleId
+                v-for="imp of info.imports"
+                :id="imp"
+                :key="imp"
+                :session="session"
+                :link="true"
+                class="hover:bg-active"
+                px2 py1 rounded
+                @click="hide"
+              />
+            </div>
+          </template>
+        </VMenu>
       </template>
-    </FlowmapNode>
+    </div>
     <div w-max flex="~ gap-4">
       <div select-none>
         <FlowmapExpandable

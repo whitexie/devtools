@@ -9,10 +9,8 @@ export interface ModuleInfo {
   loads: RolldownModuleLoadInfo[]
   transforms: RolldownModuleTransformInfo[]
   resolve_ids: RolldownResolveInfo[]
-
-  // TODO: Awaits https://github.com/rolldown/rolldown/issues/4135
-  deps: string[]
-  importers: string[]
+  imports: string[] | null
+  importers: string[] | null
 }
 
 export interface RolldownResolveInfo {
@@ -94,9 +92,10 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           id: module,
           loads: [],
           transforms: [],
-          deps: [],
+          imports: [],
           importers: [],
           resolve_ids: [],
+          ...reader.manager.modules.get(module) || {},
         }
 
         events.forEach((start, index) => {

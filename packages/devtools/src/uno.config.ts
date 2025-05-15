@@ -28,7 +28,7 @@ export default defineConfig({
       'fg-flow-line-active': 'color-primary-700/30 dark:color-primary-300/30',
 
       'bg-tooltip': 'bg-white:75 dark:bg-#111:75 backdrop-blur-8',
-      'bg-code': 'bg-gray5:5',
+      'bg-code': 'bg-gray-500:5',
 
       'bg-gradient-more': 'bg-gradient-to-t from-white via-white:80 to-white:0 dark:from-#111 dark:via-#111:80 dark:to-#111:0',
 
@@ -59,11 +59,11 @@ export default defineConfig({
       'op-mute': 'op30 dark:op25',
       'color-deprecated': 'text-op85 text-[#b71c1c] dark:text-[#f87171]',
 
-      'color-scale-neutral': 'text-gray-700:75 dark:text-gray-700:75!',
-      'color-scale-low': 'text-lime-700:75 dark:text-lime-700:75! dark:saturate-50',
-      'color-scale-medium': 'text-amber-700:85 dark:text-amber-700:85! dark:saturate-80',
-      'color-scale-high': 'text-orange-700:95 dark:text-orange-700:95!',
-      'color-scale-critical': 'text-red-700:95 dark:text-red-700:95!',
+      'color-scale-neutral': 'text-gray-700:75 dark:text-gray-300:75!',
+      'color-scale-low': 'text-lime-700:75 dark:text-lime-300:75! dark:saturate-50',
+      'color-scale-medium': 'text-amber-700:85 dark:text-amber-300:85! dark:saturate-80',
+      'color-scale-high': 'text-orange-700:95 dark:text-orange-300:95!',
+      'color-scale-critical': 'text-red-700:95 dark:text-red-300:95!',
 
       'page-padding': 'pt-24 pl-112 pr-8 pb-8',
       'page-padding-collapsed': 'pt-24 pl-14 pr-8 pb-8',
