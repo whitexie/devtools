@@ -7,25 +7,22 @@ import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    id?: string
+    id: string
     badges?: boolean
     icon?: boolean
     link?: boolean
-    session?: SessionContext
+    session: SessionContext
   }>(),
   {
     icon: true,
   },
 )
 
-// const mod = computed(() => payload.modules.find(i => i.id === props.id))
-const root = '/Users/antfu/i/vite-devtools/' // TODO: get from cwd
-// const isVirtual = computed(() => mod.value?.virtual)
 const relativePath = computed(() => {
   if (!props.id)
     return ''
   const id = props.id.replace(/%2F/g, '/')
-  let relate = relative(root, id)
+  let relate = relative(props.session!.rootDir, id)
   if (!relate.startsWith('.'))
     relate = `./${relate}`
   if (relate.startsWith('./'))

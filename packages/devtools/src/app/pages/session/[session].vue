@@ -11,14 +11,16 @@ const params = useRoute().params as {
 
 const session = reactive({
   id: computed(() => params.session),
+  rootDir: '',
   modulesList: shallowRef<ModuleListItem[]>([]),
 }) as SessionContext
 
 onMounted(async () => {
-  const modules = await backend.value!.functions['vite:rolldown:get-module-list']!({
+  const summary = await backend.value!.functions['vite:rolldown:get-session-summary']!({
     session: params.session,
   })
-  session.modulesList = modules.map(mod => ({
+  session.rootDir = summary.rootDir
+  session.modulesList = summary.modules.map(mod => ({
     id: mod.id,
     fileType: getFileTypeFromName(mod.id).name,
   }))

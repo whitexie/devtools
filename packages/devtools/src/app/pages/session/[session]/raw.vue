@@ -24,6 +24,10 @@ const events = useAsyncState(
 
 <template>
   <div>
-    <DataRawEventsTable v-if="events.state.value" :events="events.state.value.events" />
+    <DataRawEventsTable
+      v-if="events.state.value"
+      :events="events.state.value.events"
+      :session="session"
+    />
   </div>
 </template>

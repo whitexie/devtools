@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RolldownEvent } from '../../../node/rolldown/events-manager'
+import type { SessionContext } from '../../types/data'
 import { Dropdown as VDropdown } from 'floating-vue'
 import { defineProps, withDefaults } from 'vue'
 
@@ -9,6 +10,7 @@ const props = withDefaults(
   defineProps<{
     events: RolldownEvent[]
     fields?: FIELDS[]
+    session: SessionContext
   }>(),
   {
     fields: () => [
@@ -57,7 +59,11 @@ function getSource(event: RolldownEvent) {
       <tr v-for="event of props.events" :key="event.event_id">
         <template v-for="field of props.fields" :key="field">
           <td px2>
-            <DisplayModuleId v-if="field === 'module_id'" :id="'module_id' in event ? event.module_id : ''" />
+            <DisplayModuleId
+              v-if="field === 'module_id'"
+              :id="'module_id' in event ? event.module_id : ''"
+              :session="session"
+            />
             <DisplayBadge v-else-if="field === 'action'" :text="event.action" />
             <div v-else-if="field === 'plugin_name' && 'plugin_name' in event">
               <DisplayPluginName font-mono :name="event.plugin_name" />

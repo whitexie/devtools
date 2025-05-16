@@ -139,7 +139,10 @@ const codeDisplay = computed(() => {
       >
         <template #content>
           <div p2>
-            <DisplayModuleId :id="info.id" />
+            <DisplayModuleId
+              :id="info.id"
+              :session="session"
+            />
           </div>
         </template>
       </FlowmapNode>

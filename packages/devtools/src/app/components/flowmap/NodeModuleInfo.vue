@@ -122,7 +122,10 @@ const importterModule = computed(() => {
             px2 py1 rounded
           />
         </div>
-        <DisplayModuleId :id="item.module_request" />
+        <DisplayModuleId
+          :id="item.module_request"
+          :session="session"
+        />
       </div>
     </template>
   </FlowmapNode>

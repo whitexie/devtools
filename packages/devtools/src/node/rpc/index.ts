@@ -3,9 +3,9 @@ import { getPayload } from './functions/get-payload'
 import { openInEditor } from './functions/open-in-editor'
 import { openInFinder } from './functions/open-in-finder'
 import { rolldownGetModuleInfo } from './functions/rolldown-get-module-info'
-import { rolldownGetModuleList } from './functions/rolldown-get-module-list'
 import { rolldownGetModuleRawEvents } from './functions/rolldown-get-module-raw-events'
 import { rolldownGetRawEvents } from './functions/rolldown-get-raw-events'
+import { rolldownGetSessionSummary } from './functions/rolldown-get-session-summary'
 import { rolldownListSessions } from './functions/rolldown-list-sessions'
 
 export const rpcFunctions = [
@@ -14,7 +14,7 @@ export const rpcFunctions = [
   getPayload,
   rolldownListSessions,
   rolldownGetRawEvents,
-  rolldownGetModuleList,
+  rolldownGetSessionSummary,
   rolldownGetModuleInfo,
   rolldownGetModuleRawEvents,
 ] as const
