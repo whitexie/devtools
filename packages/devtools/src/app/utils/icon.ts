@@ -1,3 +1,5 @@
+import { makeCachedFunction } from './cache'
+
 export interface ModuleTypeRule {
   match: RegExp
   name: string
@@ -128,7 +130,7 @@ export function getFileTypeFromName(name: string) {
   return ModuleTypeRules.find(rule => rule.name === name) ?? DefaultTypeRule
 }
 
-export function getFileTypeFromModuleId(moduleId: string): ModuleTypeRule {
+export const getFileTypeFromModuleId = makeCachedFunction((moduleId: string): ModuleTypeRule => {
   moduleId = moduleId
     .replace(/(\?|&)v=[^&]*/, '$1')
     .replace(/\?$/, '')
@@ -140,4 +142,4 @@ export function getFileTypeFromModuleId(moduleId: string): ModuleTypeRule {
   }
 
   return DefaultTypeRule
-}
+})
