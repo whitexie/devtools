@@ -9,10 +9,15 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    minimal: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     return () => {
       const parts = props.path.split(/([?/&:=])/g)
+
       let type: 'path' | 'query' = 'path'
 
       const classes: string[][] = parts.map(() => [])
@@ -36,6 +41,15 @@ export default defineComponent({
           }
           else if (part === 'node_modules' || part === 'dist' || part === 'lib' || part.match(/^\.\w/)) {
             classes[index].push('op60')
+          }
+
+          // If the path is minimal, remove all the parts before the node_modules
+          if (part === 'node_modules') {
+            if (props.minimal) {
+              for (let i = 0; i < index + 2; i++) {
+                removeIndexes.add(i)
+              }
+            }
           }
 
           if (part === '.pnpm') {

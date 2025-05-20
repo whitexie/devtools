@@ -23,6 +23,8 @@ onMounted(async () => {
   session.modulesList = summary.modules.map(mod => ({
     id: mod.id,
     fileType: getFileTypeFromName(mod.id).name,
+    imports: mod.imports ?? [],
+    importers: mod.importers ?? [],
   }))
 })
 </script>

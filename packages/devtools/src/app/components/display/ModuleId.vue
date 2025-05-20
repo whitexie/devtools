@@ -11,6 +11,7 @@ const props = withDefaults(
     badges?: boolean
     icon?: boolean
     link?: boolean
+    minimal?: boolean
     session: SessionContext
   }>(),
   {
@@ -55,7 +56,7 @@ const containerClass = computed(() => {
       >
         <DisplayFileIcon v-if="icon" :filename="id" mr1.5 />
         <span>
-          <DisplayHighlightedPath :path="relativePath" />
+          <DisplayHighlightedPath :path="relativePath" :minimal="minimal" />
         </span>
         <slot />
         <!-- <DisplayBadge

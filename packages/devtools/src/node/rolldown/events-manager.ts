@@ -25,6 +25,7 @@ export class RolldownEventsManager {
         importers: [],
       })
     }
+
     if (event.action === 'ModuleGraphReady') {
       for (const module of event.modules) {
         this.modules.set(module.id, module)

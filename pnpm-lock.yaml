@@ -373,6 +373,9 @@ importers:
       cac:
         specifier: catalog:deps
         version: 6.7.14
+      d3-shape:
+        specifier: catalog:frontend
+        version: 3.2.0
       diff:
         specifier: catalog:deps
         version: 8.0.1
@@ -458,9 +461,6 @@ importers:
       d3-hierarchy:
         specifier: catalog:frontend
         version: 3.1.2
-      d3-shape:
-        specifier: catalog:frontend
-        version: 3.2.0
       diff-match-patch-es:
         specifier: catalog:frontend
         version: 1.0.1

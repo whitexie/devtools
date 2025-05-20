@@ -1,6 +1,8 @@
 export interface ModuleListItem {
   id: string
   fileType: string
+  imports: string[]
+  importers: string[]
 }
 
 export interface SessionContext {

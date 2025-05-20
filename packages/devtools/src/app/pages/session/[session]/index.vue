@@ -4,7 +4,7 @@ import { useRoute, useRouter } from '#app/composables/router'
 import { clearUndefined } from '@antfu/utils'
 import { computedWithControl, debouncedWatch } from '@vueuse/core'
 import Fuse from 'fuse.js'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { parseReadablePath } from '../../../utils/filepath'
 import { getFileTypeFromModuleId, getFileTypeFromName } from '../../../utils/icon'
 
@@ -117,25 +117,39 @@ const searched = computed(() => {
     .search(filters.search)
     .map(r => r.item)
 })
+
+const display = ref<'list' | 'graph'>('list')
 </script>
 
 <template>
   <div flex="~ col gap-2" p4>
-    <div flex="col gap-2">
-      <div>
+    <div h-20 />
+    <div flex="col gap-2" right-4 top-4 border="~ base rounded-xl" p2 bg-glass fixed z-panel-nav>
+      <button
+        btn-action
+        @click="display = display === 'list' ? 'graph' : 'list'"
+      >
+        <div v-if="display === 'graph'" i-ph-graph-duotone />
+        <div v-else i-ph-list-duotone />
+        {{ display === 'list' ? 'List' : 'Graph' }}
+      </button>
+    </div>
+    <div flex="col gap-2" left-4 top-4 border="~ base rounded-xl" bg-glass fixed z-panel-nav>
+      <div border="b base">
         <input
           v-model="filters.search"
-          border="~ base rounded-full"
-          p2 px4 w-full outline-none
+          p2 px4 w-full
+          style="outline: none"
           placeholder="Search"
         >
       </div>
-      <div flex="~ gap-2" py2>
+      <div flex="~ gap-2" p2>
         <label
           v-for="type of allFileTypes"
           :key="type"
-          border="~ base rounded" px2 py1
+          border="~ base rounded-md" px2 py1
           flex="~ items-center gap-1"
+          select-none
           :title="type"
           :class="isFileTypeSelected(type) ? 'bg-active' : 'grayscale op50'"
         >
@@ -145,19 +159,28 @@ const searched = computed(() => {
             mr1
             @change="toggleFileType(type)"
           >
-          <div :class="getFileTypeFromName(type).icon" />
+          <div :class="getFileTypeFromName(type).icon" icon-catppuccin />
           <div text-sm>{{ getFileTypeFromName(type).description }}</div>
         </label>
       </div>
       <!-- TODO: should we add filters for node_modules? -->
       <!-- {{ allNodeModules }} -->
     </div>
-    <ModulesList
-      :session="session"
-      :modules="searched"
-    />
-    <div text-center text-xs op50 m4>
-      {{ filtered.length }} of {{ session.modulesList.length }}
-    </div>
+    <template v-if="display === 'list'">
+      <ModulesFlatList
+        v-if="display === 'list'"
+        :session="session"
+        :modules="searched"
+      />
+      <div text-center text-xs op50 m4>
+        {{ filtered.length }} of {{ session.modulesList.length }}
+      </div>
+    </template>
+    <template v-else>
+      <ModulesGraph
+        :session="session"
+        :modules="searched"
+      />
+    </template>
   </div>
 </template>
