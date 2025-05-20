@@ -28,6 +28,8 @@ export class RolldownEventsManager {
     if (event.action === 'ModuleGraphReady') {
       for (const module of event.modules) {
         this.modules.set(module.id, module)
+        module.importers = Array.from(new Set(module.importers || [])).sort((a, b) => a.localeCompare(b))
+        module.imports = Array.from(new Set(module.imports || [])).sort((a, b) => a.localeCompare(b))
       }
     }
 

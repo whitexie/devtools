@@ -152,15 +152,10 @@ const searched = computed(() => {
       <!-- TODO: should we add filters for node_modules? -->
       <!-- {{ allNodeModules }} -->
     </div>
-    <template v-for="mod of searched" :key="mod">
-      <DisplayModuleId
-        :id="mod.id"
-        :session
-        hover="bg-active" block px2 p1
-        border="~ base rounded"
-        :link="true"
-      />
-    </template>
+    <ModulesList
+      :session="session"
+      :modules="searched"
+    />
     <div text-center text-xs op50 m4>
       {{ filtered.length }} of {{ session.modulesList.length }}
     </div>

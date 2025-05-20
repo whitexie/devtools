@@ -106,31 +106,37 @@ const codeDisplay = computed(() => {
 
 <template>
   <div of-auto pt4>
-    <div v-if="info.importers?.length" flex="~ gap-2" pb4 text-sm>
-      <VMenu>
-        <FlowmapNode :lines="{ bottom: true }" :active="selected != null" class-node-outer="border-dashed">
-          <template #inner>
-            <div flex="~ items-center gap-1" text-sm text-blue px3 py1>
-              <div i-ph-arrows-merge-duotone rotate-270 />
-              {{ info.importers?.length }} importers
+    <div v-if="info.importers?.length" text-sm>
+      <div flex>
+        <VMenu>
+          <FlowmapNode class-node-outer="border-dashed">
+            <template #inner>
+              <div flex="~ items-center gap-1" text-sm text-blue px3 py1>
+                <div i-ph-arrows-merge-duotone rotate-270 />
+                {{ info.importers?.length }} importers
+              </div>
+            </template>
+          </FlowmapNode>
+          <template #popper="{ hide }">
+            <div p2 flex="~ col gap-1">
+              <DisplayModuleId
+                v-for="importer of info.importers"
+                :id="importer"
+                :key="importer"
+                :session="session"
+                :link="true"
+                class="hover:bg-active"
+                px2 py1 rounded
+                @click="hide"
+              />
             </div>
           </template>
-        </FlowmapNode>
-        <template #popper="{ hide }">
-          <div p2 flex="~ col gap-1">
-            <DisplayModuleId
-              v-for="importer of info.importers"
-              :id="importer"
-              :key="importer"
-              :session="session"
-              :link="true"
-              class="hover:bg-active"
-              px2 py1 rounded
-              @click="hide"
-            />
-          </div>
-        </template>
-      </VMenu>
+        </VMenu>
+      </div>
+      <div
+        pl-10 border="r" h-4 w-1px z-flowmap-line
+        class="border-flow-line border-dashed"
+      />
     </div>
     <div flex="~">
       <FlowmapNode
@@ -149,7 +155,7 @@ const codeDisplay = computed(() => {
       <template v-if="info.imports?.length">
         <div w-10 border="t base dashed" mya />
         <VMenu mya>
-          <FlowmapNode :active="selected != null" class-node-outer="border-dashed">
+          <FlowmapNode class-node-outer="border-dashed">
             <template #inner>
               <div flex="~ items-center gap-1" text-sm text-orange px3 py1>
                 <div i-ph-arrows-split-duotone rotate-270 />
