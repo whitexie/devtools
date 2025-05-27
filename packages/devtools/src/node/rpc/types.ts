@@ -1,6 +1,6 @@
 /**
  * Type of the RPC function,
- * - static: A function that returns a static data (can be cached and dumpped)
+ * - static: A function that returns a static data (can be cached and dumped)
  * - action: A function that performs an action (no data returned)
  * - query: A function that queries a resource
  */
