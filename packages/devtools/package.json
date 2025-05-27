@@ -29,7 +29,7 @@
   "scripts": {
     "dev": "pnpm run -r stub && ROLLDOWN_OPTIONS_VALIDATION=loose nuxi dev src",
     "stub": "unbuild --stub",
-    "build": "ROLLDOWN_OPTIONS_VALIDATION=loose nuxi build src && unbuild",
+    "build": "ROLLDOWN_OPTIONS_VALIDATION=loose nuxi build src && tsdown",
     "build:debug": "NUXT_DEBUG_BUILD=true pnpm run build",
     "start": "node ./bin.mjs",
     "prepack": "pnpm build",
@@ -78,6 +78,7 @@
     "nanovis": "catalog:frontend",
     "splitpanes": "catalog:frontend",
     "theme-vitesse": "catalog:frontend",
+    "tsdown": "catalog:build",
     "vite-hot-client": "catalog:frontend"
   }
 }
