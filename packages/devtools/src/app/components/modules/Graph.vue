@@ -70,7 +70,7 @@ function calculateGraph() {
         return rootModules.value
       }
       const modules = node.imports.map((x) => {
-        const module = modulesMap.value.get(x)
+        const module = modulesMap.value.get(x.id)
         if (module) {
           if (seen.has(module)) {
             return undefined
