@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ModuleImport } from '@rolldown/debug'
 import type { SessionContext } from '../../types/data'
 import { NuxtLink } from '#components'
 import { Tooltip } from 'floating-vue'
@@ -12,6 +13,7 @@ const props = withDefaults(
     icon?: boolean
     link?: boolean
     minimal?: boolean
+    kind?: ModuleImport['kind']
     session: SessionContext
   }>(),
   {
@@ -59,6 +61,11 @@ const containerClass = computed(() => {
           <DisplayHighlightedPath :path="relativePath" :minimal="minimal" />
         </span>
         <slot />
+        <DisplayBadge
+          v-if="kind"
+          class="ml1"
+          :text="kind"
+        />
         <!-- <DisplayBadge
           v-if="isVirtual"
           class="ml1"

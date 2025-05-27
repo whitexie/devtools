@@ -1,4 +1,4 @@
-import type { HookResolveIdCallStart } from '@rolldown/debug'
+import type { HookResolveIdCallStart, ModuleImport } from '@rolldown/debug'
 import { diffLines } from 'diff'
 import { join } from 'pathe'
 import { RolldownEventsReader } from '../../rolldown/events-reader'
@@ -9,7 +9,7 @@ export interface ModuleInfo {
   loads: RolldownModuleLoadInfo[]
   transforms: RolldownModuleTransformInfo[]
   resolve_ids: RolldownResolveInfo[]
-  imports: string[] | null
+  imports: ModuleImport[] | null
   importers: string[] | null
 }
 

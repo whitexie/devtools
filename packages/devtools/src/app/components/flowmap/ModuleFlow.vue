@@ -167,8 +167,9 @@ const codeDisplay = computed(() => {
             <div p2 flex="~ col gap-1">
               <DisplayModuleId
                 v-for="imp of info.imports"
-                :id="imp"
-                :key="imp"
+                :id="imp.id"
+                :key="imp.id"
+                :kind="imp.kind"
                 :session="session"
                 :link="true"
                 class="hover:bg-active"

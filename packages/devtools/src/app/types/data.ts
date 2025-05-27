@@ -1,7 +1,9 @@
+import type { ModuleImport } from '@rolldown/debug'
+
 export interface ModuleListItem {
   id: string
   fileType: string
-  imports: string[]
+  imports: ModuleImport[]
   importers: string[]
 }
 
