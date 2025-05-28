@@ -2,9 +2,6 @@ packages:
   - packages/*
 catalogs:
   build:
-    '@rollup/plugin-alias': ^5.1.1
-    '@rollup/plugin-commonjs': ^28.0.3
-    '@rollup/plugin-node-resolve': ^16.0.1
     '@unocss/nuxt': ^66.1.2
     '@vueuse/nuxt': ^13.3.0
     esbuild: ^0.25.5
@@ -12,10 +9,7 @@ catalogs:
     nuxt: ^3.17.4
     nuxt-mcp: ^0.2.2
     rolldown: nightly
-    rollup: ^4.41.1
-    rollup-plugin-esbuild: ^6.2.1
     tsdown: ^0.12.4
-    unbuild: ^3.5.0
     vite: npm:rolldown-vite@^6.3.13
   deps:
     '@rolldown/debug': nightly
@@ -33,7 +27,6 @@ catalogs:
     p-limit: ^6.2.0
     pathe: ^2.0.3
     publint: ^0.3.12
-    stream-json: ^1.9.1
     structured-clone-es: ^1.0.0
     tinyglobby: ^0.2.14
     unconfig: ^7.3.2
@@ -79,6 +72,7 @@ catalogs:
     '@iconify-json/simple-icons': ^1.2.36
   inlined:
     '@antfu/utils': ^9.2.0
+    stream-json: ^1.9.1
   testing:
     vitest: ^3.1.4
   types:
