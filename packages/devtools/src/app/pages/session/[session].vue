@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { ModuleListItem, SessionContext } from '../../types/data'
 import { useRoute } from '#app/composables/router'
-import { computed, onMounted, reactive, shallowRef } from 'vue'
+import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
+import { getFileTypeFromName } from '~/utils/icon'
 import { backend } from '../../state/backend'
-import { getFileTypeFromName } from '../../utils/icon'
 
 const params = useRoute().params as {
   session: string
 }
 
+const isLoading = ref(true)
 const session = reactive({
   id: computed(() => params.session),
   rootDir: '',
@@ -30,5 +31,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NuxtPage :session="session" />
+  <div v-if="isLoading">
+    <div p10>
+      Loading...
+    </div>
+  </div>
+  <NuxtPage v-else :session="session" />
 </template>

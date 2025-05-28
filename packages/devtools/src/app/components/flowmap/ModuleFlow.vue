@@ -79,6 +79,8 @@ function select(node: RolldownModuleFlowNode) {
 function activate(node: RolldownModuleFlowNode) {
   if (node.type === 'transform_no_changes')
     expandNoChangesTransform.value = !expandNoChangesTransform.value
+  else if (node.type === 'load_no_changes')
+    expandNoChangesLoad.value = !expandNoChangesLoad.value
 }
 
 const codeDisplay = computed(() => {
@@ -294,12 +296,7 @@ const codeDisplay = computed(() => {
             {{ codeDisplay.type === 'load' ? 'Load' : 'Transform' }}
           </span>
           <div flex-auto />
-          <button
-            rounded-full p1 hover="bg-active"
-            @click="selected = null"
-          >
-            <div i-ph-x />
-          </button>
+          <DisplayCloseButton @click="selected = null" />
         </div>
         <CodeDiffEditor
           :from="codeDisplay.from ?? ''"

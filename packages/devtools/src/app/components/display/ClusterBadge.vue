@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Tooltip } from 'floating-vue'
 import { computed } from 'vue'
-import { getHashColorFromString } from '../../utils/color'
+import { getHashColorFromString } from '~/utils/color'
 
 const props = defineProps<{
   cluster: string

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { HierarchyLink, HierarchyNode } from 'd3-hierarchy'
 import type { ModuleListItem, SessionContext } from '../../types/data'
+import { useEventListener } from '@vueuse/core'
 import { hierarchy, tree } from 'd3-hierarchy'
 import { linkHorizontal, linkVertical } from 'd3-shape'
 import { computed, nextTick, onMounted, reactive, ref, shallowReactive, shallowRef, useTemplateRef, watch } from 'vue'
@@ -9,7 +10,6 @@ const props = defineProps<{
   session: SessionContext
   modules: ModuleListItem[]
 }>()
-
 type Link = HierarchyLink<ModuleListItem> & {
   id: string
 }
@@ -160,7 +160,38 @@ function getLinkColor(_link: Link) {
   return 'stroke-#8882'
 }
 
+function handleDragingScroll() {
+  let x = 0
+  let y = 0
+  const SCROLLBAR_THICKNESS = 20
+
+  useEventListener(container, 'mousedown', (e) => {
+    // prevent dragging when clicking on scrollbar
+    const rect = container.value!.getBoundingClientRect()
+    const distRight = rect.right - e.clientX
+    const distBottom = rect.bottom - e.clientY
+    if (distRight <= SCROLLBAR_THICKNESS || distBottom <= SCROLLBAR_THICKNESS) {
+      return
+    }
+
+    isGrabbing.value = true
+    x = container.value!.scrollLeft + e.pageX
+    y = container.value!.scrollTop + e.pageY
+  })
+  useEventListener('mouseleave', () => isGrabbing.value = false)
+  useEventListener('mouseup', () => isGrabbing.value = false)
+  useEventListener('mousemove', (e) => {
+    if (!isGrabbing.value)
+      return
+    e.preventDefault()
+    container.value!.scrollLeft = x - e.pageX
+    container.value!.scrollTop = y - e.pageY
+  })
+}
+
 onMounted(() => {
+  handleDragingScroll()
+
   watch(
     () => [props.modules, graphRender.value],
     calculateGraph,
@@ -175,6 +206,14 @@ onMounted(() => {
     w-screen h-screen of-scroll relative select-none
     :class="isGrabbing ? 'cursor-grabbing' : ''"
   >
+    <div
+      absolute left-0 top-0
+      :style="{
+        width: `${width}px`,
+        height: `${height}px`,
+      }"
+      class="bg-dots"
+    />
     <svg pointer-events-none absolute left-0 top-0 z-graph-link :width="width" :height="height">
       <g>
         <path

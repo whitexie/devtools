@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { SessionContext } from '../../../types/data'
+import type { SessionContext } from '~/types/data'
 import { useRoute } from '#app/composables/router'
 import { useAsyncState } from '@vueuse/core'
-import { backend } from '../../../state/backend'
+import { backend } from '~/state/backend'
 
 const props = defineProps<{
   session: SessionContext

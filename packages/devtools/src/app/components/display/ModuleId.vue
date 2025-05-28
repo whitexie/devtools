@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ModuleImport } from '@rolldown/debug'
 import type { SessionContext } from '../../types/data'
+import { useRoute } from '#app/composables/router'
 import { NuxtLink } from '#components'
 import { Tooltip } from 'floating-vue'
 import { relative } from 'pathe'
@@ -20,6 +21,9 @@ const props = withDefaults(
     icon: true,
   },
 )
+
+const route = useRoute()
+const location = window.location
 
 const relativePath = computed(() => {
   if (!props.id)
@@ -43,7 +47,7 @@ const containerClass = computed(() => {
 <template>
   <component
     :is="link ? NuxtLink : 'div'"
-    :to="link ? { path: `/session/${session?.id}/flow`, query: { module: id } } : undefined"
+    :to="link ? { path: route.path, query: { ...route.query, module: id }, hash: location.hash } : undefined"
   >
     <Tooltip
       my-auto text-sm font-mono block w-full

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type CodeMirror from 'codemirror'
 import { nextTick, onMounted, toRefs, useTemplateRef, watchEffect } from 'vue'
-import { guessCodemirrowMode, syncEditorScrolls, syncScrollListeners, useCodeMirror } from '../../composables/codemirror'
-import { settings } from '../../state/settings'
-import { calculateDiffWithWorker } from '../../worker/diff'
+import { guessCodemirrowMode, syncEditorScrolls, syncScrollListeners, useCodeMirror } from '~/composables/codemirror'
+import { settings } from '~/state/settings'
+import { calculateDiffWithWorker } from '~/worker/diff'
 
 const props = defineProps<{
   from: string

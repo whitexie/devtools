@@ -1,5 +1,5 @@
 import { defineComponent, h } from 'vue'
-import { getPluginColor } from '../../utils/color'
+import { getPluginColor } from '~/utils/color'
 
 // @unocss-include
 export default defineComponent({

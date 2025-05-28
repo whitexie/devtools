@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { RolldownModuleFlowNode } from '../../../node/rpc/functions/rolldown-get-module-info'
-import type { SessionContext } from '@/types/data'
+import type { SessionContext } from '~/types/data'
 import { computed } from 'vue'
-import { isFlowmapSwapping } from '../../state/flowmap'
+import { isFlowmapSwapping } from '~/state/flowmap'
 
 const props = defineProps<{
   item: RolldownModuleFlowNode

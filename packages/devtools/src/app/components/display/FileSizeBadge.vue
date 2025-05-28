@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { bytesToHumanSize } from '../../utils/format'
+import { bytesToHumanSize } from '~/utils/format'
 
 const props = withDefaults(
   defineProps<{

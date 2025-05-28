@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { getFileTypeFromModuleId } from '~/utils/icon'
 import { isDark } from '../../composables/dark'
-import { getFileTypeFromModuleId } from '../../utils/icon'
 
 const props = defineProps<{
   filename: string
