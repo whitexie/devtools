@@ -27,6 +27,7 @@ onMounted(async () => {
     imports: mod.imports ?? [],
     importers: mod.importers ?? [],
   }))
+  isLoading.value = false
 })
 </script>
 
