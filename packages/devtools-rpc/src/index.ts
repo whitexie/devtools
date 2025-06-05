@@ -1,5 +1,2 @@
-export function createRpcServer() {}
-
-export function createRpcProxy() {}
-
-export function createRpcClient() {}
+export * from './client'
+export * from './server'
