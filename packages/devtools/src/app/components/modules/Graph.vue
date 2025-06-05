@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HierarchyLink, HierarchyNode } from 'd3-hierarchy'
-import type { ModuleListItem, SessionContext } from '../../types/data'
+import type { ModuleImport, ModuleListItem, SessionContext } from '../../types/data'
 import { useEventListener } from '@vueuse/core'
 import { hierarchy, tree } from 'd3-hierarchy'
 import { linkHorizontal, linkVertical } from 'd3-shape'
@@ -10,8 +10,15 @@ const props = defineProps<{
   session: SessionContext
   modules: ModuleListItem[]
 }>()
-type Link = HierarchyLink<ModuleListItem> & {
+
+interface Node {
+  module: ModuleListItem
+  import?: ModuleImport
+}
+
+type Link = HierarchyLink<Node> & {
   id: string
+  import?: ModuleImport
 }
 
 const graphRender = ref<'normal' | 'mini'>('normal')
@@ -31,9 +38,9 @@ const height = ref(window.innerHeight)
 const scale = ref(1)
 const nodesRefMap = shallowReactive(new Map<string, HTMLDivElement>())
 
-const nodes = shallowRef<HierarchyNode<ModuleListItem>[]>([])
+const nodes = shallowRef<HierarchyNode<Node>[]>([])
 const links = shallowRef<Link[]>([])
-const nodesMap = shallowReactive(new Map<string, HierarchyNode<ModuleListItem>>())
+const nodesMap = shallowReactive(new Map<string, HierarchyNode<Node>>())
 const linksMap = shallowReactive(new Map<string, Link>())
 
 const modulesMap = computed(() => {
@@ -62,29 +69,34 @@ function calculateGraph() {
   height.value = window.innerHeight
 
   const seen = new Set<ModuleListItem>()
-  const root = hierarchy<ModuleListItem>(
-    { id: '~root' } as any,
-    (node) => {
-      if (node.id === '~root') {
+  const root = hierarchy<Node>(
+    { module: { id: '~root' } } as any,
+    (parent) => {
+      if (parent.module.id === '~root') {
         rootModules.value.forEach(x => seen.add(x))
-        return rootModules.value
+        return rootModules.value.map(x => ({ module: x }))
       }
-      const modules = node.imports.map((x) => {
-        const module = modulesMap.value.get(x.id)
-        if (module) {
-          if (seen.has(module)) {
+      const modules = parent.module.imports
+        .map((x): Node | undefined => {
+          const module = modulesMap.value.get(x.id)
+          if (!module)
             return undefined
-          }
+          if (seen.has(module))
+            return undefined
+
           seen.add(module)
-        }
-        return module
-      }).filter(x => x !== undefined)
+          return {
+            module,
+            import: x,
+          }
+        })
+        .filter(x => x !== undefined)
       return modules
     },
   )
 
   // Calculate the layout
-  const layout = tree<ModuleListItem>()
+  const layout = tree<Node>()
     .nodeSize([SPACING.height, SPACING.width + SPACING.gap])
   layout(root)
 
@@ -111,14 +123,15 @@ function calculateGraph() {
   nodes.value = _nodes
   nodesMap.clear()
   for (const node of _nodes) {
-    nodesMap.set(node.data.id, node)
+    nodesMap.set(node.data.module.id, node)
   }
   const _links = root.links()
-    .filter(x => x.source.data.id !== '~root')
-    .map((x) => {
+    .filter(x => x.source.data.module.id !== '~root')
+    .map((x): Link => {
       return {
         ...x,
-        id: `${x.source.data.id}|${x.target.data.id}`,
+        import: x.source.data.import,
+        id: `${x.source.data.module.id}|${x.target.data.module.id}`,
       }
     })
   linksMap.clear()
@@ -221,6 +234,7 @@ onMounted(() => {
           :key="link.id"
           :d="generateLink(link)!"
           :class="getLinkColor(link)"
+          :stroke-dasharray="link.import?.kind === 'dynamic-import' ? '3 6' : undefined"
           fill="none"
         />
       </g>
@@ -238,17 +252,17 @@ onMounted(() => {
     </svg> -->
     <template
       v-for="node of nodes"
-      :key="node.data.id"
+      :key="node.data.module.id"
     >
-      <template v-if="node.data.id !== '~root'">
+      <template v-if="node.data.module.id !== '~root'">
         <DisplayModuleId
-          :id="node.data.id"
-          :ref="(el: any) => nodesRefMap.set(node.data.id, el?.$el)"
+          :id="node.data.module.id"
+          :ref="(el: any) => nodesRefMap.set(node.data.module.id, el?.$el)"
           absolute hover="bg-active" block px2 p1 bg-glass z-graph-node
           border="~ base rounded"
           :link="true"
           :session="session"
-          :pkg="node.data"
+          :pkg="node.data.module"
           :minimal="true"
           :style="{
             left: `${node.x}px`,
