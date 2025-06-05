@@ -34,6 +34,7 @@
     "birpc": "catalog:deps"
   },
   "devDependencies": {
-    "tsdown": "catalog:build"
+    "tsdown": "catalog:build",
+    "ws": "catalog:deps"
   }
 }
