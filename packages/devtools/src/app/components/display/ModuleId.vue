@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ModuleImport } from '@rolldown/debug'
-import type { SessionContext } from '../../types/data'
+import type { SessionContext } from '~~/shared/types'
 import { useRoute } from '#app/composables/router'
 import { NuxtLink } from '#components'
 import { Tooltip } from 'floating-vue'

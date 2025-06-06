@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleLoadNoChanges, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges } from '../../../node/rpc/functions/rolldown-get-module-info'
-import type { SessionContext } from '../../types/data'
+import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleLoadNoChanges, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges, SessionContext } from '~~/shared/types'
 import { Menu as VMenu } from 'floating-vue'
 import { computed, ref, shallowRef, toRefs } from 'vue'
 import PluginName from '../display/PluginName.vue'

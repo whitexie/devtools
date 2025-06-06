@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SessionContext } from '~/types/data'
+import type { SessionContext } from '~~/shared/types'
 
 defineProps<{
   session: SessionContext

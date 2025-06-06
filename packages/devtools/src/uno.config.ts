@@ -49,9 +49,9 @@ export default defineConfig({
       'z-graph-link-active': 'z-12',
       'z-graph-node-active': 'z-13',
 
-      'z-panel-content': 'z-50',
       'z-panel-no-mobile': 'z-55',
       'z-panel-nav': 'z-60',
+      'z-panel-content': 'z-65',
       'z-panel-goto': 'z-70',
       'z-panel-terminal': 'z-80',
 

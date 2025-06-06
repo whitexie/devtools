@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ModuleListItem, SessionContext } from '../../types/data'
+import type { ModuleListItem, SessionContext } from '~~/shared/types'
 import { useRoute } from '#app/composables/router'
 import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
+import { backend } from '~/state/backend'
 import { getFileTypeFromName } from '~/utils/icon'
-import { backend } from '../../state/backend'
 
 const params = useRoute().params as {
   session: string

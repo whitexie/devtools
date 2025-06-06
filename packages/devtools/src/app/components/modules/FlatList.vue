@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ModuleListItem, SessionContext } from '../../types/data'
+import type { ModuleListItem, SessionContext } from '~~/shared/types'
 
 defineProps<{
   session: SessionContext

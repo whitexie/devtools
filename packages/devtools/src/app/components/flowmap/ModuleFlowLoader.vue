@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SessionContext } from '~/types/data'
+import type { SessionContext } from '~~/shared/types'
 import { computedAsync } from '@vueuse/core'
 import { backend } from '~/state/backend'
 
@@ -19,12 +19,17 @@ const info = computedAsync(async () => {
 
 <template>
   <div>
-    <FlowmapModuleFlow
-      v-if="info"
-      p4
-      :info
-      :session
-    />
+    <template v-if="info">
+      <FlowmapModuleFlow
+        p4
+        :info
+        :session
+      />
+      <ChartModuleFlamegraph
+        :info
+        :session="session"
+      />
+    </template>
     <div v-else>
       <!-- TODO: Better loading screen -->
       <div>Loading...</div>

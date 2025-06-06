@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SessionContext } from '~/types/data'
+import type { SessionContext } from '~~/shared/types'
 import { useRoute, useRouter } from '#app/composables/router'
 import { clearUndefined } from '@antfu/utils'
 import { computedWithControl, debouncedWatch } from '@vueuse/core'
@@ -187,7 +187,7 @@ const display = ref<'list' | 'graph'>('list')
   <div
     v-if="route.query.module"
     :key="(route.query.module as string)"
-    fixed right-0 bottom-20 top-20 z-panel-content min-w-200 bg-glass border="l t b base rounded-l-xl"
+    fixed right-0 bottom-0 top-20 z-panel-content min-w-200 of-auto bg-glass border="l t base rounded-tl-xl"
   >
     <FlowmapModuleFlowLoader
       :module="(route.query.module as string)"

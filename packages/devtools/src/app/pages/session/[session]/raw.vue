@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SessionContext } from '~/types/data'
+import type { SessionContext } from '~~/shared/types'
 import { useRoute } from '#app/composables/router'
 import { useAsyncState } from '@vueuse/core'
 import { backend } from '~/state/backend'

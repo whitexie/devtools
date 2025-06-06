@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { RolldownEvent } from '~/../node/rolldown/events-manager'
-import type { SessionContext } from '~/types/data'
+import type { RolldownEvent } from '~~/node/rolldown/events-manager'
+import type { SessionContext } from '~~/shared/types'
 import { Dropdown as VDropdown } from 'floating-vue'
 import { defineProps, withDefaults } from 'vue'
 
