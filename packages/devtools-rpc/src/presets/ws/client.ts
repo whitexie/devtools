@@ -1,3 +1,5 @@
+import { parse, stringify } from 'structured-clone-es'
+
 export interface WebSocketRpcClientOptions {
   url: string
 }
@@ -22,7 +24,7 @@ export function createWsRpcPreset(options: WebSocketRpcClientOptions) {
         ws.addEventListener('open', handler)
       }
     },
-    serialize: JSON.stringify,
-    deserialize: JSON.parse,
+    serialize: stringify,
+    deserialize: parse,
   }
 }

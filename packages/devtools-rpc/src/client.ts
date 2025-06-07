@@ -14,7 +14,7 @@ export function createRpcClient<
   const { preset, rpcOptions = {} } = options
   return createBirpc<ServerFunctions, ClientFunctions>(functions, {
     ...preset,
-    ...rpcOptions,
     timeout: -1,
+    ...rpcOptions,
   })
 }

@@ -1,4 +1,5 @@
-import type { BirpcGroup, ChannelOptions } from 'birpc'
+import type { BirpcGroup, BirpcOptions, ChannelOptions } from 'birpc'
+import { parse, stringify } from 'structured-clone-es'
 import { WebSocketServer } from 'ws'
 
 export interface WebSocketRpcServerOptions {
@@ -13,7 +14,12 @@ export function createWsRpcPreset(options: WebSocketRpcServerOptions) {
     port,
   })
 
-  return <ClientFunctions, ServerFunctions>(rpc: BirpcGroup<ClientFunctions, ServerFunctions>) => {
+  return <ClientFunctions, ServerFunctions>(rpc: BirpcGroup<ClientFunctions, ServerFunctions>, options?: Pick<BirpcOptions<ClientFunctions>, 'serialize' | 'deserialize'>) => {
+    const {
+      serialize = stringify,
+      deserialize = parse,
+    } = options ?? {}
+
     wss.on('connection', (ws) => {
       const channel: ChannelOptions = {
         post: (data) => {
@@ -24,8 +30,8 @@ export function createWsRpcPreset(options: WebSocketRpcServerOptions) {
             fn(data.toString())
           })
         },
-        serialize: JSON.stringify,
-        deserialize: JSON.parse,
+        serialize,
+        deserialize,
       }
 
       rpc.updateChannels((channels) => {

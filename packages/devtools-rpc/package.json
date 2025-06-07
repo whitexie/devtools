@@ -31,7 +31,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "birpc": "catalog:deps"
+    "birpc": "catalog:deps",
+    "structured-clone-es": "catalog:deps"
   },
   "devDependencies": {
     "tsdown": "catalog:build",
