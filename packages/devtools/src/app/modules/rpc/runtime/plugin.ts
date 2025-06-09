@@ -1,16 +1,12 @@
 import type { BirpcReturn } from 'birpc'
 import type { ServerFunctions } from '../../../../node/rpc'
-import type { ClientFunctions } from '../../../../shared/types'
+import type { ClientFunctions, ConnectionMeta } from '../../../../shared/types'
 import { defineNuxtPlugin } from '#app'
 import { useRuntimeConfig } from '#app/nuxt'
 import { createRpcClient as _createRpcClient } from '@vitejs/devtools-rpc'
 import { createWsRpcPreset } from '@vitejs/devtools-rpc/presets/ws/client'
 import { ref } from 'vue'
 
-export interface ConnectionMeta {
-  backend: 'websocket' | 'static'
-  websocket?: number
-}
 async function getMetadata() {
   const config = useRuntimeConfig()
   const baseURL = config.app.baseURL

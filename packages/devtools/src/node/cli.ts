@@ -87,14 +87,14 @@ cli
 
     console.log(c.green`${MARK_NODE} Starting Vite DevTools at`, c.green(`http://${host === '127.0.0.1' ? 'localhost' : host}:${port}`), '\n')
 
-    const { server, ws } = await createHostServer({
+    const { server, rpc } = await createHostServer({
       cwd: options.root,
       mode: 'dev',
     })
 
     // Warm up the payload
     setTimeout(() => {
-      ws.serverFunctions['vite:get-payload']()
+      rpc.functions['vite:get-payload']()
     }, 1)
 
     server.listen(port, host, async () => {

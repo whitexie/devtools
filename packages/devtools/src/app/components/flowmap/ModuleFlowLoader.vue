@@ -28,8 +28,8 @@ const info = computedAsync(async () => {
     module: props.module,
   }
   return {
-    ...(await rpc.value!['vite:rolldown:get-module-info']?.(arg)),
     transforms: transforms.value,
+    ...(await rpc.value!['vite:rolldown:get-module-info']?.(arg)),
   } as ModuleInfo
 })
 </script>

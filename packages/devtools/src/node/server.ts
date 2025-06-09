@@ -11,7 +11,7 @@ import { createWsServer } from './ws'
 export async function createHostServer(options: CreateWsServerOptions) {
   const app = createApp()
 
-  const ws = await createWsServer(options)
+  const { rpc, getMetadata } = await createWsServer(options)
 
   const fileMap = new Map<string, Promise<string | Buffer<ArrayBufferLike> | undefined>>()
   const readCachedFile = (id: string) => {
@@ -22,7 +22,7 @@ export async function createHostServer(options: CreateWsServerOptions) {
 
   app.use('/api/metadata.json', eventHandler(async (event) => {
     event.node.res.setHeader('Content-Type', 'application/json')
-    return event.node.res.end(JSON.stringify(await ws.getMetadata()))
+    return event.node.res.end(JSON.stringify(await getMetadata()))
   }))
 
   app.use('/', eventHandler(async (event) => {
@@ -47,6 +47,6 @@ export async function createHostServer(options: CreateWsServerOptions) {
 
   return {
     server: createServer(toNodeListener(app)),
-    ws,
+    rpc,
   }
 }
