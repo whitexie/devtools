@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { backend } from '../../state/backend'
+import { useRpc } from '#imports'
 
-const sessions = await backend.value!.functions['vite:rolldown:list-sessions']()
+const rpc = useRpc()
+const sessions = await rpc.value!['vite:rolldown:list-sessions']()
 </script>
 
 <template>

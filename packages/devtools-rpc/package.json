@@ -18,7 +18,10 @@
   ],
   "sideEffects": false,
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": "./dist/index.mjs",
+    "./presets/ws/server": "./dist/presets/ws/server.mjs",
+    "./presets/ws/client": "./dist/presets/ws/client.mjs",
+    "./presets": "./dist/presets/index.mjs"
   },
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
@@ -29,6 +32,11 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "prepack": "pnpm build"
+  },
+  "peerDependenciesMeta": {
+    "ws": {
+      "optional": true
+    }
   },
   "dependencies": {
     "birpc": "catalog:deps",

@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { ModuleInfo, RolldownModuleTransformInfo, SessionContext } from '~~/shared/types'
+import { useRpc } from '#imports'
 import { computedAsync } from '@vueuse/core'
 import { nextTick, ref, watchEffect } from 'vue'
-import { backend } from '~/state/backend'
 
 const props = defineProps<{
   session: SessionContext
   module: string
 }>()
 
+const rpc = useRpc()
 const transforms = ref<RolldownModuleTransformInfo[]>([])
 watchEffect(async () => {
   const arg = {
@@ -17,7 +18,7 @@ watchEffect(async () => {
   }
   // fetch transforms in the next tick to avoid race conditions with module info
   nextTick(async () => {
-    transforms.value = await backend.value!.functions['vite:rolldown:get-module-transforms']?.(arg)
+    transforms.value = await rpc.value!['vite:rolldown:get-module-transforms']?.(arg)
   })
 })
 
@@ -27,7 +28,7 @@ const info = computedAsync(async () => {
     module: props.module,
   }
   return {
-    ...(await backend.value!.functions['vite:rolldown:get-module-info']?.(arg)),
+    ...(await rpc.value!['vite:rolldown:get-module-info']?.(arg)),
     transforms: transforms.value,
   } as ModuleInfo
 })
