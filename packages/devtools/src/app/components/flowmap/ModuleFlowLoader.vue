@@ -11,6 +11,7 @@ const props = defineProps<{
 
 const rpc = useRpc()
 const transforms = ref<RolldownModuleTransformInfo[]>([])
+const transformsLoading = ref(false)
 watchEffect(async () => {
   const arg = {
     session: props.session.id,
@@ -18,7 +19,9 @@ watchEffect(async () => {
   }
   // fetch transforms in the next tick to avoid race conditions with module info
   nextTick(async () => {
+    transformsLoading.value = true
     transforms.value = await rpc.value!['vite:rolldown:get-module-transforms']?.(arg)
+    transformsLoading.value = false
   })
 })
 
@@ -41,6 +44,7 @@ const info = computedAsync(async () => {
         p4
         :info
         :session
+        :transforms-loading
       />
       <ChartModuleFlamegraph
         :info

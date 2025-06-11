@@ -7,6 +7,7 @@ import PluginName from '../display/PluginName.vue'
 const props = defineProps<{
   info: ModuleInfo
   session: SessionContext
+  transformsLoading: boolean
 }>()
 const { info } = toRefs(props)
 
@@ -246,7 +247,8 @@ const codeDisplay = computed(() => {
         >
           <template #node>
             <div i-ph-magic-wand-duotone /> Transform
-            <span op50 text-xs>({{ info.transforms.length }})</span>
+            <span v-if="transformsLoading" i-ph-spinner animate-spin />
+            <span v-else op50 text-xs>({{ info.transforms.length }})</span>
           </template>
           <template #container>
             <div>
