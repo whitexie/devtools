@@ -78,7 +78,7 @@ function getSource(event: RolldownEvent) {
                 <pre p1 text-sm v-text="getSource(event)" />
               </template>
             </VDropdown>
-            <DisplayTimestamp v-else-if="field === 'timestamp'" text-sm :timestamp="event.timestamp" />
+            <DisplayTimestamp v-else-if="field === 'timestamp' && 'timestamp' in event" text-sm :timestamp="event.timestamp" />
             <pre v-else-if="field === '*'" text-sm v-text="omit(event, fields)" />
           </td>
         </template>
