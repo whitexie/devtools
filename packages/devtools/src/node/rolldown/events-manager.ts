@@ -7,13 +7,33 @@ export type RolldownEvent = Event & {
 export class RolldownEventsManager {
   events: RolldownEvent[] = []
   modules: Map<string, ModuleInfo> = new Map()
+  source_refs: Map<string, string> = new Map()
+
+  interpretSourceRefs(event: Event, key: string) {
+    if (key in event && typeof event[key as keyof Event] === 'string') {
+      if (event[key as keyof Event].startsWith('$ref:')) {
+        const refKey = event[key as keyof Event].slice(5)
+        if (this.source_refs.has(refKey)) {
+          (event as any)[key] = this.source_refs.get(refKey)
+        }
+      }
+    }
+  }
 
   handleEvent(raw: Event) {
     const event = {
       ...raw,
-      event_id: `${raw.timestamp}#${this.events.length}`,
+      event_id: `${'timestamp' in raw ? raw.timestamp : 'x'}#${this.events.length}`,
     }
     this.events.push(event)
+
+    if (event.action === 'StringRef') {
+      this.source_refs.set(event.id, event.content)
+      return
+    }
+
+    this.interpretSourceRefs(event, 'source')
+    this.interpretSourceRefs(event, 'transformed_source')
 
     if ('module_id' in event) {
       if (this.modules.has(event.module_id))
