@@ -5,6 +5,9 @@
     "module": "esnext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
+    "types": [
+      "chrome"
+    ],
     "noEmit": true
   }
 }

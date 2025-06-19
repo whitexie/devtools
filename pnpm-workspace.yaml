@@ -11,6 +11,7 @@ catalogs:
     nuxt-mcp: ^0.2.2
     rolldown: https://pkg.pr.new/rolldown@4882
     tsdown: ^0.12.8
+    tsx: ^4.20.3
     vite: npm:rolldown-vite@^6.3.21
   deps:
     '@rolldown/debug': https://pkg.pr.new/@rolldown/debug@4882
@@ -77,6 +78,7 @@ catalogs:
   testing:
     vitest: ^3.2.3
   types:
+    '@types/chrome': ^0.0.326
     '@types/codemirror': ^5.60.16
     '@types/connect': ^3.4.38
     '@types/d3': ^7.4.3

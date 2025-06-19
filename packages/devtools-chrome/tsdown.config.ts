@@ -3,7 +3,8 @@ import { defineConfig } from 'tsdown'
 export default defineConfig({
   entry: [
     'src/*.ts',
+    '!src/app/*.ts',
   ],
-  clean: true,
-  fixedExtension: true,
+  clean: false,
+  external: ['./app/devtools-app.js'],
 })

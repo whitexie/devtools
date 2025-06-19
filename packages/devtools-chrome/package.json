@@ -19,8 +19,12 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "build": "tsdown",
+    "build:extension": "tsx scripts/build-app.ts && tsdown",
     "dev": "tsdown --watch",
-    "prepack": "pnpm build"
+    "prepack": "pnpm build:extension"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:build",
+    "tsx": "catalog:build"
   }
 }

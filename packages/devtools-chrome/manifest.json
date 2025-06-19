@@ -29,8 +29,8 @@
   "permissions": [
     "scripting"
   ],
-  "version": "0.0.0-alpha.0",
-  "version_name": "0.0.0-alpha.0",
+  "version": "0.0.0",
+  "version_name": "0.0.0",
   "web_accessible_resources": [
     {
       "extension_ids": [],
