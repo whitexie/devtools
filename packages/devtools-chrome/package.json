@@ -23,6 +23,9 @@
     "dev": "tsdown --watch",
     "prepack": "pnpm build:extension"
   },
+  "dependencies": {
+    "webext-bridge": "catalog:deps"
+  },
   "devDependencies": {
     "tsdown": "catalog:build",
     "tsx": "catalog:build"

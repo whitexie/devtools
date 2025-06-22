@@ -6,10 +6,14 @@ import { useRuntimeConfig } from '#app/nuxt'
 import { createRpcClient as _createRpcClient } from '@vitejs/devtools-rpc'
 import { createWsRpcPreset } from '@vitejs/devtools-rpc/presets/ws/client'
 import { ref } from 'vue'
+import { isNumeric } from '../../../utils/is'
 
 async function getMetadata() {
   const config = useRuntimeConfig()
   const baseURL = config.app.baseURL
+  if (config.app.metadata) {
+    return config.app.metadata
+  }
   const metadata: ConnectionMeta = await fetch(`${baseURL}api/metadata.json`)
     .then(r => r.json())
 
@@ -35,7 +39,7 @@ export default defineNuxtPlugin({
       // TODO: static server
       }
       else {
-        const url = `${location.protocol.replace('http', 'ws')}//${location.hostname}:${metadata.websocket}`
+        const url = isNumeric(metadata.websocket) ? `${location.protocol.replace('http', 'ws')}//${location.hostname}:${metadata.websocket}` : metadata.websocket
         const clientFunctions = {} as ClientFunctions
 
         try {

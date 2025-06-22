@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHead } from '#app/composables/head'
 import { useNuxtApp } from '#app/nuxt'
-import { useServerConnectionInfo } from './modules/rpc/runtime/composables/rpc'
+import { useServerConnectionInfo } from '#imports'
 
 import 'floating-vue/dist/style.css'
 import './styles/cm.css'

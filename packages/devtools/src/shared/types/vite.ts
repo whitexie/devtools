@@ -31,5 +31,5 @@ export interface ClientFunctions {}
 
 export interface ConnectionMeta {
   backend: 'websocket' | 'static'
-  websocket?: number
+  websocket?: number | string
 }

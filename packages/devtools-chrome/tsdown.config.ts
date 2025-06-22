@@ -1,10 +1,19 @@
 import { defineConfig } from 'tsdown'
 
-export default defineConfig({
+export default defineConfig([{
   entry: [
     'src/*.ts',
-    '!src/app/*.ts',
+    '!src/proxy.ts',
   ],
   clean: false,
   external: ['./app/devtools-app.js'],
-})
+  noExternal: [/^webext-bridge\/.*/],
+}, {
+  entry: ['src/proxy.ts'],
+  clean: false,
+  format: 'iife',
+  outputOptions: {
+    entryFileNames: '[name].js',
+  },
+  noExternal: [/^webext-bridge\/.*/],
+}])
