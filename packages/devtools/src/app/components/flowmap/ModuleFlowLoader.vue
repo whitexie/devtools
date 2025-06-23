@@ -39,7 +39,7 @@ const info = computedAsync(async () => {
 
 <template>
   <div of-auto w-full h-full relative>
-    <div v-if="info" flex="~ col" w-max>
+    <div v-if="info" flex="~ col" w-max min-w-full>
       <FlowmapModuleFlow
         p4
         :info
