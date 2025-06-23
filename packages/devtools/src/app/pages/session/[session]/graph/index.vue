@@ -129,9 +129,8 @@ function toggleDisplay() {
 </script>
 
 <template>
-  <div flex="~ col gap-2" p4>
-    <div h-45 />
-    <div flex="col gap-2" left-4 top-4 max-w-90vw border="~ base rounded-xl" bg-glass fixed z-panel-nav>
+  <div relative max-h-screen of-hidden>
+    <div flex="col gap-2" absolute left-4 top-4 max-w-90vw border="~ base rounded-xl" bg-glass z-panel-nav>
       <div border="b base">
         <input
           v-model="filters.search"
@@ -175,13 +174,15 @@ function toggleDisplay() {
       <!-- {{ allNodeModules }} -->
     </div>
     <template v-if="display === 'list'">
-      <ModulesFlatList
-        v-if="display === 'list'"
-        :session="session"
-        :modules="searched"
-      />
-      <div text-center text-xs op50 m4>
-        {{ filtered.length }} of {{ session.modulesList.length }}
+      <div of-scroll max-h-screen pt-45 relative>
+        <ModulesFlatList
+          v-if="display === 'list'"
+          :session="session"
+          :modules="searched"
+        />
+        <div text-center text-xs op50 m4>
+          {{ filtered.length }} of {{ session.modulesList.length }}
+        </div>
       </div>
     </template>
     <template v-else>

@@ -216,7 +216,7 @@ onMounted(() => {
 <template>
   <div
     ref="container"
-    w-screen h-screen of-scroll relative select-none
+    w-full h-screen of-scroll relative select-none
     :class="isGrabbing ? 'cursor-grabbing' : ''"
   >
     <div

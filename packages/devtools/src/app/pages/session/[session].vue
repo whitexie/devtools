@@ -34,5 +34,10 @@ onMounted(async () => {
 
 <template>
   <VisualLoading v-if="isLoading" />
-  <NuxtPage v-else :session="session" />
+  <div v-else grid="~ cols-[max-content_1fr]" h-screen w-screen max-w-screen max-h-screen of-hidden>
+    <PanelSideNav />
+    <div of-auto h-screen max-h-screen relative>
+      <NuxtPage :session="session" />
+    </div>
+  </div>
 </template>

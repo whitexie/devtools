@@ -29,6 +29,5 @@ $connectToServer()
   />
   <div v-else>
     <NuxtPage />
-    <PanelNav />
   </div>
 </template>
