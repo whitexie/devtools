@@ -33,10 +33,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="isLoading">
-    <div p10>
-      Loading...
-    </div>
-  </div>
+  <VisualLoading v-if="isLoading" />
   <NuxtPage v-else :session="session" />
 </template>

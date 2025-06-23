@@ -130,18 +130,8 @@ function toggleDisplay() {
 
 <template>
   <div flex="~ col gap-2" p4>
-    <div h-20 />
-    <div flex="col gap-2" right-4 top-4 border="~ base rounded-xl" p2 bg-glass fixed z-panel-nav>
-      <button
-        btn-action
-        @click="toggleDisplay"
-      >
-        <div v-if="display === 'graph'" i-ph-graph-duotone />
-        <div v-else i-ph-list-duotone />
-        {{ display === 'list' ? 'List' : 'Graph' }}
-      </button>
-    </div>
-    <div flex="col gap-2" left-4 top-4 border="~ base rounded-xl" bg-glass fixed z-panel-nav>
+    <div h-45 />
+    <div flex="col gap-2" left-4 top-4 max-w-90vw border="~ base rounded-xl" bg-glass fixed z-panel-nav>
       <div border="b base">
         <input
           v-model="filters.search"
@@ -150,7 +140,7 @@ function toggleDisplay() {
           placeholder="Search"
         >
       </div>
-      <div flex="~ gap-2" p2>
+      <div flex="~ gap-2 wrap" p2>
         <label
           v-for="type of allFileTypes"
           :key="type"
@@ -169,6 +159,17 @@ function toggleDisplay() {
           <div :class="getFileTypeFromName(type).icon" icon-catppuccin />
           <div text-sm>{{ getFileTypeFromName(type).description }}</div>
         </label>
+      </div>
+      <div flex="~ gap-2 items-center" p2 border="t base">
+        <span op50 pl2 text-sm>View as</span>
+        <button
+          btn-action
+          @click="toggleDisplay"
+        >
+          <div v-if="display === 'graph'" i-ph-graph-duotone />
+          <div v-else i-ph-list-duotone />
+          {{ display === 'list' ? 'List' : 'Graph' }}
+        </button>
       </div>
       <!-- TODO: should we add filters for node_modules? -->
       <!-- {{ allNodeModules }} -->
@@ -192,17 +193,24 @@ function toggleDisplay() {
   </div>
 
   <div
-    v-if="route.query.module"
-    :key="(route.query.module as string)"
-    fixed right-0 bottom-0 top-20 z-panel-content min-w-200 of-auto bg-glass border="l t base rounded-tl-xl"
+    v-if="route.query.module" fixed inset-0 backdrop-blur-5
+    z-panel-content
+    @click="router.replace({ query: { ...route.query, module: undefined } })"
   >
-    <FlowmapModuleFlowLoader
-      :module="(route.query.module as string)"
-      :session="session"
-    />
-    <DisplayCloseButton
-      absolute right-2 top-2
-      @click="router.replace({ query: { ...route.query, module: undefined } })"
-    />
+    <div
+      :key="(route.query.module as string)"
+      fixed right-0 bottom-0 top-20 z-panel-content
+      min-w-200 of-scroll bg-glass border="l t base rounded-tl-xl"
+      max-w-85vw
+    >
+      <FlowmapModuleFlowLoader
+        :module="(route.query.module as string)"
+        :session="session"
+      />
+      <DisplayCloseButton
+        absolute right-2 top-2
+        @click="router.replace({ query: { ...route.query, module: undefined } })"
+      />
+    </div>
   </div>
 </template>

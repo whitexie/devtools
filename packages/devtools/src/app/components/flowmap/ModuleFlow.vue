@@ -107,7 +107,7 @@ const codeDisplay = computed(() => {
 </script>
 
 <template>
-  <div of-auto pt4>
+  <div pt4 w-max min-w-full>
     <div v-if="info.importers?.length" text-sm>
       <div flex>
         <VMenu>
@@ -287,7 +287,7 @@ const codeDisplay = computed(() => {
 
       <div
         v-if="codeDisplay"
-        w-200 m4
+        min-w-200 m4
         border="~ base rounded-lg" bg-glass of-hidden
         grid="~ rows-[max-content_1fr]" max-h-120vh
       >

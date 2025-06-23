@@ -38,8 +38,8 @@ const info = computedAsync(async () => {
 </script>
 
 <template>
-  <div>
-    <template v-if="info">
+  <div of-auto w-full h-full relative>
+    <div v-if="info" flex="~ col" w-max>
       <FlowmapModuleFlow
         p4
         :info
@@ -50,10 +50,7 @@ const info = computedAsync(async () => {
         :info
         :session="session"
       />
-    </template>
-    <div v-else>
-      <!-- TODO: Better loading screen -->
-      <div>Loading...</div>
     </div>
+    <VisualLoading v-else />
   </div>
 </template>
