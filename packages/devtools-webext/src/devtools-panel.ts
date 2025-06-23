@@ -8,7 +8,7 @@ function injectScript(scriptName: string, cb: () => void) {
       script.src = "${scriptName}";
       script.type = "module";
       document.documentElement.appendChild(script);
-      // script.parentNode.removeChild(script);
+      script.parentNode.removeChild(script);
     })()
   `
   let timeoutId: number = null!
