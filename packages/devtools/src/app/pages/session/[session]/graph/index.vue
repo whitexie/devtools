@@ -2,6 +2,7 @@
 import type { SessionContext } from '~~/shared/types'
 import { useRoute, useRouter } from '#app/composables/router'
 import { clearUndefined } from '@antfu/utils'
+import { vOnClickOutside } from '@vueuse/components'
 import { computedWithControl, debouncedWatch } from '@vueuse/core'
 import Fuse from 'fuse.js'
 import { computed, reactive, ref } from 'vue'
@@ -126,6 +127,10 @@ function toggleDisplay() {
   }
   display.value = display.value === 'list' ? 'graph' : 'list'
 }
+
+function closeFlowPanel() {
+  router.replace({ query: { ...route.query, module: undefined } })
+}
 </script>
 
 <template>
@@ -194,12 +199,13 @@ function toggleDisplay() {
   </div>
 
   <div
-    v-if="route.query.module" fixed inset-0 backdrop-blur-5
+    v-if="route.query.module" fixed inset-0
+    backdrop-blur-5
     z-panel-content
-    @click="router.replace({ query: { ...route.query, module: undefined } })"
   >
     <div
       :key="(route.query.module as string)"
+      v-on-click-outside="closeFlowPanel"
       fixed right-0 bottom-0 top-20 z-panel-content
       min-w-200 of-scroll bg-glass border="l t base rounded-tl-xl"
       max-w-85vw
@@ -210,7 +216,7 @@ function toggleDisplay() {
       />
       <DisplayCloseButton
         absolute right-2 top-2
-        @click="router.replace({ query: { ...route.query, module: undefined } })"
+        @click="closeFlowPanel"
       />
     </div>
   </div>

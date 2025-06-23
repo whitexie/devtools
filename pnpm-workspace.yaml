@@ -51,6 +51,7 @@ catalogs:
     vite-plugin-inspect: ^11.2.0
     vue-tsc: ^2.2.10
   frontend:
+    '@vueuse/components': ^13.4.0
     '@vueuse/router': ^13.4.0
     codemirror: ^5.65.19
     codemirror-theme-vars: ^0.1.2
