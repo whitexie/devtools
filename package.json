@@ -24,6 +24,7 @@
     "@iconify-json/ph": "catalog:icons",
     "@iconify-json/ri": "catalog:icons",
     "@iconify-json/simple-icons": "catalog:icons",
+    "@iconify-json/svg-spinners": "catalog:icons",
     "@nuxt/devtools": "catalog:devtools",
     "@nuxt/eslint": "catalog:devtools",
     "@types/chrome": "catalog:types",

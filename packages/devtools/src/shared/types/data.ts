@@ -77,9 +77,9 @@ export interface RolldownModuleLoadNoChanges {
   duration: number
 }
 
-export type RolldownModuleFlowNode =
-  | RolldownResolveInfo
-  | RolldownModuleLoadInfo
-  | RolldownModuleLoadNoChanges
-  | RolldownModuleTransformInfo
-  | RolldownModuleTransformNoChanges
+export type RolldownModuleFlowNode
+  = | RolldownResolveInfo
+    | RolldownModuleLoadInfo
+    | RolldownModuleLoadNoChanges
+    | RolldownModuleTransformInfo
+    | RolldownModuleTransformNoChanges

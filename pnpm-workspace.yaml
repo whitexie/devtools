@@ -1,5 +1,6 @@
 packages:
   - packages/*
+catalog:
 catalogs:
   build:
     '@nuxt/kit': ^3.17.5
@@ -73,6 +74,7 @@ catalogs:
     '@iconify-json/ph': ^1.2.2
     '@iconify-json/ri': ^1.2.5
     '@iconify-json/simple-icons': ^1.2.39
+    '@iconify-json/svg-spinners': ^1.2.2
   inlined:
     '@antfu/utils': ^9.2.0
     stream-json: ^1.9.1

@@ -15,6 +15,7 @@ useHead({
 
 const connectionInfo = useServerConnectionInfo()
 const { $connectToServer } = useNuxtApp()
+
 $connectToServer()
 </script>
 
@@ -22,8 +23,15 @@ $connectToServer()
   <div v-if="connectionInfo.error" text-red>
     {{ connectionInfo.error }}
   </div>
-  <div v-else-if="!connectionInfo.connected">
-    Connecting...
+  <div
+    v-else-if="!connectionInfo.connected"
+    p10 h-full flex="~ col" items-center justify-center
+  >
+    <VisualLogoBanner />
+    <div flex="~ gap-2" mt--4 items-center justify-center>
+      <div i-svg-spinners-8-dots-rotate />
+      <span animate-pulse>Connecting...</span>
+    </div>
   </div>
   <div v-else>
     <NuxtPage />

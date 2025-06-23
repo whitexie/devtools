@@ -13,10 +13,10 @@ export interface ViteDevToolsError {
   error: any
 }
 
-export type ViteDevToolsLog =
-  ViteDevToolsPayload |
-  ViteDevToolsHeartbeat |
-  ViteDevToolsError
+export type ViteDevToolsLog
+  = ViteDevToolsPayload
+    | ViteDevToolsHeartbeat
+    | ViteDevToolsError
 
 export interface ViteDevToolsConfig {
   /**
