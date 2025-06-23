@@ -26,9 +26,12 @@ const events = useAsyncState(
 <template>
   <div>
     <DataRawEventsTable
-      v-if="events.state.value"
+      v-if="events.isReady"
       :events="events.state.value.events"
       :session="session"
     />
+    <div v-else>
+      <VisualLoading />
+    </div>
   </div>
 </template>

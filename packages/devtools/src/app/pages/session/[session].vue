@@ -3,6 +3,7 @@ import type { ModuleListItem, SessionContext } from '~~/shared/types'
 import { useRoute } from '#app/composables/router'
 import { useRpc } from '#imports'
 import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
+import { useSideNav } from '~/state/nav'
 import { getFileTypeFromName } from '~/utils/icon'
 
 const params = useRoute().params as {
@@ -16,6 +17,33 @@ const session = reactive({
   modulesList: shallowRef<ModuleListItem[]>([]),
 }) as SessionContext
 const rpc = useRpc()
+
+useSideNav(() => {
+  if (!session.rootDir)
+    return []
+  return [
+    {
+      title: 'Home',
+      to: `/session/${session.id}`,
+      icon: 'i-ph-house-duotone',
+    },
+    {
+      title: 'Modules Graph',
+      to: `/session/${session.id}/graph`,
+      icon: 'i-ph-graph-duotone',
+    },
+    {
+      title: 'Bundle Analysis',
+      to: `/session/${session.id}/bundle`,
+      icon: 'i-ph-package-duotone',
+    },
+    {
+      title: 'Raw Data',
+      to: `/session/${session.id}/raw`,
+      icon: 'i-ph-file-duotone',
+    },
+  ]
+})
 
 onMounted(async () => {
   const summary = await rpc.value!['vite:rolldown:get-session-summary']!({

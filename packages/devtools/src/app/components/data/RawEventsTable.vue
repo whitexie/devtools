@@ -54,6 +54,11 @@ function getSource(event: RolldownEvent) {
 </script>
 
 <template>
+  <div v-if="!events.length">
+    <div p5 italic>
+      No events found
+    </div>
+  </div>
   <table>
     <tbody>
       <tr v-for="event of props.events" :key="event.event_id">

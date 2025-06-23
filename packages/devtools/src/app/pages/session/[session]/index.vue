@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <div flex="~ col gap-2" p4>
-    <div border="~ base rounded" p4 flex="~ gap-2">
+    <div border="~ base rounded" p4 flex="~ col gap-2">
       <div>
         {{ session.id }}
       </div>
@@ -28,6 +28,13 @@ defineProps<{
       </NuxtLink>
       <NuxtLink btn-action :to="{ path: `/session/${session.id}/raw` }">
         Raw Data
+      </NuxtLink>
+    </div>
+
+    <div flex="~ gap-2" mt-10>
+      <NuxtLink btn-action :to="{ path: `/` }">
+        <div i-ph-arrow-left-duotone />
+        Re-select Session
       </NuxtLink>
     </div>
   </div>
