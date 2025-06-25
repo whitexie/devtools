@@ -2,7 +2,7 @@
 import type { TreeNodeInput } from 'nanovis'
 import type { ModuleInfo, SessionContext } from '~~/shared/types'
 import { Flamegraph, normalizeTreeNode } from 'nanovis'
-import { computed, defineProps, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, defineProps, onMounted, ref, shallowRef, useTemplateRef, watch } from 'vue'
 
 const props = defineProps<{
   info: ModuleInfo
@@ -59,9 +59,10 @@ const hoverNode = ref<{
 const hoverX = ref<number>(0)
 const hoverY = ref<number>(0)
 const el = useTemplateRef<HTMLDivElement>('el')
+const flamegraph = shallowRef<Flamegraph | null>(null)
 
-onMounted(() => {
-  const flamegraph = new Flamegraph(tree.value, {
+function buildFlamegraph() {
+  flamegraph.value = new Flamegraph(tree.value, {
     animate: true,
     palette: {
       fg: '#888',
@@ -88,12 +89,25 @@ onMounted(() => {
       }
     },
   })
+  el.value!.appendChild(flamegraph.value!.el)
+}
 
-  el.value!.appendChild(flamegraph.el)
+function disposeFlamegraph() {
+  flamegraph.value?.dispose()
+}
 
+onMounted(() => {
+  buildFlamegraph()
   return () => {
-    flamegraph.dispose()
+    disposeFlamegraph()
   }
+})
+
+watch(tree, async () => {
+  disposeFlamegraph()
+  buildFlamegraph()
+}, {
+  deep: true,
 })
 </script>
 
