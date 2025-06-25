@@ -5,6 +5,7 @@ import Inspect from 'vite-plugin-inspect'
 const NUXT_DEBUG_BUILD = !!process.env.NUXT_DEBUG_BUILD
 const backend = process.env.NMI_BACKEND ?? 'dev'
 const isWebContainer = backend === 'webcontainer'
+const isDev = process.env.NODE_ENV === 'development'
 
 const headers: Record<string, string> = isWebContainer
   ? {
@@ -71,7 +72,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: './',
+    baseURL: isDev ? '/' : './',
     head: {
       title: 'Vite DevTools',
       charset: 'utf-8',
