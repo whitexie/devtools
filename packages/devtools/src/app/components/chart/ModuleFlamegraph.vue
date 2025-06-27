@@ -2,11 +2,12 @@
 import type { TreeNodeInput } from 'nanovis'
 import type { ModuleInfo, SessionContext } from '~~/shared/types'
 import { Flamegraph, normalizeTreeNode } from 'nanovis'
-import { computed, defineProps, onMounted, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, defineProps, nextTick, onMounted, ref, shallowRef, useTemplateRef, watch } from 'vue'
 
 const props = defineProps<{
   info: ModuleInfo
   session: SessionContext
+  flowNodeSelected: boolean
 }>()
 
 const n = (node: TreeNodeInput<any>) => normalizeTreeNode(node, undefined, false)
@@ -108,6 +109,11 @@ watch(tree, async () => {
   buildFlamegraph()
 }, {
   deep: true,
+})
+
+watch(() => props.flowNodeSelected, async () => {
+  await nextTick()
+  flamegraph.value?.resize()
 })
 </script>
 
