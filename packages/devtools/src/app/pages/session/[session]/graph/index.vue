@@ -45,7 +45,7 @@ debouncedWatch(
 )
 
 const parsedPaths = computed(() => props.session.modulesList.map((mod) => {
-  const path = parseReadablePath(mod.id, props.session.rootDir)
+  const path = parseReadablePath(mod.id, props.session.meta.cwd)
   const type = getFileTypeFromModuleId(mod.id)
   return {
     mod,
@@ -207,7 +207,7 @@ function closeFlowPanel() {
       :key="(route.query.module as string)"
       v-on-click-outside="closeFlowPanel"
       fixed right-0 bottom-0 top-20 z-panel-content
-      min-w-200 of-scroll bg-glass border="l t base rounded-tl-xl"
+      min-w-300 of-scroll bg-glass border="l t base rounded-tl-xl"
       max-w-85vw
     >
       <FlowmapModuleFlowLoader

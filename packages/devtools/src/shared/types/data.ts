@@ -1,4 +1,4 @@
-import type { HookResolveIdCallStart, ModuleImport } from '@rolldown/debug'
+import type { HookResolveIdCallStart, ModuleImport, SessionMeta } from '@rolldown/debug'
 
 export type { ModuleImport }
 
@@ -11,7 +11,7 @@ export interface ModuleListItem {
 
 export interface SessionContext {
   id: string
-  rootDir: string
+  meta: SessionMeta
   modulesList: ModuleListItem[]
 }
 

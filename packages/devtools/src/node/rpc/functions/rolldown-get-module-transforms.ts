@@ -1,7 +1,5 @@
 import type { RolldownModuleTransformInfo } from '../../../shared/types'
 import { diffLines } from 'diff'
-import { join } from 'pathe'
-import { RolldownEventsReader } from '../../rolldown/events-reader'
 import { defineRpcFunction } from '../utils'
 
 const DURATION_THRESHOLD = 10
@@ -9,11 +7,10 @@ const DURATION_THRESHOLD = 10
 export const rolldownGetModuleTransforms = defineRpcFunction({
   name: 'vite:rolldown:get-module-transforms',
   type: 'query',
-  setup: ({ cwd }) => {
+  setup: ({ manager }) => {
     return {
       handler: async ({ session, module }: { session: string, module: string }) => {
-        const reader = RolldownEventsReader.get(join(cwd, '.rolldown', session, 'logs.json'))
-        await reader.read()
+        const reader = await manager.loadSession(session)
         const events = reader.manager.events
         const transforms: RolldownModuleTransformInfo[] = []
 

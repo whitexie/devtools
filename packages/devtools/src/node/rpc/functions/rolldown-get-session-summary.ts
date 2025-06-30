@@ -1,26 +1,16 @@
-import { join } from 'pathe'
-import { RolldownEventsReader } from '../../rolldown/events-reader'
 import { defineRpcFunction } from '../utils'
 
 export const rolldownGetSessionSummary = defineRpcFunction({
   name: 'vite:rolldown:get-session-summary',
   type: 'query',
-  setup: async ({ cwd }) => {
+  setup: async ({ manager }) => {
     return {
       handler: async ({ session }: { session: string }) => {
-        const reader = RolldownEventsReader.get(join(cwd, '.rolldown', session, 'logs.json'))
-        await reader.read()
-
-        // TODO: read from meta.json
-        const plugins = new Set(
-          reader.manager.events.map(e => 'plugin_name' in e ? e.plugin_name : null)
-            .filter(x => !!x),
-        )
+        const reader = await manager.loadSession(session)
 
         return {
           id: session,
-          rootDir: cwd,
-          plugins: Array.from(plugins),
+          meta: reader.meta,
           modules: Array.from(reader.manager.modules.values())
             .sort((a, b) => a.id.localeCompare(b.id)),
         }

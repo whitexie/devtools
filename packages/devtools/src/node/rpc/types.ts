@@ -1,3 +1,5 @@
+import type { RolldownLogsManager } from '../rolldown/logs-manager'
+
 /**
  * Type of the RPC function,
  * - static: A function that returns a static data (can be cached and dumped)
@@ -31,6 +33,7 @@ export interface RpcFunctionDefinition<
 export interface RpcContext {
   cwd: string
   mode: 'dev' | 'build'
+  manager: RolldownLogsManager
 }
 
 export type EntriesToObject<T extends readonly [string, any][]> = {

@@ -1,15 +1,12 @@
-import { join } from 'pathe'
-import { RolldownEventsReader } from '../../rolldown/events-reader'
 import { defineRpcFunction } from '../utils'
 
 export const rolldownGetRawEvents = defineRpcFunction({
   name: 'vite:rolldown:get-raw-events',
   type: 'query',
-  setup: ({ cwd }) => {
+  setup: ({ manager }) => {
     return {
       handler: async ({ session }: { session: string }) => {
-        const reader = RolldownEventsReader.get(join(cwd, '.rolldown', session, 'logs.json'))
-        await reader.read()
+        const reader = await manager.loadSession(session)
         return reader.manager.events
       },
     }

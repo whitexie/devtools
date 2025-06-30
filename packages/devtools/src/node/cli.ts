@@ -2,6 +2,7 @@ import type { ServerFunctionsDump } from './rpc'
 import { existsSync } from 'node:fs'
 
 import fs from 'node:fs/promises'
+import { join } from 'node:path'
 import process from 'node:process'
 import c from 'ansis'
 import cac from 'cac'
@@ -12,6 +13,7 @@ import { stringify } from 'structured-clone-es'
 import { glob } from 'tinyglobby'
 import { distDir } from '../dirs'
 import { MARK_CHECK, MARK_NODE } from './constants'
+import { RolldownLogsManager } from './rolldown/logs-manager'
 import { createHostServer } from './server'
 
 const cli = cac('vite-devtools')
@@ -35,6 +37,7 @@ cli
       .then(async r => await r.createServerFunctions({
         cwd,
         mode: 'build',
+        manager: new RolldownLogsManager(join(cwd, '.rolldown')),
       }))
     const rpcDump: ServerFunctionsDump = {
       'vite:get-payload': await rpc['vite:get-payload'](),
@@ -90,6 +93,7 @@ cli
     const { server, rpc } = await createHostServer({
       cwd: options.root,
       mode: 'dev',
+      manager: new RolldownLogsManager(join(options.root, '.rolldown')),
     })
 
     // Warm up the payload

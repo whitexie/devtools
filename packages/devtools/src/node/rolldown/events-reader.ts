@@ -1,4 +1,4 @@
-import type { Event } from '@rolldown/debug'
+import type { Event, SessionMeta } from '@rolldown/debug'
 import fs from 'node:fs'
 import { parseJsonStreamWithConcatArrays } from '../utils/json-parse-stream'
 import { RolldownEventsManager } from './events-manager'
@@ -9,6 +9,7 @@ export class RolldownEventsReader {
   lastBytes: number = 0
   lastTimestamp: number = 0
   manager = new RolldownEventsManager()
+  meta: SessionMeta | undefined
 
   private constructor(
     readonly filepath: string,

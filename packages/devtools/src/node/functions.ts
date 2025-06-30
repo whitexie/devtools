@@ -1,9 +1,8 @@
 import type { ServerFunctions } from './rpc/index'
+import type { RpcContext } from './rpc/types'
 import { rpcFunctions } from './rpc/index'
 
-export interface CreateServerFunctionsOptions {
-  cwd: string
-  mode: 'dev' | 'build'
+export interface CreateServerFunctionsOptions extends RpcContext {
 }
 
 export async function createServerFunctions(options: CreateServerFunctionsOptions): Promise<ServerFunctions> {

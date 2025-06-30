@@ -13,13 +13,13 @@ const params = useRoute().params as {
 const isLoading = ref(true)
 const session = reactive({
   id: computed(() => params.session),
-  rootDir: '',
+  meta: undefined!,
   modulesList: shallowRef<ModuleListItem[]>([]),
 }) as SessionContext
 const rpc = useRpc()
 
 useSideNav(() => {
-  if (!session.rootDir)
+  if (!session.meta)
     return []
   return [
     {
@@ -31,16 +31,19 @@ useSideNav(() => {
       title: 'Modules Graph',
       to: `/session/${session.id}/graph`,
       icon: 'i-ph-graph-duotone',
+      category: 'session',
+    },
+    {
+      title: 'Plugins',
+      to: `/session/${session.id}/plugins`,
+      icon: 'i-ph-plugs-duotone',
+      category: 'session',
     },
     {
       title: 'Bundle Analysis',
       to: `/session/${session.id}/bundle`,
       icon: 'i-ph-package-duotone',
-    },
-    {
-      title: 'Raw Data',
-      to: `/session/${session.id}/raw`,
-      icon: 'i-ph-file-duotone',
+      category: 'session',
     },
   ]
 })
@@ -49,7 +52,7 @@ onMounted(async () => {
   const summary = await rpc.value!['vite:rolldown:get-session-summary']!({
     session: params.session,
   })
-  session.rootDir = summary.rootDir
+  session.meta = summary.meta!
   session.modulesList = summary.modules.map(mod => ({
     id: mod.id,
     fileType: getFileTypeFromName(mod.id).name,

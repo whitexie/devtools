@@ -12,7 +12,7 @@ const props = withDefaults(
     id: string
     badges?: boolean
     icon?: boolean
-    link?: boolean
+    link?: boolean | string
     minimal?: boolean
     kind?: ModuleImport['kind']
     session: SessionContext
@@ -29,7 +29,7 @@ const relativePath = computed(() => {
   if (!props.id)
     return ''
   const id = props.id.replace(/%2F/g, '/')
-  let relate = relative(props.session!.rootDir, id)
+  let relate = relative(props.session!.meta.cwd, id)
   if (!relate.startsWith('.'))
     relate = `./${relate}`
   if (relate.startsWith('./'))
@@ -47,7 +47,7 @@ const containerClass = computed(() => {
 <template>
   <component
     :is="link ? NuxtLink : 'div'"
-    :to="link ? { path: route.path, query: { ...route.query, module: id }, hash: location.hash } : undefined"
+    :to="link ? (typeof link === 'string' ? link : { path: route.path, query: { ...route.query, module: id }, hash: location.hash }) : undefined"
   >
     <Tooltip
       my-auto text-sm font-mono block w-full
