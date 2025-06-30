@@ -292,7 +292,7 @@ const codeDisplay = computed(() => {
       </div>
 
       <div
-        v-if="codeDisplay"
+        v-if="!!codeDisplay?.from || !!codeDisplay?.to"
         border="~ base rounded-lg" bg-glass of-hidden max-h-120vh flex-1 m4
       >
         <div pl4 p2 font-mono border="b base" flex="~ items-center gap-2" h-max-100vh>
