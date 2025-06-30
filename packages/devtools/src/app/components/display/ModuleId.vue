@@ -15,7 +15,8 @@ const props = withDefaults(
     link?: boolean | string
     minimal?: boolean
     kind?: ModuleImport['kind']
-    session: SessionContext
+    session?: SessionContext
+    cwd?: string
   }>(),
   {
     icon: true,
@@ -29,7 +30,8 @@ const relativePath = computed(() => {
   if (!props.id)
     return ''
   const id = props.id.replace(/%2F/g, '/')
-  let relate = relative(props.session!.meta.cwd, id)
+  const cwd = props.cwd || props.session!.meta.cwd
+  let relate = cwd ? relative(cwd, id) : id
   if (!relate.startsWith('.'))
     relate = `./${relate}`
   if (relate.startsWith('./'))

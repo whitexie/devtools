@@ -5,7 +5,7 @@ import { RolldownEventsReader } from './events-reader'
 
 export interface BuildInfo {
   id: string
-  createdAt: number
+  timestamp: number
   meta: SessionMeta
 }
 
@@ -22,11 +22,12 @@ export class RolldownLogsManager {
     return await Promise.all(sessions
       .filter(d => d.isDirectory())
       .map(async (d): Promise<BuildInfo> => {
-        const stats = await fs.stat(join(this.dir, d.name))
+        const meta = JSON.parse(await fs.readFile(join(this.dir, d.name, 'meta.json'), 'utf-8')) as SessionMeta
         return {
           id: d.name,
-          createdAt: stats.birthtime.getTime(),
-          meta: JSON.parse(await fs.readFile(join(this.dir, d.name, 'meta.json'), 'utf-8')) as SessionMeta,
+          // @ts-expect-error missing type
+          timestamp: meta.timestamp,
+          meta,
         }
       }),
     )
