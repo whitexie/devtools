@@ -40,8 +40,8 @@ useSideNav(() => {
       category: 'session',
     },
     {
-      title: 'Bundle Analysis',
-      to: `/session/${session.id}/bundle`,
+      title: 'Chunks',
+      to: `/session/${session.id}/chunks`,
       icon: 'i-ph-package-duotone',
       category: 'session',
     },

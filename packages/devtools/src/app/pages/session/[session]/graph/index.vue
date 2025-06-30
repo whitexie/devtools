@@ -207,8 +207,8 @@ function closeFlowPanel() {
       :key="(route.query.module as string)"
       v-on-click-outside="closeFlowPanel"
       fixed right-0 bottom-0 top-20 z-panel-content
-      min-w-300 of-scroll bg-glass border="l t base rounded-tl-xl"
-      max-w-85vw
+      w-250 of-scroll bg-glass border="l t base rounded-tl-xl"
+      max-w-90vw
     >
       <FlowmapModuleFlowLoader
         :module="(route.query.module as string)"

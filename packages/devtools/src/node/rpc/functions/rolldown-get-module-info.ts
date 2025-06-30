@@ -21,6 +21,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           imports: [],
           importers: [],
           resolve_ids: [],
+          chunks: [],
           ...reader.manager.modules.get(module) || {},
         }
 

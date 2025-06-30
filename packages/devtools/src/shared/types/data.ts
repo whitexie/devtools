@@ -20,8 +20,15 @@ export interface ModuleInfo {
   loads: RolldownModuleLoadInfo[]
   transforms: RolldownModuleTransformInfo[]
   resolve_ids: RolldownResolveInfo[]
+  chunks: RolldownModuleChunkInfo[]
   imports: ModuleImport[] | null
   importers: string[] | null
+}
+
+export interface RolldownModuleChunkInfo {
+  type: 'chunk'
+  id: string
+  plugin_name: string
 }
 
 export interface RolldownResolveInfo {

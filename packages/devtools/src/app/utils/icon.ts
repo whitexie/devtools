@@ -25,7 +25,7 @@ export const ModuleTypeRules: ModuleTypeRule[] = [
     match: /[\\/]node_modules[\\/]/i,
     name: 'node_modules',
     description: 'Node Modules',
-    icon: 'i-catppuccin-folder-node-open',
+    icon: 'i-catppuccin-npm',
   },
   {
     match: /\.vue$/i,
