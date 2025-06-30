@@ -2,7 +2,7 @@
   "type": "module",
   "version": "0.0.0-alpha.0",
   "private": true,
-  "packageManager": "pnpm@10.12.2",
+  "packageManager": "pnpm@10.12.4",
   "scripts": {
     "build": "pnpm -r run build",
     "build:debug": "NUXT_DEBUG_BUILD=true pnpm -r run build",
@@ -54,6 +54,7 @@
     "vue-tsc": "catalog:devtools"
   },
   "resolutions": {
+    "@jridgewell/sourcemap-codec": "1.5.0",
     "@nuxt/devtools": "catalog:devtools",
     "@nuxt/kit": "catalog:build",
     "@rolldown/debug": "catalog:deps",
