@@ -23,7 +23,7 @@ export function getHsla(
 /**
  * Predefined color map for matching the branding
  *
- * Accpet a 6-digit hex color string or a hue number
+ * Accept a 6-digit hex color string or a hue number
  * Hue numbers are preferred because they will adapt better contrast in light/dark mode
  *
  * Hue numbers reference:

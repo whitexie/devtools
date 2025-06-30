@@ -73,8 +73,8 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             duration,
           }
 
-          // In Rolldown, resolveId might be called multiple times with different thread of Rust
-          // If that happens, we only keep the last on
+          // In Rolldown, resolveId might be called multiple times with different threads of Rust
+          // If that happens, we only keep the last one
           const existingIndex = info.resolve_ids.findIndex(r => r.importer === start.importer && r.module_request === start.module_request && r.import_kind === start.import_kind && r.plugin_index === end.plugin_index)
           if (existingIndex >= 0)
             info.resolve_ids.splice(existingIndex, 1)
