@@ -192,7 +192,6 @@ const codeDisplay = computed(() => {
     <div w-full flex="~">
       <div select-none flex-1>
         <FlowmapExpandable
-          :items="resolveIds"
           :expandable="resolveIds.length > 0"
           :class-root-node="resolveIds.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(resolveIds[0] || loads[0])"
@@ -219,7 +218,6 @@ const codeDisplay = computed(() => {
         </FlowmapExpandable>
 
         <FlowmapExpandable
-          :items="loads"
           :expandable="loads.length > 0"
           :class-root-node="loads.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(loads[0])"
