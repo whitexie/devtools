@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { ModuleImport, ModuleListItem, SessionContext } from '～/shared/types'
 import type { HierarchyLink, HierarchyNode } from 'd3-hierarchy'
-import type { ModuleImport, ModuleListItem, SessionContext } from '~~/shared/types'
-import { useEventListener } from '@vueuse/core'
+import { onKeyPressed, useEventListener, useMagicKeys } from '@vueuse/core'
 import { hierarchy, tree } from 'd3-hierarchy'
 import { linkHorizontal, linkVertical } from 'd3-shape'
 import { computed, nextTick, onMounted, reactive, ref, shallowReactive, shallowRef, useTemplateRef, watch } from 'vue'
+import { useZoomElement } from '~/composables/zoomElement'
 
 const props = defineProps<{
   session: SessionContext
@@ -35,13 +36,31 @@ const container = useTemplateRef<HTMLDivElement>('container')
 const isGrabbing = ref(false)
 const width = ref(window.innerWidth)
 const height = ref(window.innerHeight)
-const scale = ref(1)
 const nodesRefMap = shallowReactive(new Map<string, HTMLDivElement>())
 
 const nodes = shallowRef<HierarchyNode<Node>[]>([])
 const links = shallowRef<Link[]>([])
 const nodesMap = shallowReactive(new Map<string, HierarchyNode<Node>>())
 const linksMap = shallowReactive(new Map<string, Link>())
+
+const ZOOM_MIN = 0.4
+const ZOOM_MAX = 2
+const { control } = useMagicKeys()
+const { scale, zoomIn, zoomOut } = useZoomElement(container, {
+  wheel: control,
+  minScale: ZOOM_MIN,
+  maxScale: ZOOM_MAX,
+})
+
+onKeyPressed(['-', '_'], (e) => {
+  if (e.ctrlKey)
+    zoomOut()
+})
+
+onKeyPressed(['=', '+'], (e) => {
+  if (e.ctrlKey)
+    zoomIn()
+})
 
 const modulesMap = computed(() => {
   const map = new Map<string, ModuleListItem>()
@@ -220,26 +239,30 @@ onMounted(() => {
     :class="isGrabbing ? 'cursor-grabbing' : ''"
   >
     <div
-      absolute left-0 top-0
-      :style="{
-        width: `${width}px`,
-        height: `${height}px`,
-      }"
-      class="bg-dots"
-    />
-    <svg pointer-events-none absolute left-0 top-0 z-graph-link :width="width" :height="height">
-      <g>
-        <path
-          v-for="link of links"
-          :key="link.id"
-          :d="generateLink(link)!"
-          :class="getLinkColor(link)"
-          :stroke-dasharray="link.import?.kind === 'dynamic-import' ? '3 6' : undefined"
-          fill="none"
-        />
-      </g>
-    </svg>
-    <!-- <svg pointer-events-none absolute left-0 top-0 z-graph-link-active :width="width" :height="height">
+      flex="~ items-center justify-center"
+      :style="{ transform: `scale(${scale})`, transformOrigin: '0 0' }"
+    >
+      <div
+        absolute left-0 top-0
+        :style="{
+          width: `${width}px`,
+          height: `${height}px`,
+        }"
+        class="bg-dots"
+      />
+      <svg pointer-events-none absolute left-0 top-0 z-graph-link :width="width" :height="height">
+        <g>
+          <path
+            v-for="link of links"
+            :key="link.id"
+            :d="generateLink(link)!"
+            :class="getLinkColor(link)"
+            :stroke-dasharray="link.import?.kind === 'dynamic-import' ? '3 6' : undefined"
+            fill="none"
+          />
+        </g>
+      </svg>
+      <!-- <svg pointer-events-none absolute left-0 top-0 z-graph-link-active :width="width" :height="height">
       <g>
         <path
           v-for="link of links"
@@ -250,31 +273,65 @@ onMounted(() => {
         />
       </g>
     </svg> -->
-    <template
-      v-for="node of nodes"
-      :key="node.data.module.id"
-    >
-      <template v-if="node.data.module.id !== '~root'">
-        <DisplayModuleId
-          :id="node.data.module.id"
-          :ref="(el: any) => nodesRefMap.set(node.data.module.id, el?.$el)"
-          absolute hover="bg-active" block px2 p1 bg-glass z-graph-node
-          border="~ base rounded"
-          :link="true"
-          :session="session"
-          :pkg="node.data.module"
-          :minimal="true"
-          :style="{
-            left: `${node.x}px`,
-            top: `${node.y}px`,
-            minWidth: graphRender === 'normal' ? `${SPACING.width}px` : undefined,
-            transform: 'translate(-50%, -50%)',
-            maxWidth: '400px',
-            maxHeight: '50px',
-            overflow: 'hidden',
-          }"
-        />
+      <template
+        v-for="node of nodes"
+        :key="node.data.module.id"
+      >
+        <template v-if="node.data.module.id !== '~root'">
+          <DisplayModuleId
+            :id="node.data.module.id"
+            :ref="(el: any) => nodesRefMap.set(node.data.module.id, el?.$el)"
+            absolute hover="bg-active" block px2 p1 bg-glass z-graph-node
+            border="~ base rounded"
+            :link="true"
+            :session="session"
+            :pkg="node.data.module"
+            :minimal="true"
+            :style="{
+              left: `${node.x}px`,
+              top: `${node.y}px`,
+              minWidth: graphRender === 'normal' ? `${SPACING.width}px` : undefined,
+              transform: 'translate(-50%, -50%)',
+              maxWidth: '400px',
+              maxHeight: '50px',
+              overflow: 'hidden',
+            }"
+          />
+        </template>
       </template>
-    </template>
+    </div>
+    <div
+      fixed right-6 bottom-6 z-panel-nav flex="~ col gap-2 items-center"
+    >
+      <div w-10 flex="~ items-center justify-center">
+        <DisplayTimeoutView :content="`${Math.round(scale * 100)}%`" class="text-sm" />
+      </div>
+
+      <div bg-glass rounded-full border border-base shadow>
+        <button
+          v-tooltip.left="'Zoom In (Ctrl + =)'"
+          :disabled="scale >= ZOOM_MAX"
+          w-10 h-10 rounded-full hover:bg-active op-fade
+          hover:op100 disabled:op20 disabled:bg-none
+          disabled:cursor-not-allowed
+          flex="~ items-center justify-center"
+          title="Zoom In (Ctrl + =)"
+          @click="zoomIn()"
+        >
+          <div i-ph-magnifying-glass-plus-duotone />
+        </button>
+        <button
+          v-tooltip.left="'Zoom Out (Ctrl + -)'"
+          :disabled="scale <= ZOOM_MIN"
+          w-10 h-10 rounded-full hover:bg-active op-fade hover:op100
+          disabled:op20 disabled:bg-none disabled:cursor-not-allowed
+          flex="~ items-center justify-center"
+          title="Zoom Out (Ctrl + -)"
+          @click="zoomOut()"
+        >
+          <div i-ph-magnifying-glass-minus-duotone />
+        </button>
+      </div>
+    </div>
   </div>
 </template>
