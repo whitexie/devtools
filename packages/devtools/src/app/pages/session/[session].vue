@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ModuleListItem, SessionContext } from '~~/shared/types'
-import { useRoute } from '#app/composables/router'
+import { useRoute, useRouter } from '#app/composables/router'
 import { useRpc } from '#imports'
+import { vOnClickOutside } from '@vueuse/components'
 import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
 import { useSideNav } from '~/state/nav'
 import { getFileTypeFromName } from '~/utils/icon'
@@ -17,6 +18,12 @@ const session = reactive({
   modulesList: shallowRef<ModuleListItem[]>([]),
 }) as SessionContext
 const rpc = useRpc()
+const router = useRouter()
+const route = useRoute()
+
+function closeFlowPanel() {
+  router.replace({ query: { ...route.query, module: undefined } })
+}
 
 useSideNav(() => {
   if (!session.meta)
@@ -69,6 +76,29 @@ onMounted(async () => {
     <PanelSideNav />
     <div of-auto h-screen max-h-screen relative>
       <NuxtPage :session="session" />
+    </div>
+
+    <div
+      v-if="route.query.module" fixed inset-0
+      backdrop-blur-5
+      z-panel-content
+    >
+      <div
+        :key="(route.query.module as string)"
+        v-on-click-outside="closeFlowPanel"
+        fixed right-0 bottom-0 top-20 z-panel-content
+        w-250 of-scroll bg-glass border="l t base rounded-tl-xl"
+        max-w-90vw
+      >
+        <FlowmapModuleFlowLoader
+          :module="(route.query.module as string)"
+          :session="session"
+        />
+        <DisplayCloseButton
+          absolute right-2 top-2
+          @click="closeFlowPanel"
+        />
+      </div>
     </div>
   </div>
 </template>
