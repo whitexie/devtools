@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ModuleImport, ModuleListItem, SessionContext } from '～/shared/types'
 import type { HierarchyLink, HierarchyNode } from 'd3-hierarchy'
+import type { ModuleImport, ModuleListItem, SessionContext } from '~~/shared/types'
 import { onKeyPressed, useEventListener, useMagicKeys } from '@vueuse/core'
 import { hierarchy, tree } from 'd3-hierarchy'
 import { linkHorizontal, linkVertical } from 'd3-shape'
