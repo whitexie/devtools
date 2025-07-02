@@ -113,7 +113,7 @@ const codeDisplay = computed(() => {
 </script>
 
 <template>
-  <div pt4 w-max>
+  <div pt4>
     <div v-if="info.importers?.length" text-sm>
       <div flex>
         <VMenu>
@@ -189,8 +189,8 @@ const codeDisplay = computed(() => {
         </VMenu>
       </template>
     </div>
-    <div w-full flex="~">
-      <div select-none flex-1>
+    <div flex="~ gap-10">
+      <div select-none w-max>
         <FlowmapExpandable
           :expandable="resolveIds.length > 0"
           :class-root-node="resolveIds.length === 0 ? 'border-dashed' : ''"
@@ -290,23 +290,30 @@ const codeDisplay = computed(() => {
       </div>
 
       <div
-        v-if="!!codeDisplay?.from || !!codeDisplay?.to"
-        border="~ base rounded-lg" bg-glass of-hidden max-h-120vh flex-1 m4
+        w-259
+        :class="codeDisplay?.from && codeDisplay?.to ? '' : 'border-dashed'"
+        border="~ base rounded-lg" of-hidden max-h-120vh m4 flex="~ col"
       >
-        <div pl4 p2 font-mono border="b base" flex="~ items-center gap-2" h-max-100vh>
-          <PluginName :name="codeDisplay.plugin_name" />
-          <span op50 text-xs>
-            {{ codeDisplay.type === 'load' ? 'Load' : 'Transform' }}
-          </span>
-          <div flex-auto />
-          <DisplayCloseButton @click="selected = null" />
-        </div>
-        <CodeDiffEditor
-          :from="codeDisplay.from ?? ''"
-          :to="codeDisplay.to ?? ''"
-          :diff="true"
-          :one-column="false"
-        />
+        <template v-if="codeDisplay?.from && codeDisplay?.to">
+          <div pl4 p2 font-mono border="b base" flex="~ items-center gap-2" h-max-100vh>
+            <PluginName :name="codeDisplay?.plugin_name ?? ''" />
+            <span v-if="codeDisplay?.type" op50 text-xs>
+              {{ codeDisplay?.type === 'load' ? 'Load' : 'Transform' }}
+            </span>
+            <div flex-auto />
+            <DisplayCloseButton @click="selected = null" />
+          </div>
+          <CodeDiffEditor
+            :from="codeDisplay?.from ?? ''"
+            :to="codeDisplay?.to ?? ''"
+            :diff="true"
+            :one-column="false"
+          />
+        </template>
+        <!-- TODO: show more info with selected node -->
+        <span v-else op50 italic ma>
+          Select a node to view
+        </span>
       </div>
     </div>
   </div>

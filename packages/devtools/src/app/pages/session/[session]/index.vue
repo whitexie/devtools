@@ -93,7 +93,7 @@ const dataTable = computed<DataTableItem[]>(() => {
     </div>
     <div flex="~ gap-2">
       <template v-for="item of sideNavItems" :key="item.to">
-        <NuxtLink v-if="item.category === 'session'" btn-action :to="{ path: item.to }" flex="~ col" min-w-40>
+        <NuxtLink v-if="item.category === 'session'" btn-action :to="{ path: item.to }" flex="~ col" min-w-40 p4>
           <div :class="item.icon" text-2xl />
           {{ item.title }}
         </NuxtLink>

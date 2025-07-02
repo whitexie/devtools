@@ -80,7 +80,7 @@ onMounted(async () => {
 
     <div
       v-if="route.query.module" fixed inset-0
-      backdrop-blur-5 z-panel-content
+      backdrop-blur-8 backdrop-brightness-95 z-panel-content
     >
       <div
         :key="(route.query.module as string)"
@@ -92,7 +92,6 @@ onMounted(async () => {
         <FlowmapModuleFlowLoader
           :module="(route.query.module as string)"
           :session="session"
-          w-max
         />
         <DisplayCloseButton
           absolute right-2 top-2

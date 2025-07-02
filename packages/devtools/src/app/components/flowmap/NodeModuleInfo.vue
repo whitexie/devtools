@@ -84,7 +84,7 @@ const importterModule = computed(() => {
             v-if="'plugin_name' in item"
             :class="isDashed ? 'op50' : ''"
             :name="item.plugin_name"
-            class="font-mono text-sm"
+            class="font-mono text-sm ws-nowrap"
           />
         </slot>
       </button>
