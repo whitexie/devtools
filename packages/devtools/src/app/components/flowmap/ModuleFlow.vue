@@ -113,7 +113,7 @@ const codeDisplay = computed(() => {
 </script>
 
 <template>
-  <div pt4 w-full min-w-full>
+  <div pt4 w-max>
     <div v-if="info.importers?.length" text-sm>
       <div flex>
         <VMenu>

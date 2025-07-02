@@ -43,21 +43,19 @@ function selectFlowNode(v: boolean) {
 </script>
 
 <template>
-  <div of-auto w-full h-full relative>
-    <div v-if="info" flex="~ col" w-full min-w-full>
-      <FlowmapModuleFlow
-        p4
-        :info
-        :session
-        :transforms-loading
-        @select="selectFlowNode"
-      />
-      <ChartModuleFlamegraph
-        :info
-        :session="session"
-        :flow-node-selected="flowNodeSelected"
-      />
-    </div>
-    <VisualLoading v-else />
+  <div v-if="info" flex="~ col">
+    <FlowmapModuleFlow
+      p4
+      :info
+      :session
+      :transforms-loading
+      @select="selectFlowNode"
+    />
+    <ChartModuleFlamegraph
+      :info
+      :session="session"
+      :flow-node-selected="flowNodeSelected"
+    />
   </div>
+  <VisualLoading v-else />
 </template>
