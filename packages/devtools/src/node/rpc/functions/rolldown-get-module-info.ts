@@ -35,15 +35,15 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             return
           }
           const duration = +end.timestamp - +start.timestamp
-          if (!end.source && duration < DURATION_THRESHOLD)
+          if (!end.content && duration < DURATION_THRESHOLD)
             return
 
           info.loads.push({
             type: 'load',
             id: start.event_id,
             plugin_name: start.plugin_name,
-            plugin_index: start.plugin_index,
-            source: end.source,
+            plugin_id: start.plugin_id,
+            content: end.content,
             timestamp_start: +start.timestamp,
             timestamp_end: +end.timestamp,
             duration,
@@ -67,7 +67,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             module_request: start.module_request,
             import_kind: start.import_kind,
             plugin_name: end.plugin_name,
-            plugin_index: end.plugin_index,
+            plugin_id: end.plugin_id,
             resolved_id: end.resolved_id,
             timestamp_start: +start.timestamp,
             timestamp_end: +end.timestamp,
@@ -76,14 +76,14 @@ export const rolldownGetModuleInfo = defineRpcFunction({
 
           // In Rolldown, resolveId might be called multiple times with different threads of Rust
           // If that happens, we only keep the last one
-          const existingIndex = info.resolve_ids.findIndex(r => r.importer === start.importer && r.module_request === start.module_request && r.import_kind === start.import_kind && r.plugin_index === end.plugin_index)
+          const existingIndex = info.resolve_ids.findIndex(r => r.importer === start.importer && r.module_request === start.module_request && r.import_kind === start.import_kind && r.plugin_id === end.plugin_id)
           if (existingIndex >= 0)
             info.resolve_ids.splice(existingIndex, 1)
           info.resolve_ids.push(data)
         })
 
-        info.loads.sort((a, b) => a.plugin_index - b.plugin_index)
-        info.resolve_ids.sort((a, b) => a.plugin_index - b.plugin_index)
+        info.loads.sort((a, b) => a.plugin_id - b.plugin_id)
+        info.resolve_ids.sort((a, b) => a.plugin_id - b.plugin_id)
 
         return info
       },

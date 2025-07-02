@@ -35,7 +35,7 @@ export interface RolldownResolveInfo {
   type: 'resolve'
   id: string
   plugin_name: string
-  plugin_index: number
+  plugin_id: number
   importer: string | null
   module_request: string
   import_kind: HookResolveIdCallStart['import_kind']
@@ -49,8 +49,8 @@ export interface RolldownModuleLoadInfo {
   type: 'load'
   id: string
   plugin_name: string
-  plugin_index: number
-  source: string | null
+  plugin_id: number
+  content: string | null
   timestamp_start: number
   timestamp_end: number
   duration: number
@@ -60,9 +60,9 @@ export interface RolldownModuleTransformInfo {
   type: 'transform'
   id: string
   plugin_name: string
-  plugin_index: number
-  source_from: string | null
-  source_to: string | null
+  plugin_id: number
+  content_from: string | null
+  content_to: string | null
   diff_added: number
   diff_removed: number
   timestamp_start: number

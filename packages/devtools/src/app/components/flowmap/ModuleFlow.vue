@@ -23,8 +23,8 @@ const transforms = computed((): (RolldownModuleTransformNoChanges | RolldownModu
   if (expandNoChangesTransform.value)
     return info?.value?.transforms ?? []
 
-  const unchanged = info?.value?.transforms?.filter(t => t.source_from === t.source_to)
-  const changed = info?.value?.transforms?.filter(t => t.source_from !== t.source_to)
+  const unchanged = info?.value?.transforms?.filter(t => t.content_from === t.content_to)
+  const changed = info?.value?.transforms?.filter(t => t.content_from !== t.content_to)
 
   if (!unchanged?.length)
     return changed ?? []
@@ -43,8 +43,8 @@ const loads = computed(() => {
   if (expandNoChangesLoad.value)
     return info?.value?.loads ?? []
 
-  const unchanged = info?.value?.loads?.filter(l => !l.source)
-  const changed = info?.value?.loads?.filter(l => l.source)
+  const unchanged = info?.value?.loads?.filter(l => !l.content)
+  const changed = info?.value?.loads?.filter(l => l.content)
 
   if (!unchanged?.length)
     return changed ?? []
@@ -96,8 +96,8 @@ const codeDisplay = computed(() => {
     return {
       type: 'transform',
       plugin_name: selected.value.plugin_name,
-      from: selected.value.source_from,
-      to: selected.value.source_to,
+      from: selected.value.content_from,
+      to: selected.value.content_to,
     }
   }
   else if (selected.value.type === 'load') {
@@ -105,7 +105,7 @@ const codeDisplay = computed(() => {
       type: 'load',
       from: '',
       plugin_name: selected.value.plugin_name,
-      to: selected.value.source,
+      to: selected.value.content,
     }
   }
   return null
@@ -175,8 +175,8 @@ const codeDisplay = computed(() => {
             <div p2 flex="~ col gap-1">
               <DisplayModuleId
                 v-for="imp of info.imports"
-                :id="imp.id"
-                :key="imp.id"
+                :id="imp.module_id"
+                :key="imp.module_id"
                 :kind="imp.kind"
                 :session="session"
                 :link="true"

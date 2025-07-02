@@ -84,7 +84,7 @@ const dataTable = computed<DataTableItem[]>(() => {
     <div border="~ base rounded" p4 grid="~ cols-[max-content_1fr] gap-2 items-center">
       <template v-for="input of props.session.meta.inputs" :key="input">
         <DisplayBadge :text="input.name || ''" />
-        <DisplayModuleId :id="input.import || ''" :session="session" :link="true" />
+        <DisplayModuleId :id="input.filename || ''" :session="session" :link="true" />
       </template>
     </div>
 

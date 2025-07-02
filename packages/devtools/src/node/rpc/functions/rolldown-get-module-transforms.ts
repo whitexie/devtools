@@ -27,13 +27,13 @@ export const rolldownGetModuleTransforms = defineRpcFunction({
             return
           }
           const duration = +end.timestamp - +start.timestamp
-          if (end.transformed_source === start.source && duration < DURATION_THRESHOLD)
+          if (end.content === start.content && duration < DURATION_THRESHOLD)
             return
 
           let diff_added = 0
           let diff_removed = 0
-          if (start.source !== end.transformed_source && start.source != null && end.transformed_source != null) {
-            const delta = diffLines(start.source, end.transformed_source)
+          if (start.content !== end.content && start.content != null && end.content != null) {
+            const delta = diffLines(start.content, end.content)
             diff_added = delta.filter(d => d.added).map(d => d.value).join('').split(/\n/g).length
             diff_removed = delta.filter(d => d.removed).map(d => d.value).join('').split(/\n/g).length
           }
@@ -42,9 +42,9 @@ export const rolldownGetModuleTransforms = defineRpcFunction({
             type: 'transform',
             id: start.event_id,
             plugin_name: start.plugin_name,
-            plugin_index: start.plugin_index,
-            source_from: start.source,
-            source_to: end.transformed_source,
+            plugin_id: start.plugin_id,
+            content_from: start.content,
+            content_to: end.content,
             diff_added,
             diff_removed,
             timestamp_start: +start.timestamp,
@@ -53,7 +53,7 @@ export const rolldownGetModuleTransforms = defineRpcFunction({
           })
         })
 
-        return transforms.sort((a, b) => a.plugin_index - b.plugin_index)
+        return transforms.sort((a, b) => a.plugin_id - b.plugin_id)
       },
     }
   },

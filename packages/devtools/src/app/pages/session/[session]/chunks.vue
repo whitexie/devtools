@@ -29,7 +29,7 @@ const { state: chunks } = useAsyncState(
           <div flex="~ gap-1 items-center">
             <div i-ph-hash-duotone />
             <span>{{ chunk.name }}</span>
-            <span>{{ chunk.id }}</span>
+            <span>{{ chunk.chunk_id }}</span>
             <DisplayBadge :text="chunk.reason" />
           </div>
           <div flex-auto />

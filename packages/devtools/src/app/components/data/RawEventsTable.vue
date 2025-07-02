@@ -4,7 +4,7 @@ import type { SessionContext } from '~~/shared/types'
 import { Dropdown as VDropdown } from 'floating-vue'
 import { defineProps, withDefaults } from 'vue'
 
-type FIELDS = 'module_id' | 'action' | 'source' | 'timestamp' | 'event_id' | 'plugin_name' | '*'
+type FIELDS = 'module_id' | 'action' | 'content' | 'timestamp' | 'event_id' | 'plugin_name' | '*'
 
 const props = withDefaults(
   defineProps<{
@@ -19,7 +19,7 @@ const props = withDefaults(
       'module_id',
       'plugin_name',
       'timestamp',
-      'source',
+      'content',
       '*',
     ],
   },
@@ -27,9 +27,8 @@ const props = withDefaults(
 
 function omit(obj: RolldownEvent, inputs: string[]) {
   const fields = new Set(inputs)
-  if (fields.has('source')) {
-    fields.add('source')
-    fields.add('transformed_source')
+  if (fields.has('content')) {
+    fields.add('content')
   }
   if (fields.has('plugin_name')) {
     fields.add('plugin_index')
@@ -39,15 +38,9 @@ function omit(obj: RolldownEvent, inputs: string[]) {
   )
 }
 
-function getSource(event: RolldownEvent) {
-  if (event.action === 'HookLoadCallEnd') {
-    return event.source
-  }
-  if (event.action === 'HookTransformCallStart') {
-    return event.source
-  }
-  if (event.action === 'HookTransformCallEnd') {
-    return event.transformed_source
+function getContent(event: RolldownEvent) {
+  if (event.action === 'HookLoadCallEnd' || event.action === 'HookTransformCallStart' || event.action === 'HookTransformCallEnd') {
+    return event.content
   }
   return null
 }
@@ -72,15 +65,15 @@ function getSource(event: RolldownEvent) {
             <DisplayBadge v-else-if="field === 'action'" :text="event.action" />
             <div v-else-if="field === 'plugin_name' && 'plugin_name' in event">
               <DisplayPluginName font-mono :name="event.plugin_name" />
-              <code op50>#{{ event.plugin_index }}</code>
+              <code op50>#{{ event.plugin_id }}</code>
             </div>
             <div v-else-if="field === 'event_id'">
               {{ event.event_id }}
             </div>
-            <VDropdown v-else-if="field === 'source' && getSource(event)">
+            <VDropdown v-else-if="field === 'content' && getContent(event)">
               <div i-ph-code />
               <template #popper>
-                <pre p1 text-sm v-text="getSource(event)" />
+                <pre p1 text-sm v-text="getContent(event)" />
               </template>
             </VDropdown>
             <DisplayTimestamp v-else-if="field === 'timestamp' && 'timestamp' in event" text-sm :timestamp="event.timestamp" />

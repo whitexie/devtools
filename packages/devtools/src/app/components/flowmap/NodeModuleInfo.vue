@@ -17,9 +17,9 @@ const emit = defineEmits<{
 const isDashed = computed(() => {
   switch (props.item.type) {
     case 'transform':
-      return props.item.source_from === props.item.source_to
+      return props.item.content_from === props.item.content_to
     case 'load':
-      return props.item.source == null
+      return props.item.content == null
     default:
       return false
   }
@@ -92,7 +92,7 @@ const importterModule = computed(() => {
     <template #inline-after>
       <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
       <template v-if="item.type === 'transform'">
-        <div v-if="item.source_from === item.source_to" text-xs op50>
+        <div v-if="item.content_from === item.content_to" text-xs op50>
           no changes
         </div>
         <div v-else>
