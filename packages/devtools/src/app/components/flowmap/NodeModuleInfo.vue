@@ -55,7 +55,7 @@ const importterModule = computed(() => {
       />
       <span op50>{{ item.count }} plugins did not change the content but cost</span>
       <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
-      <span op50>in total</span>
+      <span op50 flex-shrink-0>in total</span>
       <button
         border="~ base rounded-full" px2 py-px op50 hover="op100"
         @click="emit('activate', item)"
