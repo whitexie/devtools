@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SessionContext } from '~~/shared/types'
 import { useRoute, useRouter } from '#app/composables/router'
-import { clearUndefined } from '@antfu/utils'
+import { clearUndefined, toArray } from '@antfu/utils'
 import { computedWithControl, debouncedWatch } from '@vueuse/core'
 import Fuse from 'fuse.js'
 import { computed, reactive } from 'vue'
@@ -24,8 +24,8 @@ const router = useRouter()
 
 const filters = reactive<Filters>({
   search: (route.query.search || '') as string,
-  file_types: (route.query.file_types || null) as string[] | null,
-  node_modules: (route.query.node_modules || null) as string[] | null,
+  file_types: (route.query.file_types ? toArray(route.query.file_types) : null) as string[] | null,
+  node_modules: (route.query.node_modules ? toArray(route.query.node_modules) : null) as string[] | null,
 })
 
 debouncedWatch(
