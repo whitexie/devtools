@@ -9,6 +9,8 @@ export interface ClientSettings {
   flowExpandResolveId: boolean
   flowExpandTransforms: boolean
   flowExpandLoads: boolean
+  flowExpandChunks: boolean
+  flowExpandAssets: boolean
   flowShowAllTransforms: boolean
   flowShowAllLoads: boolean
 }
@@ -22,6 +24,8 @@ export const settings = useLocalStorage<ClientSettings>(
     flowExpandResolveId: true,
     flowExpandTransforms: true,
     flowExpandLoads: true,
+    flowExpandChunks: true,
+    flowExpandAssets: true,
     flowShowAllTransforms: false,
     flowShowAllLoads: false,
   },

@@ -21,6 +21,8 @@ const {
   flowExpandTransforms,
   flowExpandLoads,
   flowExpandResolveId,
+  flowExpandChunks,
+  flowExpandAssets,
 } = settingsRefs
 
 const selected = shallowRef<RolldownChunkInfo | RolldownModuleFlowNode | null>(null)
@@ -93,14 +95,15 @@ const loads = computed(() => {
   ]
 })
 
-const nodes = computed(() => [
+const nodes = computed<RolldownModuleFlowNode[]>(() => [
   ...resolveIds.value,
   ...loads.value,
   ...transforms.value,
   ...info.value.chunks,
+  ...info.value.assets,
 ])
 
-function isSelectedAncestor(node?: RolldownModuleFlowNode | RolldownChunkInfo) {
+function isSelectedAncestor(node?: RolldownModuleFlowNode) {
   if (!selected.value || !node)
     return false
   const indexSelected = nodes.value.indexOf(selected.value)
@@ -300,7 +303,8 @@ const codeDisplay = computed(() => {
         </FlowmapExpandable>
 
         <FlowmapExpandable
-          :lines="{ top: true, bottom: true }"
+          v-model:expanded="flowExpandChunks"
+          :lines="{ top: true }"
           :expandable="info.chunks.length > 0"
           :class-root-node="info.chunks.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(info.chunks[0])"
@@ -323,17 +327,36 @@ const codeDisplay = computed(() => {
           </template>
         </FlowmapExpandable>
 
-        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 pt4>
+        <!-- <FlowmapNode :lines="{ top: true, bottom: true }" pl6 pt4>
           <template #content>
             <div i-ph-tree-duotone /> Tree shake
           </template>
-        </FlowmapNode>
+        </FlowmapNode> -->
 
-        <FlowmapNode :lines="{ top: true }" pl6 pt4>
-          <template #content>
-            <div i-ph-package-duotone /> Generate
+        <FlowmapExpandable
+          v-model:expanded="flowExpandAssets"
+          :lines="{ top: true }"
+          :expandable="info.assets.length > 0"
+          :class-root-node="info.assets.length === 0 ? 'border-dashed' : ''"
+          :active-start="isSelectedAncestor(info.assets[0])"
+          :active-end="isSelectedAncestor(info.assets.at(-1))"
+          pl6 pt4
+        >
+          <template #node>
+            <div i-ph-package-duotone /> Assets
+            <span op50 text-xs>({{ info.assets.length }})</span>
           </template>
-        </FlowmapNode>
+          <template #container>
+            <FlowmapNodeAssetInfo
+              v-for="asset of info.assets"
+              :key="asset.filename"
+              :item="asset"
+              :active="isSelectedAncestor(asset)"
+              :session="session"
+              @select="e => selected = e"
+            />
+          </template>
+        </FlowmapExpandable>
       </div>
 
       <div
@@ -347,6 +370,14 @@ const codeDisplay = computed(() => {
               :chunk="selected"
               :session="session"
             />
+          </div>
+        </template>
+        <template v-else-if="selected?.type === 'asset'">
+          <div p4>
+            Assets Details (TODO)
+            - Trace back to the chunk
+            - A button to open the asset in the editor
+            - A button to show source in the page
           </div>
         </template>
         <template v-else-if="codeDisplay?.from && codeDisplay?.to">

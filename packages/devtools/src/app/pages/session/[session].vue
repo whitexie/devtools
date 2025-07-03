@@ -49,6 +49,12 @@ useSideNav(() => {
     {
       title: 'Chunks',
       to: `/session/${session.id}/chunks`,
+      icon: 'i-ph-shapes-duotone ',
+      category: 'session',
+    },
+    {
+      title: 'Assets',
+      to: `/session/${session.id}/assets`,
       icon: 'i-ph-package-duotone',
       category: 'session',
     },

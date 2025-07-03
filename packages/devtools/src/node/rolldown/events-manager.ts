@@ -1,4 +1,4 @@
-import type { Chunk as ChunkInfo, Event, Module as ModuleInfo } from '@rolldown/debug'
+import type { Asset as AssetInfo, Chunk as ChunkInfo, Event, Module as ModuleInfo } from '@rolldown/debug'
 
 export type RolldownEvent = Event & {
   event_id: string
@@ -7,6 +7,7 @@ export type RolldownEvent = Event & {
 export class RolldownEventsManager {
   events: RolldownEvent[] = []
   chunks: Map<number, ChunkInfo> = new Map()
+  assets: Map<string, AssetInfo> = new Map()
   modules: Map<string, ModuleInfo> = new Map()
   source_refs: Map<string, string> = new Map()
 
@@ -59,6 +60,12 @@ export class RolldownEventsManager {
         this.modules.set(module.id, module)
         module.importers = Array.from(new Set(module.importers || [])).sort((a, b) => a.localeCompare(b))
         module.imports = Array.from(new Set(module.imports || [])).sort((a, b) => a.module_id.localeCompare(b.module_id))
+      }
+    }
+
+    if (event.action === 'AssetsReady') {
+      for (const asset of event.assets) {
+        this.assets.set(asset.filename, asset)
       }
     }
 

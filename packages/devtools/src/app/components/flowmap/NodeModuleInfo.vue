@@ -110,7 +110,13 @@ const importterModule = computed(() => {
       </button>
     </template>
     <template #inline-after>
-      <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
+      <DisplayDuration
+        v-if="'duration' in item"
+        :duration="item.duration"
+        :color="true"
+        :factor="5"
+        text-xs flex-shrink-0
+      />
       <template v-if="item.type === 'transform'">
         <div v-if="item.content_from === item.content_to" text-xs op25>
           no changes

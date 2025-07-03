@@ -1,4 +1,4 @@
-import type { Chunk as ChunkInfo, HookResolveIdCallStart, ModuleImport, SessionMeta } from '@rolldown/debug'
+import type { Asset as AssetInfo, Chunk as ChunkInfo, HookResolveIdCallStart, ModuleImport, SessionMeta } from '@rolldown/debug'
 
 export type { ModuleImport }
 
@@ -23,6 +23,7 @@ export interface ModuleInfo {
   chunks: RolldownChunkInfo[]
   imports: ModuleImport[] | null
   importers: string[] | null
+  assets: RolldownAssetInfo[]
 }
 
 export interface RolldownResolveInfo {
@@ -82,9 +83,15 @@ export interface RolldownChunkInfo extends ChunkInfo {
   type: 'chunk'
 }
 
+export interface RolldownAssetInfo extends AssetInfo {
+  type: 'asset'
+}
+
 export type RolldownModuleFlowNode
   = | RolldownResolveInfo
     | RolldownModuleLoadInfo
     | RolldownModuleNoChanges
     | RolldownModuleNoChangesHide
     | RolldownModuleTransformInfo
+    | RolldownChunkInfo
+    | RolldownAssetInfo

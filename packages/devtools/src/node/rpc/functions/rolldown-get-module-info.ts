@@ -22,6 +22,7 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           importers: [],
           resolve_ids: [],
           chunks: [],
+          assets: [],
           ...reader.manager.modules.get(module) || {},
         }
 
@@ -88,6 +89,13 @@ export const rolldownGetModuleInfo = defineRpcFunction({
             type: 'chunk',
             ...chunk,
           }))
+        info.assets = Array.from(reader.manager.assets.values())
+          .filter(asset => info.chunks.some(chunk => chunk.chunk_id === asset.chunk_id))
+          .map(asset => ({
+            type: 'asset',
+            ...asset,
+          }))
+
         info.loads.sort((a, b) => a.plugin_id - b.plugin_id)
         info.resolve_ids.sort((a, b) => a.plugin_id - b.plugin_id)
 
