@@ -1,4 +1,4 @@
-import type { HookResolveIdCallStart, ModuleImport, SessionMeta } from '@rolldown/debug'
+import type { Chunk as ChunkInfo, HookResolveIdCallStart, ModuleImport, SessionMeta } from '@rolldown/debug'
 
 export type { ModuleImport }
 
@@ -20,15 +20,9 @@ export interface ModuleInfo {
   loads: RolldownModuleLoadInfo[]
   transforms: RolldownModuleTransformInfo[]
   resolve_ids: RolldownResolveInfo[]
-  chunks: RolldownModuleChunkInfo[]
+  chunks: RolldownChunkInfo[]
   imports: ModuleImport[] | null
   importers: string[] | null
-}
-
-export interface RolldownModuleChunkInfo {
-  type: 'chunk'
-  id: string
-  plugin_name: string
 }
 
 export interface RolldownResolveInfo {
@@ -82,6 +76,10 @@ export interface RolldownModuleNoChangesHide {
   id: string
   count: number
   duration: number
+}
+
+export interface RolldownChunkInfo extends ChunkInfo {
+  type: 'chunk'
 }
 
 export type RolldownModuleFlowNode

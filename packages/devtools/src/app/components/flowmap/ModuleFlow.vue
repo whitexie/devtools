@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleNoChanges, RolldownModuleNoChangesHide, RolldownModuleTransformInfo, SessionContext } from '~~/shared/types'
+import type { ModuleInfo, RolldownChunkInfo, RolldownModuleFlowNode, RolldownModuleNoChanges, RolldownModuleNoChangesHide, RolldownModuleTransformInfo, SessionContext } from '~~/shared/types'
 import { Menu as VMenu } from 'floating-vue'
 import { computed, shallowRef, toRefs, watch } from 'vue'
 import { settingsRefs } from '~/state/settings'
@@ -23,7 +23,7 @@ const {
   flowExpandResolveId,
 } = settingsRefs
 
-const selected = shallowRef<RolldownModuleFlowNode | null>(null)
+const selected = shallowRef<RolldownChunkInfo | RolldownModuleFlowNode | null>(null)
 
 const resolveIds = computed(() => info?.value?.resolve_ids ?? [])
 
@@ -97,9 +97,10 @@ const nodes = computed(() => [
   ...resolveIds.value,
   ...loads.value,
   ...transforms.value,
+  ...info.value.chunks,
 ])
 
-function isSelectedAncestor(node?: RolldownModuleFlowNode) {
+function isSelectedAncestor(node?: RolldownModuleFlowNode | RolldownChunkInfo) {
   if (!selected.value || !node)
     return false
   const indexSelected = nodes.value.indexOf(selected.value)
@@ -109,16 +110,14 @@ function isSelectedAncestor(node?: RolldownModuleFlowNode) {
   return false
 }
 
-function select(node: RolldownModuleFlowNode) {
-  selected.value = node
-}
-
 watch(selected, (v) => {
   emit('select', !!v)
 })
 
 const codeDisplay = computed(() => {
   if (!selected.value)
+    return null
+  if (!('type' in selected.value))
     return null
   if (selected.value.type === 'transform') {
     return {
@@ -239,7 +238,7 @@ const codeDisplay = computed(() => {
                 :session="session"
                 :active="isSelectedAncestor(item)"
                 :class="index > 0 ? 'pt-2' : ''"
-                @select="select"
+                @select="e => selected = e"
               />
             </div>
           </template>
@@ -265,7 +264,7 @@ const codeDisplay = computed(() => {
                 :session="session"
                 :active="isSelectedAncestor(item)"
                 :class="index > 0 ? 'pt-2' : ''"
-                @select="select"
+                @select="e => selected = e"
                 @toggle-show-all="flowShowAllLoads = !flowShowAllLoads"
               />
             </div>
@@ -277,7 +276,7 @@ const codeDisplay = computed(() => {
           :expandable="transforms.length > 0"
           :class-root-node="transforms.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(transforms[0])"
-          :active-end="isSelectedAncestor(transforms.at(-1))"
+          :active-end="isSelectedAncestor(info.chunks[0] || transforms.at(-1))"
         >
           <template #node>
             <div i-ph-magic-wand-duotone /> Transform
@@ -293,18 +292,36 @@ const codeDisplay = computed(() => {
                 :session="session"
                 :active="isSelectedAncestor(item)"
                 :class="index > 0 ? 'pt-2' : ''"
-                @select="select"
+                @select="e => selected = e"
                 @toggle-show-all="flowShowAllTransforms = !flowShowAllTransforms"
               />
             </div>
           </template>
         </FlowmapExpandable>
 
-        <FlowmapNode :lines="{ top: true, bottom: true }" pl6 pt4>
-          <template #content>
+        <FlowmapExpandable
+          :lines="{ top: true, bottom: true }"
+          :expandable="info.chunks.length > 0"
+          :class-root-node="info.chunks.length === 0 ? 'border-dashed' : ''"
+          :active-start="isSelectedAncestor(info.chunks[0])"
+          :active-end="isSelectedAncestor(info.chunks.at(-1))"
+          pl6 pt4
+        >
+          <template #node>
             <div i-ph-shapes-duotone /> Chunk
+            <span op50 text-xs>({{ info.chunks.length }})</span>
           </template>
-        </FlowmapNode>
+          <template #container>
+            <FlowmapNodeChunkInfo
+              v-for="chunk of info.chunks"
+              :key="chunk.chunk_id"
+              :item="chunk"
+              :active="isSelectedAncestor(chunk)"
+              :session="session"
+              @select="e => selected = e"
+            />
+          </template>
+        </FlowmapExpandable>
 
         <FlowmapNode :lines="{ top: true, bottom: true }" pl6 pt4>
           <template #content>
@@ -324,7 +341,15 @@ const codeDisplay = computed(() => {
         :class="codeDisplay?.from && codeDisplay?.to ? '' : 'border-dashed'"
         border="~ base rounded-lg" of-hidden max-h-120vh m4 flex="~ col"
       >
-        <template v-if="codeDisplay?.from && codeDisplay?.to">
+        <template v-if="selected?.type === 'chunk'">
+          <div p4>
+            <DataChunkDetails
+              :chunk="selected"
+              :session="session"
+            />
+          </div>
+        </template>
+        <template v-else-if="codeDisplay?.from && codeDisplay?.to">
           <div pl4 p2 font-mono border="b base" flex="~ items-center gap-2" h-max-100vh>
             <PluginName :name="codeDisplay?.plugin_name ?? ''" />
             <span v-if="codeDisplay?.type" op50 text-xs>

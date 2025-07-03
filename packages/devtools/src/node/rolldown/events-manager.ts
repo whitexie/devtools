@@ -1,4 +1,4 @@
-import type { Event, Module as ModuleInfo } from '@rolldown/debug'
+import type { Chunk as ChunkInfo, Event, Module as ModuleInfo } from '@rolldown/debug'
 
 export type RolldownEvent = Event & {
   event_id: string
@@ -6,6 +6,7 @@ export type RolldownEvent = Event & {
 
 export class RolldownEventsManager {
   events: RolldownEvent[] = []
+  chunks: Map<number, ChunkInfo> = new Map()
   modules: Map<string, ModuleInfo> = new Map()
   source_refs: Map<string, string> = new Map()
 
@@ -29,6 +30,13 @@ export class RolldownEventsManager {
 
     if (event.action === 'StringRef') {
       this.source_refs.set(event.id, event.content)
+      return
+    }
+
+    if (event.action === 'ChunkGraphReady') {
+      for (const chunk of event.chunks) {
+        this.chunks.set(chunk.chunk_id, chunk)
+      }
       return
     }
 

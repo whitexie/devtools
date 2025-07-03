@@ -31,7 +31,7 @@ const props = defineProps<{
           props.classNodeOuter,
           active ? 'border-flow-active' : 'border-flow',
         ]"
-        border="~ rounded-full" bg-base of-hidden
+        border="~ rounded-2xl" bg-base of-hidden
       >
         <slot name="inner">
           <div px3 py1 :class="props.classNodeInner" flex="~ inline gap-2 items-center">

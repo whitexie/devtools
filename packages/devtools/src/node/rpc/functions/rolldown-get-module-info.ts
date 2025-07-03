@@ -82,6 +82,12 @@ export const rolldownGetModuleInfo = defineRpcFunction({
           info.resolve_ids.push(data)
         })
 
+        info.chunks = Array.from(reader.manager.chunks.values())
+          .filter(chunk => chunk.modules.includes(module))
+          .map(chunk => ({
+            type: 'chunk',
+            ...chunk,
+          }))
         info.loads.sort((a, b) => a.plugin_id - b.plugin_id)
         info.resolve_ids.sort((a, b) => a.plugin_id - b.plugin_id)
 

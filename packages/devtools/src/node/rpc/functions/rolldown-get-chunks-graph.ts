@@ -7,8 +7,7 @@ export const rolldownGetChunksGraph = defineRpcFunction({
     return {
       handler: async ({ session }: { session: string }) => {
         const reader = await manager.loadSession(session)
-        const graph = reader.manager.events.find(x => x.action === 'ChunkGraphReady')
-        return graph?.chunks
+        return Array.from(reader.manager.chunks.values())
       },
     }
   },
