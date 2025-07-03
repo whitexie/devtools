@@ -140,7 +140,7 @@ const codeDisplay = computed(() => {
 </script>
 
 <template>
-  <div pt4>
+  <div pt4 ws-nowrap>
     <div v-if="info.importers?.length" text-sm>
       <div flex>
         <VMenu>

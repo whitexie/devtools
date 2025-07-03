@@ -85,17 +85,14 @@ onMounted(async () => {
       <div
         :key="(route.query.module as string)"
         v-on-click-outside="closeFlowPanel"
-        fixed right-0 bottom-0 top-20 z-panel-content
-        of-scroll bg-glass border="l t base rounded-tl-xl"
-        max-w-90vw min-w-250
+        fixed right-0 bottom-0 top-20 left-20 z-panel-content
+        bg-glass border="l t base rounded-tl-xl"
+        of-auto
       >
-        <FlowmapModuleFlowLoader
+        <DataModuleDetailsLoader
           :module="(route.query.module as string)"
           :session="session"
-        />
-        <DisplayCloseButton
-          absolute right-2 top-2
-          @click="closeFlowPanel"
+          @close="closeFlowPanel"
         />
       </div>
     </div>
