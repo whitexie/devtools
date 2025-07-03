@@ -60,7 +60,14 @@ const dataTable = computed<DataTableItem[]>(() => {
 
 <template>
   <div flex="~ col gap-2" p6>
-    <div op50>
+    <div flex="~ gap-2">
+      <NuxtLink btn-action :to="{ path: `/` }">
+        <div i-ph-arrow-bend-up-left-duotone />
+        Re-select Session
+      </NuxtLink>
+    </div>
+
+    <div op50 mt-10>
       Meta Info
     </div>
     <div border="~ base rounded" p4 grid="~ cols-[max-content_160px_2fr] gap-2 items-center">
@@ -98,13 +105,6 @@ const dataTable = computed<DataTableItem[]>(() => {
           {{ item.title }}
         </NuxtLink>
       </template>
-    </div>
-
-    <div flex="~ gap-2" mt-10>
-      <NuxtLink btn-action :to="{ path: `/` }">
-        <div i-ph-arrow-left-duotone />
-        Re-select Session
-      </NuxtLink>
     </div>
   </div>
 </template>

@@ -4,7 +4,8 @@ import { useRoute, useRouter } from '#app/composables/router'
 import { clearUndefined } from '@antfu/utils'
 import { computedWithControl, debouncedWatch } from '@vueuse/core'
 import Fuse from 'fuse.js'
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
+import { settings } from '~/state/settings'
 import { parseReadablePath } from '~/utils/filepath'
 import { getFileTypeFromModuleId, getFileTypeFromName } from '~/utils/icon'
 
@@ -118,13 +119,11 @@ const searched = computed(() => {
     .map(r => r.item)
 })
 
-const display = ref<'list' | 'graph'>('list')
-
 function toggleDisplay() {
   if (route.query.module) {
     router.replace({ query: { ...route.query, module: undefined } })
   }
-  display.value = display.value === 'list' ? 'graph' : 'list'
+  settings.value.flowModuleGraphView = settings.value.flowModuleGraphView === 'list' ? 'graph' : 'list'
 }
 </script>
 
@@ -165,18 +164,18 @@ function toggleDisplay() {
           btn-action
           @click="toggleDisplay"
         >
-          <div v-if="display === 'graph'" i-ph-graph-duotone />
+          <div v-if="settings.flowModuleGraphView === 'graph'" i-ph-graph-duotone />
           <div v-else i-ph-list-duotone />
-          {{ display === 'list' ? 'List' : 'Graph' }}
+          {{ settings.flowModuleGraphView === 'list' ? 'List' : 'Graph' }}
         </button>
       </div>
       <!-- TODO: should we add filters for node_modules? -->
       <!-- {{ allNodeModules }} -->
     </div>
-    <template v-if="display === 'list'">
+    <template v-if="settings.flowModuleGraphView === 'list'">
       <div of-scroll max-h-screen pt-45 relative>
         <ModulesFlatList
-          v-if="display === 'list'"
+          v-if="settings.flowModuleGraphView === 'list'"
           :session="session"
           :modules="searched"
         />

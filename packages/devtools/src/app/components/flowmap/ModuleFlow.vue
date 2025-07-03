@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleLoadNoChanges, RolldownModuleTransformInfo, RolldownModuleTransformNoChanges, SessionContext } from '~~/shared/types'
+import type { ModuleInfo, RolldownModuleFlowNode, RolldownModuleNoChanges, RolldownModuleNoChangesHide, RolldownModuleTransformInfo, SessionContext } from '~~/shared/types'
 import { Menu as VMenu } from 'floating-vue'
-import { computed, ref, shallowRef, toRefs, watch } from 'vue'
+import { computed, shallowRef, toRefs, watch } from 'vue'
+import { settingsRefs } from '~/state/settings'
 import PluginName from '../display/PluginName.vue'
 
 const props = defineProps<{
@@ -13,51 +14,85 @@ const emit = defineEmits<{
   (e: 'select', v: boolean): void
 }>()
 const { info } = toRefs(props)
-const expandNoChangesTransform = ref(false)
-const expandNoChangesLoad = ref(false)
+
+const {
+  flowShowAllTransforms,
+  flowShowAllLoads,
+  flowExpandTransforms,
+  flowExpandLoads,
+  flowExpandResolveId,
+} = settingsRefs
+
 const selected = shallowRef<RolldownModuleFlowNode | null>(null)
 
 const resolveIds = computed(() => info?.value?.resolve_ids ?? [])
 
-const transforms = computed((): (RolldownModuleTransformNoChanges | RolldownModuleTransformInfo)[] => {
-  if (expandNoChangesTransform.value)
-    return info?.value?.transforms ?? []
-
+const transforms = computed((): (RolldownModuleNoChanges | RolldownModuleNoChangesHide | RolldownModuleTransformInfo)[] => {
   const unchanged = info?.value?.transforms?.filter(t => t.content_from === t.content_to)
   const changed = info?.value?.transforms?.filter(t => t.content_from !== t.content_to)
 
+  if (flowShowAllTransforms.value && !unchanged?.length)
+    return info?.value?.transforms ?? []
+
+  if (flowShowAllTransforms.value && unchanged?.length) {
+    return [
+      ...(info.value.transforms ?? []),
+      ({
+        type: 'no_changes_hide',
+        id: 'no_changes_hide',
+        count: unchanged?.length ?? 0,
+        duration: unchanged?.reduce((acc, t) => acc + t.duration, 0) ?? 0,
+      } satisfies RolldownModuleNoChangesHide),
+    ]
+  }
+
   if (!unchanged?.length)
     return changed ?? []
+
   return [
     ({
-      type: 'transform_no_changes',
-      id: 'transform_no_changes',
+      type: 'no_changes_collapsed',
+      id: 'no_changes_collapsed',
       count: unchanged?.length ?? 0,
       duration: unchanged?.reduce((acc, t) => acc + t.duration, 0) ?? 0,
-    } satisfies RolldownModuleTransformNoChanges),
+    } satisfies RolldownModuleNoChanges),
     ...(changed ?? []),
   ]
 })
 
 const loads = computed(() => {
-  if (expandNoChangesLoad.value)
-    return info?.value?.loads ?? []
-
   const unchanged = info?.value?.loads?.filter(l => !l.content)
   const changed = info?.value?.loads?.filter(l => l.content)
 
+  if (flowShowAllLoads.value && !unchanged?.length)
+    return info?.value?.loads ?? []
+
+  if (flowShowAllLoads.value && unchanged?.length) {
+    return [
+      ...(info.value.loads ?? []),
+      ({
+        type: 'no_changes_hide',
+        id: 'no_changes_hide',
+        count: unchanged?.length ?? 0,
+        duration: unchanged?.reduce((acc, t) => acc + t.duration, 0) ?? 0,
+      } satisfies RolldownModuleNoChangesHide),
+    ]
+  }
+
   if (!unchanged?.length)
     return changed ?? []
+
   return [
     ({
-      type: 'load_no_changes',
-      id: 'load_no_changes',
+      type: 'no_changes_collapsed',
+      id: 'no_changes_collapsed',
       count: unchanged?.length ?? 0,
       duration: unchanged?.reduce((acc, t) => acc + t.duration, 0) ?? 0,
-    } satisfies RolldownModuleLoadNoChanges),
+    } satisfies RolldownModuleNoChanges),
     ...(changed ?? []),
   ]
 })
+
 const nodes = computed(() => [
   ...resolveIds.value,
   ...loads.value,
@@ -81,13 +116,6 @@ function select(node: RolldownModuleFlowNode) {
 watch(selected, (v) => {
   emit('select', !!v)
 })
-
-function activate(node: RolldownModuleFlowNode) {
-  if (node.type === 'transform_no_changes')
-    expandNoChangesTransform.value = !expandNoChangesTransform.value
-  else if (node.type === 'load_no_changes')
-    expandNoChangesLoad.value = !expandNoChangesLoad.value
-}
 
 const codeDisplay = computed(() => {
   if (!selected.value)
@@ -189,9 +217,10 @@ const codeDisplay = computed(() => {
         </VMenu>
       </template>
     </div>
-    <div flex="~ gap-10">
+    <div flex="~ gap-10" min-w-300>
       <div select-none w-max>
         <FlowmapExpandable
+          v-model:expanded="flowExpandResolveId"
           :expandable="resolveIds.length > 0"
           :class-root-node="resolveIds.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(resolveIds[0] || loads[0])"
@@ -211,13 +240,13 @@ const codeDisplay = computed(() => {
                 :active="isSelectedAncestor(item)"
                 :class="index > 0 ? 'pt-2' : ''"
                 @select="select"
-                @activate="activate"
               />
             </div>
           </template>
         </FlowmapExpandable>
 
         <FlowmapExpandable
+          v-model:expanded="flowExpandLoads"
           :expandable="loads.length > 0"
           :class-root-node="loads.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(loads[0])"
@@ -237,13 +266,14 @@ const codeDisplay = computed(() => {
                 :active="isSelectedAncestor(item)"
                 :class="index > 0 ? 'pt-2' : ''"
                 @select="select"
-                @activate="activate"
+                @toggle-show-all="flowShowAllLoads = !flowShowAllLoads"
               />
             </div>
           </template>
         </FlowmapExpandable>
 
         <FlowmapExpandable
+          v-model:expanded="flowExpandTransforms"
           :expandable="transforms.length > 0"
           :class-root-node="transforms.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(transforms[0])"
@@ -264,7 +294,7 @@ const codeDisplay = computed(() => {
                 :active="isSelectedAncestor(item)"
                 :class="index > 0 ? 'pt-2' : ''"
                 @select="select"
-                @activate="activate"
+                @toggle-show-all="flowShowAllTransforms = !flowShowAllTransforms"
               />
             </div>
           </template>

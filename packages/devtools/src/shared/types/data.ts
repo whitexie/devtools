@@ -70,15 +70,15 @@ export interface RolldownModuleTransformInfo {
   duration: number
 }
 
-export interface RolldownModuleTransformNoChanges {
-  type: 'transform_no_changes'
+export interface RolldownModuleNoChanges {
+  type: 'no_changes_collapsed'
   id: string
   count: number
   duration: number
 }
 
-export interface RolldownModuleLoadNoChanges {
-  type: 'load_no_changes'
+export interface RolldownModuleNoChangesHide {
+  type: 'no_changes_hide'
   id: string
   count: number
   duration: number
@@ -87,6 +87,6 @@ export interface RolldownModuleLoadNoChanges {
 export type RolldownModuleFlowNode
   = | RolldownResolveInfo
     | RolldownModuleLoadInfo
-    | RolldownModuleLoadNoChanges
+    | RolldownModuleNoChanges
+    | RolldownModuleNoChangesHide
     | RolldownModuleTransformInfo
-    | RolldownModuleTransformNoChanges

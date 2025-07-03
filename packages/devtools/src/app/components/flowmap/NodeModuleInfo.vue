@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'select', item: RolldownModuleFlowNode): void
-  (e: 'activate', item: RolldownModuleFlowNode): void
+  (e: 'toggleShowAll', item: RolldownModuleFlowNode): void
 }>()
 
 const isDashed = computed(() => {
@@ -44,7 +44,7 @@ const importterModule = computed(() => {
 </script>
 
 <template>
-  <div v-if="item.type === 'transform_no_changes' || item.type === 'load_no_changes'" pl10>
+  <div v-if="item.type === 'no_changes_collapsed'" pl10>
     <div
       flex="~ gap-2 items-center" text-sm border="l" py1
       :class="active ? 'border-flow-line-active' : 'border-flow-line'"
@@ -58,9 +58,29 @@ const importterModule = computed(() => {
       <span op50 flex-shrink-0>in total</span>
       <button
         border="~ base rounded-full" px2 py-px op50 hover="op100"
-        @click="emit('activate', item)"
+        @click="emit('toggleShowAll', item)"
       >
         Expand
+      </button>
+    </div>
+  </div>
+  <div v-else-if="item.type === 'no_changes_hide'" pl10>
+    <div
+      flex="~ gap-2 items-center" text-sm border="l" py1
+      :class="active ? 'border-flow-line-active' : 'border-flow-line'"
+    >
+      <div
+        w-2 h-2 border="4" rounded-full ml--1 translate-x--0.5px
+        :class="active ? 'border-flow-line-active' : 'border-flow-line'"
+      />
+      <span op50>{{ item.count }} plugins did not change the content but cost</span>
+      <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
+      <span op50 flex-shrink-0>in total</span>
+      <button
+        border="~ base rounded-full" px2 py-px op50 hover="op100"
+        @click="emit('toggleShowAll', item)"
+      >
+        Hide
       </button>
     </div>
   </div>
@@ -92,7 +112,7 @@ const importterModule = computed(() => {
     <template #inline-after>
       <DisplayDuration :duration="item.duration" :color="true" :factor="5" text-xs />
       <template v-if="item.type === 'transform'">
-        <div v-if="item.content_from === item.content_to" text-xs op50>
+        <div v-if="item.content_from === item.content_to" text-xs op25>
           no changes
         </div>
         <div v-else>

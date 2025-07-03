@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 defineProps<{
   expandable?: boolean
   classRootNode?: string
@@ -8,12 +6,12 @@ defineProps<{
   activeEnd?: boolean
 }>()
 
-const isExpanded = ref(true)
+const expanded = defineModel<boolean>('expanded', { required: false, default: true })
 </script>
 
 <template>
   <FlowmapNode
-    :lines="{ top: true, bottom: !expandable || !isExpanded }" pl6 pt4
+    :lines="{ top: true, bottom: !expandable || !expanded }" pl6 pt4
     :class-node-outer="classRootNode"
     :active="activeStart"
   >
@@ -24,13 +22,13 @@ const isExpanded = ref(true)
     <template v-if="expandable" #inline-before>
       <button
         w-6 h-6 mr1 ml--7 mya rounded-full hover="bg-active" flex="~ items-center justify-center"
-        @click="isExpanded = !isExpanded"
+        @click="expanded = !expanded"
       >
-        <div i-ph-caret-right text-sm op50 transition duration-300 :class="{ 'rotate-90': isExpanded }" />
+        <div i-ph-caret-right text-sm op50 transition duration-300 :class="{ 'rotate-90': expanded }" />
       </button>
     </template>
 
-    <template v-if="expandable && isExpanded" #after>
+    <template v-if="expandable && expanded" #after>
       <div>
         <svg
           ml-1em w-27px h-30px
