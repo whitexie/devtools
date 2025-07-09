@@ -1,10 +1,13 @@
 <script setup lang="ts">
-defineProps<{
+withDefaults(defineProps<{
   expandable?: boolean
   classRootNode?: string
   activeStart?: boolean
   activeEnd?: boolean
-}>()
+  showTail?: boolean
+}>(), {
+  showTail: true,
+})
 
 const expanded = defineModel<boolean>('expanded', { required: false, default: true })
 </script>
@@ -43,9 +46,10 @@ const expanded = defineModel<boolean>('expanded', { required: false, default: tr
           <slot name="container" />
         </div>
         <svg
+          v-if="showTail"
           ml-1em w-27px h-30px
-          style="transform: scaleX(-1)"
-          viewBox="0 0 27 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="transform: scaleX(-1)" viewBox="0 0 27 30" fill="none"
+          xmlns="http://www.w3.org/2000/svg"
           :class="activeEnd ? 'fg-flow-line-active' : 'fg-flow-line'"
         >
           <g>

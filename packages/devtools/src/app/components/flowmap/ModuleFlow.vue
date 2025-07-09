@@ -340,6 +340,7 @@ const codeDisplay = computed(() => {
           :class-root-node="info.assets.length === 0 ? 'border-dashed' : ''"
           :active-start="isSelectedAncestor(info.assets[0])"
           :active-end="isSelectedAncestor(info.assets.at(-1))"
+          :show-tail="false"
           pl6 pt4
         >
           <template #node>
