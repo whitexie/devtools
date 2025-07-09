@@ -63,23 +63,34 @@ const moduleTree = computed(() => {
         v-if="Object.keys(moduleTree.workspace.children).length"
         :node="moduleTree.workspace"
         p="l3"
-        icon="i-carbon-portfolio"
+        icon="i-catppuccin:folder-dist catppuccin"
+        icon-open="i-catppuccin:folder-dist-open catppuccin"
         :link="true"
       />
-      <DisplayTreeNode
-        v-if="Object.keys(moduleTree.nodeModules.children).length"
-        :node="moduleTree.nodeModules"
-        p="l3"
-        icon="i-carbon-categories"
-        :link="true"
-      />
-      <DisplayTreeNode
-        v-if="Object.keys(moduleTree.virtual.children).length"
-        :node="moduleTree.virtual"
-        p="l3"
-        icon="i-codicon:file-symlink-directory"
-        :link="true"
-      />
+
+      <template v-if="Object.keys(moduleTree.nodeModules.children).length">
+        <div w-full h-1px border="t base" />
+        <DisplayTreeNode
+          :node="moduleTree.nodeModules"
+          p="l3"
+          icon="i-catppuccin:folder-node catppuccin"
+          icon-open="i-catppuccin:folder-node-open catppuccin"
+          :link="true"
+          :open="false"
+        />
+      </template>
+
+      <template v-if="Object.keys(moduleTree.virtual.children).length">
+        <div w-full h-1px border="t base" />
+        <DisplayTreeNode
+          :node="moduleTree.virtual"
+          p="l3"
+          icon="i-catppuccin:folder-components catppuccin"
+          icon-open="i-catppuccin:folder-components-open catppuccin"
+          :link="true"
+          :open="false"
+        />
+      </template>
     </div>
   </div>
 </template>

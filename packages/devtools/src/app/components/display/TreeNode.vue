@@ -6,14 +6,20 @@ import { NuxtLink } from '#components'
 const props = withDefaults(defineProps<{
   node: ModuleTreeNode
   icon?: string
+  iconOpen?: string
   link?: string | boolean
+  padding?: number
+  open?: boolean
 }>(), {
-  icon: 'i-carbon-folder',
+  icon: 'i-catppuccin:folder catppuccin',
+  iconOpen: 'i-catppuccin:folder-open catppuccin',
+  padding: 0,
 })
 
 const emit = defineEmits<{
   (e: 'select', node: ModuleDest): void
 }>()
+const open = defineModel<boolean>('open', { required: false, default: true })
 const route = useRoute()
 const location = window.location
 function select(node: ModuleDest) {
@@ -24,40 +30,48 @@ function select(node: ModuleDest) {
 </script>
 
 <template>
-  <details open>
+  <details :open="open" @toggle="e => open = (e.target as HTMLDetailsElement)?.open">
     <summary
       cursor-default
       select-none
       text-sm
       truncate
-      p="y1"
+      :style="{ paddingLeft: `${padding + 0.5}rem` }"
+      flex="~ gap-1"
+      px2 py1 rounded
+      hover="bg-active "
     >
-      <div :class="icon" inline-block vertical-text-bottom />
-      {{ node.name }}
+      <div class="i-ph:caret-right-duotone transition op50" :class="open ? 'rotate-90' : ''" />
+      <div :class="open ? iconOpen || icon : icon" inline-block vertical-text-bottom />
+      <div font-mono>
+        <DisplayHighlightedPath :path="node.name || ''" />
+      </div>
     </summary>
 
-    <DisplayTreeNode v-for="e of Object.entries(node.children)" :key="e[0]" ml4 :node="e[1]" :link="link" />
-    <div
-      v-for="i of node.items"
-      :key="i.full"
-      ml4
-      ws-nowrap
-    >
-      <component
-        :is="link ? NuxtLink : 'div'"
-        :to="link ? (typeof link === 'string' ? link : { path: route.path, query: { ...route.query, module: i.full }, hash: location.hash }) : undefined"
-        block
-        text-sm
-        p="x2 y1"
-        ml1
-        rounded
-        @click="select(i)"
-      >
-        <DisplayFileIcon :filename="i.full" inline-block vertical-text-bottom />
-        <span ml-1>
-          {{ i.path.split('/').pop() }}
-        </span>
-      </component>
-    </div>
+    <template v-if="open">
+      <DisplayTreeNode
+        v-for="e of Object.entries(node.children)"
+        :key="e[0]" :node="e[1]" :link="link"
+        :padding="padding + 1"
+      />
+      <template v-for="i of node.items" :key="i.full">
+        <component
+          :is="link ? NuxtLink : 'div'"
+          :to="link ? (typeof link === 'string' ? link : { path: route.path, query: { ...route.query, module: i.full }, hash: location.hash }) : undefined"
+          text-sm
+          ws-nowrap
+          flex="~ gap-1"
+          px2 py1 rounded
+          hover="bg-active"
+          :style="{ paddingLeft: `${padding + 2.7}rem` }"
+          @click="select(i)"
+        >
+          <DisplayFileIcon :filename="i.full" />
+          <div font-mono>
+            <DisplayHighlightedPath :path="i.path.split('/').pop() || ''" />
+          </div>
+        </component>
+      </template>
+    </template>
   </details>
 </template>
