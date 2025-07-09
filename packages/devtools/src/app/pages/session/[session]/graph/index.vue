@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SessionContext } from '~~/shared/types'
+import type { ClientSettings } from '~/state/settings'
 import { useRoute, useRouter } from '#app/composables/router'
 import { clearUndefined, toArray } from '@antfu/utils'
 import { computedWithControl, debouncedWatch } from '@vueuse/core'
@@ -27,6 +28,23 @@ const filters = reactive<Filters>({
   file_types: (route.query.file_types ? toArray(route.query.file_types) : null) as string[] | null,
   node_modules: (route.query.node_modules ? toArray(route.query.node_modules) : null) as string[] | null,
 })
+const moduleViewTypes = [
+  {
+    label: 'List',
+    value: 'list',
+    icon: 'i-ph-list-duotone',
+  },
+  {
+    label: 'Graph',
+    value: 'graph',
+    icon: 'i-ph-graph-duotone',
+  },
+  {
+    label: 'Folder',
+    value: 'folder',
+    icon: 'i-ph-folder-duotone',
+  },
+] as const
 
 debouncedWatch(
   filters,
@@ -79,7 +97,7 @@ const filtered = computed(() => {
   if (filters.node_modules) {
     modules = modules.filter(mod => mod.path.moduleName && filters.node_modules!.includes(mod.path.moduleName))
   }
-  return modules.map(mod => mod.mod)
+  return modules.map(mod => ({ ...mod.mod, path: mod.path.path }))
 })
 
 function isFileTypeSelected(type: string) {
@@ -119,11 +137,11 @@ const searched = computed(() => {
     .map(r => r.item)
 })
 
-function toggleDisplay() {
+function toggleDisplay(type: ClientSettings['flowModuleGraphView']) {
   if (route.query.module) {
     router.replace({ query: { ...route.query, module: undefined } })
   }
-  settings.value.flowModuleGraphView = settings.value.flowModuleGraphView === 'list' ? 'graph' : 'list'
+  settings.value.flowModuleGraphView = type
 }
 </script>
 
@@ -161,12 +179,14 @@ function toggleDisplay() {
       <div flex="~ gap-2 items-center" p2 border="t base">
         <span op50 pl2 text-sm>View as</span>
         <button
+          v-for="viewType of moduleViewTypes"
+          :key="viewType.value"
           btn-action
-          @click="toggleDisplay"
+          :class="settings.flowModuleGraphView === viewType.value ? 'bg-active' : 'grayscale op50'"
+          @click="toggleDisplay(viewType.value)"
         >
-          <div v-if="settings.flowModuleGraphView === 'graph'" i-ph-graph-duotone />
-          <div v-else i-ph-list-duotone />
-          {{ settings.flowModuleGraphView === 'list' ? 'List' : 'Graph' }}
+          <div :class="viewType.icon" />
+          {{ viewType.label }}
         </button>
       </div>
       <!-- TODO: should we add filters for node_modules? -->
@@ -184,8 +204,14 @@ function toggleDisplay() {
         </div>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="settings.flowModuleGraphView === 'graph'">
       <ModulesGraph
+        :session="session"
+        :modules="searched"
+      />
+    </template>
+    <template v-else>
+      <ModulesFolder
         :session="session"
         :modules="searched"
       />

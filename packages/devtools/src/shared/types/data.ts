@@ -4,6 +4,7 @@ export type { ModuleImport }
 
 export interface ModuleListItem {
   id: string
+  path?: string
   fileType: string
   imports: ModuleImport[]
   importers: string[]
@@ -24,6 +25,16 @@ export interface ModuleInfo {
   imports: ModuleImport[] | null
   importers: string[] | null
   assets: RolldownAssetInfo[]
+}
+
+export interface ModuleDest {
+  full: string
+  path: string
+}
+export interface ModuleTreeNode {
+  name?: string
+  children: Record<string, ModuleTreeNode>
+  items: ModuleDest[]
 }
 
 export interface RolldownResolveInfo {
