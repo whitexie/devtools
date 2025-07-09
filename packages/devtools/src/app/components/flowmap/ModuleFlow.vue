@@ -366,7 +366,7 @@ const codeDisplay = computed(() => {
         border="~ base rounded-lg" of-hidden max-h-120vh m4 flex="~ col"
       >
         <template v-if="selected?.type === 'chunk'">
-          <div p4>
+          <div p4 h-full of-auto>
             <DataChunkDetails
               :chunk="selected"
               :session="session"
