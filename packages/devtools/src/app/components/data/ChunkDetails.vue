@@ -24,13 +24,13 @@ defineProps<{
       </div>
     </div>
 
-    <div op50>
+    <!-- TODO -->
+    <!-- <div op50>
       Imports
     </div>
     <div flex="~ col gap-1" ws-nowrap>
-      <!-- TODO: -->
       {{ chunk.imports }}
-    </div>
+    </div> -->
 
     <div op50>
       Modules

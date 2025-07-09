@@ -70,8 +70,8 @@ function getLinkColor(_link: Link) {
 
 function calculateGraph() {
   // Unset the canvas size, and recalculate again after nodes are rendered
-  width.value = window.innerWidth
-  height.value = window.innerHeight
+  width.value = window.innerWidth * 0.8
+  height.value = window.innerHeight * 0.8
   const seen = new Set<ModuleListItem>()
 
   // build imports graph
