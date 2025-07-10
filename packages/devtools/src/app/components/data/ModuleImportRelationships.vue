@@ -112,20 +112,6 @@ function calculateGraph() {
     [node.x, node.y] = [node.y! - SPACING.width, node.x!]
   }
 
-  // Offset the graph and adding margin
-  const minX = Math.min(..._importsNodes.map(n => n.x!))
-  const minY = Math.min(..._importsNodes.map(n => n.y!))
-  if (minX < SPACING.margin) {
-    for (const node of _importsNodes) {
-      node.x! += Math.abs(minX) + SPACING.margin
-    }
-  }
-  if (minY < SPACING.margin) {
-    for (const node of _importsNodes) {
-      node.y! += Math.abs(minY) + SPACING.margin
-    }
-  }
-
   const _importsLinks = importsRoot.links()
     .filter(x => x.source.data.module.id !== '~root')
     .map((x): Link => {
@@ -191,6 +177,21 @@ function calculateGraph() {
     }
   })
 
+  // Offset the graph and adding margin
+  const _nodes = [..._importsNodes, ..._importersNodes]
+  const minX = Math.min(..._nodes.map(n => n.x!))
+  const minY = Math.min(..._nodes.map(n => n.y!))
+  if (minX < SPACING.margin) {
+    for (const node of _nodes) {
+      node.x! += Math.abs(minX) + SPACING.margin
+    }
+  }
+  if (minY < SPACING.margin) {
+    for (const node of _nodes) {
+      node.y! += Math.abs(minY) + SPACING.margin
+    }
+  }
+
   const _importersLinks = importersRoot.links()
     .filter(x => x.source.data.module.id !== '~root')
     .map((x): Link => {
@@ -211,7 +212,7 @@ function calculateGraph() {
     })
 
   // deduplicate modules
-  nodes.value = [..._importsNodes, ..._importersNodes].filter((n, i, s) =>
+  nodes.value = _nodes.filter((n, i, s) =>
     i === s.findIndex(t => t.data.module.id === n.data.module.id),
   )
   links.value = [..._importsLinks, ..._importersLinks]
