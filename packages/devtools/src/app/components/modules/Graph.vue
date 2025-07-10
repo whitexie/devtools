@@ -285,7 +285,6 @@ onMounted(() => {
             border="~ base rounded"
             :link="true"
             :session="session"
-            :pkg="node.data.module"
             :minimal="true"
             :style="{
               left: `${node.x}px`,
