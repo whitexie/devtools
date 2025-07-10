@@ -193,7 +193,7 @@ function toggleDisplay(type: ClientSettings['flowModuleGraphView']) {
       <!-- {{ allNodeModules }} -->
     </div>
     <template v-if="settings.flowModuleGraphView === 'list'">
-      <div of-scroll max-h-screen pt-45 relative>
+      <div of-auto max-h-screen pt-45 relative>
         <ModulesFlatList
           v-if="settings.flowModuleGraphView === 'list'"
           :session="session"
