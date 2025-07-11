@@ -21,6 +21,7 @@ const { state: chunks } = useAsyncState(
 <template>
   <div p5 flex="~ col gap-4">
     Chunks
+    <!-- TODO: graph view -->
     <template v-for="chunk of chunks" :key="chunk.id">
       <DataChunkDetails
         border="~ base rounded-lg"

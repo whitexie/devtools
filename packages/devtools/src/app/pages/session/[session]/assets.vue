@@ -21,6 +21,12 @@ const { state: assets } = useAsyncState(
 <template>
   <div p5 flex="~ col gap-4">
     Assets
+    <!--
+      TODO:
+      - Use tree view to show assets
+      - Show asssets detail on the right panel
+      - View of Flamechart with nanovis
+    -->
     <template v-for="asset of assets" :key="asset.filename">
       <pre>{{
         {
