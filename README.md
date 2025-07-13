@@ -15,7 +15,12 @@ We are currently focusing on get the basic data visualization working for **Vite
 
 You can check the [TODO list](https://github.com/vitejs/devtools/issues/9) (excluding `hold-off`) if you are interested in helping out.
 
-For the `devtools-webext` package, we plan to use it for dev mode in the future, so no contributions are needed at this time.
+## 💡 Contributing Guide
+
+We're really excited that you're interested in contributing to Vite DevTools! Before submitting your contribution, please take a moment to read through the following guidelines:
+
+- For the `devtools-webext` package, we plan to use it for dev mode in the future, so no contributions are needed at this time.
+- For any new feature additions, we recommend submitting an issue for discussion and confirmation first.
 
 ## 🧑‍💻 Development Guide
 
