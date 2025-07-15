@@ -11,8 +11,8 @@ const props = withDefaults(defineProps<{
   padding?: number
   open?: boolean
 }>(), {
-  icon: 'i-catppuccin:folder catppuccin',
-  iconOpen: 'i-catppuccin:folder-open catppuccin',
+  icon: 'i-catppuccin:folder icon-catppuccin',
+  iconOpen: 'i-catppuccin:folder-open icon-catppuccin',
   padding: 0,
 })
 
