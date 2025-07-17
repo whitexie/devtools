@@ -2,7 +2,8 @@
 import type { ModuleInfo, RolldownModuleTransformInfo, SessionContext } from '~~/shared/types'
 import { useRpc } from '#imports'
 import { computedAsync } from '@vueuse/core'
-import { nextTick, ref, watchEffect } from 'vue'
+import { computed, nextTick, ref, watchEffect } from 'vue'
+import { getContentByteSize } from '~~/app/utils/format'
 
 const props = defineProps<{
   session: SessionContext
@@ -44,6 +45,41 @@ const info = computedAsync(async () => {
   } as ModuleInfo
 })
 
+const durations = computed(() => {
+  const data = info.value
+  const _resolveIds = data?.resolve_ids.reduce((t, node) => {
+    t += node.duration
+    return t
+  }, 0) ?? 0
+  const _loads = data?.loads?.reduce((t, node) => {
+    t += node.duration
+    return t
+  }, 0) ?? 0
+  const _transforms = data?.transforms.reduce((t, node) => {
+    t += node.duration
+    return t
+  }, 0) ?? 0
+  const total = _resolveIds + _loads + _transforms
+  return {
+    resolveIds: _resolveIds,
+    loads: _loads,
+    transforms: _transforms,
+    total,
+  }
+})
+
+const sourceCodeSize = computed(() => {
+  const data = info.value?.transforms
+  const source = data?.[0]?.content_from ?? ''
+  return getContentByteSize(source)
+})
+
+const transformedCodeSize = computed(() => {
+  const data = info.value?.transforms?.filter(t => t.content_to)?.reverse()
+  const source = data?.[0]?.content_to ?? ''
+  return getContentByteSize(source)
+})
+
 function selectFlowNode(v: boolean) {
   flowNodeSelected.value = v
 }
@@ -60,7 +96,40 @@ function selectFlowNode(v: boolean) {
       border="~ base rounded-lg"
       flex="~ col gap-2"
     >
-      <DisplayModuleId :id="module" px2 py1 :session />
+      <DisplayModuleId :id="module" px2 pt1 :session />
+      <div text-xs font-mono flex="~ items-center gap-3" ml2>
+        <DisplayDuration
+          :duration="durations.resolveIds" flex="~ gap-1 items-center"
+          :title="`resolveId hooks cost: ${durations.resolveIds}ms`"
+        >
+          <span i-ph-magnifying-glass-duotone inline-block />
+        </DisplayDuration>
+        <DisplayDuration
+          :duration="durations.loads" flex="~ gap-1 items-center"
+          :title="`load hooks cost: ${durations.loads}ms`"
+        >
+          <span i-ph-upload-simple-duotone inline-block />
+        </DisplayDuration>
+        <DisplayDuration
+          :duration="durations.transforms" flex="~ gap-1 items-center"
+          :title="`transform hooks cost: ${durations.transforms}ms`"
+        >
+          <span i-ph-magic-wand-duotone inline-block />
+        </DisplayDuration>
+        <span op40>|</span>
+        <DisplayDuration
+          :duration="durations.total" flex="~ gap-1 items-center"
+          :title="`Total build cost: ${durations.total}ms`"
+        >
+          <span i-ph-clock-duotone inline-block />
+        </DisplayDuration>
+        <span op40>|</span>
+        <div flex="~ gap-1 items-center">
+          <DisplayFileSizeBadge title="Source code size" :bytes="sourceCodeSize" />
+          <span i-carbon-arrow-right op50 />
+          <DisplayFileSizeBadge title="Transformed code size" :bytes="transformedCodeSize" />
+        </div>
+      </div>
       <div flex="~ gap-2">
         <button
           :class="view === 'flow' ? 'text-primary' : ''"
