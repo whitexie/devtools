@@ -7,6 +7,7 @@ export default defineConfig({
     'src/cli.ts',
     'src/dirs.ts',
   ],
+  tsconfig: '../../tsconfig.json',
   clean: false,
   target: 'esnext',
   fixedExtension: true,
