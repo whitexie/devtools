@@ -139,11 +139,11 @@ const searched = computed(() => {
     .map(r => r.item)
 })
 
-function toggleDisplay(type: ClientSettings['flowModuleGraphView']) {
+function toggleDisplay(type: ClientSettings['moduleGraphViewType']) {
   if (route.query.module) {
     router.replace({ query: { ...route.query, module: undefined } })
   }
-  settings.value.flowModuleGraphView = type
+  settings.value.moduleGraphViewType = type
 }
 </script>
 
@@ -184,7 +184,7 @@ function toggleDisplay(type: ClientSettings['flowModuleGraphView']) {
           v-for="viewType of moduleViewTypes"
           :key="viewType.value"
           btn-action
-          :class="settings.flowModuleGraphView === viewType.value ? 'bg-active' : 'grayscale op50'"
+          :class="settings.moduleGraphViewType === viewType.value ? 'bg-active' : 'grayscale op50'"
           @click="toggleDisplay(viewType.value)"
         >
           <div :class="viewType.icon" />
@@ -194,7 +194,7 @@ function toggleDisplay(type: ClientSettings['flowModuleGraphView']) {
       <!-- TODO: should we add filters for node_modules? -->
       <!-- {{ allNodeModules }} -->
     </div>
-    <template v-if="settings.flowModuleGraphView === 'list'">
+    <template v-if="settings.moduleGraphViewType === 'list'">
       <div of-auto h-screen pt-45>
         <ModulesFlatList
           :session="session"
@@ -207,7 +207,7 @@ function toggleDisplay(type: ClientSettings['flowModuleGraphView']) {
         </div>
       </div>
     </template>
-    <template v-else-if="settings.flowModuleGraphView === 'graph'">
+    <template v-else-if="settings.moduleGraphViewType === 'graph'">
       <ModulesGraph
         :session="session"
         :modules="searched"
