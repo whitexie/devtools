@@ -123,12 +123,14 @@ function selectFlowNode(v: boolean) {
         >
           <span i-ph-clock-duotone inline-block />
         </DisplayDuration>
-        <span op40>|</span>
-        <div flex="~ gap-1 items-center">
-          <DisplayFileSizeBadge title="Source code size" :bytes="sourceCodeSize" />
-          <span i-carbon-arrow-right op50 />
-          <DisplayFileSizeBadge title="Transformed code size" :bytes="transformedCodeSize" />
-        </div>
+        <template v-if="sourceCodeSize && transformedCodeSize">
+          <span op40>|</span>
+          <div flex="~ gap-1 items-center">
+            <DisplayFileSizeBadge title="Source code size" :bytes="sourceCodeSize" />
+            <span i-carbon-arrow-right op50 />
+            <DisplayFileSizeBadge title="Transformed code size" :bytes="transformedCodeSize" />
+          </div>
+        </template>
       </div>
       <div flex="~ gap-2">
         <button
