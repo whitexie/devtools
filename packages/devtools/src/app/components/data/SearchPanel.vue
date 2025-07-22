@@ -46,6 +46,27 @@ function toggleRule(rule: FilterMatchRule) {
     model.value.selected = null
   }
 }
+
+function reverseSelect() {
+  if (model?.value?.selected?.length === props.rules.length) {
+    model.value.selected = null
+  }
+  else if (model?.value?.selected == null) {
+    model.value.selected = []
+  }
+  else {
+    model.value.selected = props.rules.map(r => r.name).filter(r => !model.value.selected?.includes(r))
+  }
+}
+
+function unselectToggle() {
+  if (model?.value?.selected?.length === 0) {
+    model.value.selected = null
+  }
+  else {
+    model.value.selected = []
+  }
+}
 </script>
 
 <template>
@@ -78,6 +99,28 @@ function toggleRule(rule: FilterMatchRule) {
         <div :class="rule.icon" icon-catppuccin />
         <div text-sm>{{ rule.description || rule.name }}</div>
       </label>
+      <button
+        rounded-md px2 py1
+        flex="~ items-center gap-1"
+        select-none
+        hover="bg-active"
+        @click="reverseSelect"
+      >
+        <div text-xs op50>
+          Reverse
+        </div>
+      </button>
+      <button
+        rounded-md px2 py1
+        flex="~ items-center gap-1"
+        select-none
+        hover="bg-active"
+        @click="unselectToggle"
+      >
+        <div text-xs op50>
+          {{ model.selected?.length === 0 ? 'Select All' : 'Unselect All' }}
+        </div>
+      </button>
     </div>
     <slot />
   </div>
