@@ -37,9 +37,12 @@ export class RolldownLogsManager {
 
   async loadSession(session: string) {
     const reader = RolldownEventsReader.get(join(this.dir, session, 'logs.json'))
-    const metaReader = RolldownEventsReader.get(join(this.dir, session, 'meta.json'))
-    reader.meta = metaReader.manager.events[metaReader.manager.events.length - 1] as SessionMeta
     await reader.read()
+    if (!reader.meta) {
+      const metaReader = RolldownEventsReader.get(join(this.dir, session, 'meta.json'))
+      await metaReader.read()
+      reader.meta = metaReader.manager.events.at(-1) as SessionMeta
+    }
     return reader
   }
 }

@@ -18,6 +18,7 @@ const session = reactive({
   meta: undefined!,
   modulesList: shallowRef<ModuleListItem[]>([]),
 }) as SessionContext
+
 const rpc = useRpc()
 const router = useRouter()
 const route = useRoute()
