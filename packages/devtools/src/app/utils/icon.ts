@@ -1,6 +1,6 @@
 import { makeCachedFunction } from './cache'
 
-export interface ModuleTypeRule {
+export interface FilterMatchRule {
   match: RegExp
   name: string
   description: string
@@ -8,7 +8,13 @@ export interface ModuleTypeRule {
 }
 
 // @unocss-include
-export const ModuleTypeRules: ModuleTypeRule[] = [
+export const ModuleTypeRules: FilterMatchRule[] = [
+  {
+    match: /[\\/]node_modules[\\/]/i,
+    name: 'node_modules',
+    description: 'Node Modules',
+    icon: 'i-catppuccin-npm',
+  },
   {
     match: /virtual:|^\0/,
     name: 'virtual',
@@ -20,12 +26,6 @@ export const ModuleTypeRules: ModuleTypeRule[] = [
     name: 'package',
     description: 'Package',
     icon: 'i-catppuccin-java-class-abstract',
-  },
-  {
-    match: /[\\/]node_modules[\\/]/i,
-    name: 'node_modules',
-    description: 'Node Modules',
-    icon: 'i-catppuccin-npm',
   },
   {
     match: /\.vue$/i,
@@ -117,20 +117,62 @@ export const ModuleTypeRules: ModuleTypeRule[] = [
     description: 'SVG',
     icon: 'i-catppuccin-svg',
   },
+
 ]
 
-const DefaultTypeRule: ModuleTypeRule = {
+// @unocss-include
+export const PluginTypeRules: FilterMatchRule[] = [
+  {
+    match: /^(replace|define|alias)$/,
+    name: 'rollup',
+    description: 'Rollup',
+    icon: 'i-catppuccin-rollup',
+  },
+  {
+    match: /^vite:/i,
+    name: 'vite',
+    description: 'Vite',
+    icon: 'i-catppuccin-vite',
+  },
+  {
+    match: /^unocss:/i,
+    name: 'unocss',
+    description: 'Unocss',
+    icon: 'i-catppuccin-unocss',
+  },
+  {
+    match: /^nuxt:/i,
+    name: 'nuxt',
+    description: 'Nuxt',
+    icon: 'i-catppuccin-nuxt',
+  },
+  {
+    match: /^builtin:/i,
+    name: 'builtin',
+    description: 'Builtin',
+    icon: 'i-catppuccin-folder-prisma',
+  },
+]
+
+export const DefaultFileTypeRule: FilterMatchRule = {
   name: 'file',
   match: /.*/,
   description: 'File',
   icon: 'i-catppuccin-file',
 }
 
-export function getFileTypeFromName(name: string) {
-  return ModuleTypeRules.find(rule => rule.name === name) ?? DefaultTypeRule
+export const DefaultPluginType: FilterMatchRule = {
+  name: 'plugin',
+  match: /.*/,
+  description: 'User Plugins',
+  icon: 'i-catppuccin-folder-plugins',
 }
 
-export const getFileTypeFromModuleId = makeCachedFunction((moduleId: string): ModuleTypeRule => {
+export function getFileTypeFromName(name: string) {
+  return ModuleTypeRules.find(rule => rule.name === name) ?? DefaultFileTypeRule
+}
+
+export const getFileTypeFromModuleId = makeCachedFunction((moduleId: string): FilterMatchRule => {
   moduleId = moduleId
     .replace(/(\?|&)v=[^&]*/, '$1')
     .replace(/\?$/, '')
@@ -141,5 +183,14 @@ export const getFileTypeFromModuleId = makeCachedFunction((moduleId: string): Mo
     }
   }
 
-  return DefaultTypeRule
+  return DefaultFileTypeRule
+})
+
+export const getPluginTypeFromName = makeCachedFunction((name: string): FilterMatchRule => {
+  for (const rule of PluginTypeRules) {
+    if (rule.match.test(name)) {
+      return rule
+    }
+  }
+  return DefaultPluginType
 })
