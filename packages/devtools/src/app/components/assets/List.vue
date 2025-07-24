@@ -16,7 +16,9 @@ defineProps<{
         >
           <div flex="~ gap-1">
             <DisplayFileIcon :filename="asset.filename" />
-            {{ asset.filename }}
+            <span overflow-hidden text-ellipsis break-all line-clamp-2>
+              {{ asset.filename }}
+            </span>
           </div>
         </NuxtLink>
       </template>
