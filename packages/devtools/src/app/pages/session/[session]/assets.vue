@@ -89,6 +89,11 @@ function toggleDisplay(type: ClientSettings['assetViewType']) {
     <div of-auto h-screen flex="~ col gap-2" pt32>
       <template v-if="settings.assetViewType === 'list'">
         <AssetsList v-if="searched?.length" :assets="searched" :session="session" />
+        <div
+          absolute bottom-4 py-1 px-2 bg-glass left="1/2" translate-x="-1/2" border="~ base rounded-full" text="center xs"
+        >
+          <span op50>{{ searched.length }} of {{ assets?.length || 0 }}</span>
+        </div>
       </template>
       <template v-else-if="settings.assetViewType === 'folder'">
         <AssetsFolder v-if="searched?.length" :assets="searched" :session="session" />
@@ -96,11 +101,6 @@ function toggleDisplay(type: ClientSettings['assetViewType']) {
       <template v-else-if="settings.assetViewType === 'treemap'">
         <AssetsTreemap v-if="searched?.length" :assets="searched" :session="session" />
       </template>
-    </div>
-    <div
-      absolute bottom-4 py-1 px-2 bg-glass left="1/2" translate-x="-1/2" border="~ base rounded-full" text="center xs"
-    >
-      <span op50>{{ searched.length }} of {{ assets?.length || 0 }}</span>
     </div>
   </div>
 </template>
