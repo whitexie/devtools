@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type CodeMirror from 'codemirror'
-import { nextTick, onMounted, toRefs, useTemplateRef, watchEffect } from 'vue'
+import { Pane, Splitpanes } from 'splitpanes'
+import { computed, nextTick, onMounted, toRefs, useTemplateRef, watchEffect } from 'vue'
 import { guessCodemirrowMode, syncEditorScrolls, syncScrollListeners, useCodeMirror } from '~/composables/codemirror'
 import { settings } from '~/state/settings'
 import { calculateDiffWithWorker } from '~/worker/diff'
@@ -121,7 +122,13 @@ onMounted(() => {
   })
 })
 
-function _onUpdate(size: number) {
+const leftPanelSize = computed(() => {
+  return props.oneColumn
+    ? 0
+    : settings.value.codeviewerDiffPanelSize
+})
+
+function onUpdate(size: number) {
   // Refresh sizes
   cm1?.refresh()
   cm2?.refresh()
@@ -132,10 +139,14 @@ function _onUpdate(size: number) {
 </script>
 
 <template>
-  <div h-full w-full of-auto :class="oneColumn ? 'flex' : 'grid grid-cols-2'" style="overscroll-behavior: contain">
-    <div v-show="!oneColumn" ref="fromEl" h-inherit />
-    <div ref="toEl" h-inherit :class="oneColumn ? 'w-full' : ''" />
-  </div>
+  <Splitpanes @resize="onUpdate($event.prevPane.size)">
+    <Pane v-show="!oneColumn" min-size="10" :size="leftPanelSize">
+      <div ref="fromEl" h-inherit />
+    </Pane>
+    <Pane min-size="10" :size="100 - leftPanelSize">
+      <div ref="toEl" h-inherit />
+    </Pane>
+  </Splitpanes>
 </template>
 
 <style lang="postcss">
