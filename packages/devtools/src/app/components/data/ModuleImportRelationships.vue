@@ -171,7 +171,7 @@ onMounted(() => {
 <template>
   <div
     ref="container"
-    w-full relative select-none
+    w-full relative select-none mt4
   >
     <!-- nodes -->
     <div flex px2>
