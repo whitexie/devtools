@@ -50,7 +50,6 @@ function handleClose() {
         <ModuleFlowDetails
           :selected="selected"
           :session="session"
-          :chunks="info.chunks"
           @close="handleClose"
         />
       </div>

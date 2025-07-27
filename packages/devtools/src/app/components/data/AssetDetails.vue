@@ -2,20 +2,46 @@
 import type { Asset as AssetInfo } from '@rolldown/debug'
 import type { RolldownAssetInfo, RolldownChunkInfo, SessionContext } from '~~/shared/types'
 import { useRpc } from '#imports'
+import { useAsyncState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { settings } from '~~/app/state/settings'
 
-const props = defineProps<{
-  chunks: RolldownChunkInfo[]
+const props = withDefaults(defineProps<{
   session: SessionContext
   asset: RolldownAssetInfo
-  importers: AssetInfo[]
-  imports: AssetInfo[]
-}>()
+  chunks?: RolldownChunkInfo[]
+  importers?: AssetInfo[]
+  imports?: AssetInfo[]
+  lazy?: boolean
+}>(), {
+  lazy: false,
+})
 
 const rpc = useRpc()
 const showSource = ref(false)
-const assetChunks = computed(() => props.chunks.filter(c => c.chunk_id === props.asset.chunk_id))
+const { state } = useAsyncState(
+  async () => {
+    if (!props.lazy)
+      return
+    const res = await rpc.value!['vite:rolldown:get-asset-details']?.({
+      session: props.session.id,
+      id: props.asset.filename,
+    })
+    return {
+      chunks: [{ ...res?.chunk, type: 'chunk' }],
+      importers: res?.importers,
+      imports: res?.imports,
+    } satisfies {
+      chunks: RolldownChunkInfo[]
+      importers: AssetInfo[]
+      imports: AssetInfo[]
+    }
+  },
+  null,
+)
+const assetChunks = computed(() => props.lazy ? state.value?.chunks : props.chunks?.filter(c => c.chunk_id === props.asset.chunk_id))
+const _importers = computed(() => props.lazy ? state.value?.importers : props.importers)
+const _imports = computed(() => props.lazy ? state.value?.imports : props.imports)
 
 function openInEditor() {
   rpc.value!['vite:open-in-editor'](`${props.session.meta.dir}/${props.asset.filename}`)
@@ -81,14 +107,14 @@ function openInEditor() {
           />
         </div>
       </div>
-      <template v-if="importers.length || imports.length">
+      <template v-if="_importers?.length || _imports?.length">
         <div flex="~ col gap-2">
           <div op50>
             Asset Relationships
           </div>
           <DataAssetRelationships
-            :importers="importers"
-            :imports="imports"
+            :importers="_importers"
+            :imports="_imports"
           />
         </div>
       </template>

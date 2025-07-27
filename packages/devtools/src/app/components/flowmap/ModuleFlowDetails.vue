@@ -7,7 +7,6 @@ import PluginName from '../display/PluginName.vue'
 const props = defineProps<{
   selected: RolldownChunkInfo | RolldownModuleFlowNode | null
   session: SessionContext
-  chunks: RolldownChunkInfo[]
 }>()
 
 const emit = defineEmits<{
@@ -62,7 +61,7 @@ function handleClose() {
         <DataAssetDetails
           :asset="selected"
           :session="session"
-          :chunks="chunks"
+          :lazy="true"
         />
       </div>
     </template>
