@@ -89,7 +89,7 @@ function handleClose() {
     </template>
     <!-- TODO: show more info with selected node -->
     <span v-else op50 italic ma>
-      Select a node to view
+      No data
     </span>
   </div>
 </template>
