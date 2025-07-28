@@ -127,5 +127,14 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        types: ['chrome'], // for devtools-webext package
+      },
+    },
+    includeWorkspace: true,
+  },
+
   compatibilityDate: '2024-07-17',
 })
