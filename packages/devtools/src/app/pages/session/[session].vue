@@ -17,6 +17,7 @@ const session = reactive({
   id: computed(() => params.session),
   meta: undefined!,
   modulesList: shallowRef<ModuleListItem[]>([]),
+  buildDuration: 0,
 }) as SessionContext
 
 const rpc = useRpc()
