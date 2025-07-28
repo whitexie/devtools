@@ -78,7 +78,7 @@ function handleClose() {
           :active="settings.codeviewerLineWrap"
           @click="settings.codeviewerLineWrap = !settings.codeviewerLineWrap"
         />
-        <DisplayCloseButton @click="handleClose" />
+        <DisplayCloseButton @click.stop="handleClose" />
       </div>
       <CodeDiffEditor
         :from="codeDisplay?.from ?? ''"
