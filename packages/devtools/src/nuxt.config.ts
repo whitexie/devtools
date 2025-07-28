@@ -127,9 +127,5 @@ export default defineNuxtConfig({
     enabled: true,
   },
 
-  typescript: {
-    includeWorkspace: true,
-  },
-
   compatibilityDate: '2024-07-17',
 })
