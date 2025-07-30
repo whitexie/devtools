@@ -23,12 +23,12 @@ export class RolldownEventsManager {
   build_start_time: number = 0
   build_end_time: number = 0
 
-  interpretSourceRefs(event: Event, key: string) {
+  interpretSourceRefs(event: Event, key: 'content') {
     if (key in event && typeof event[key as keyof Event] === 'string') {
       if (event[key as keyof Event].startsWith('$ref:')) {
         const refKey = event[key as keyof Event].slice(5)
         if (this.source_refs.has(refKey)) {
-          (event as any)[key] = this.source_refs.get(refKey)
+          event[key] = this.source_refs.get(refKey)!
         }
       }
     }
@@ -36,11 +36,10 @@ export class RolldownEventsManager {
 
   recordModuleBuildMetrics(event: ModuleBuildHookEvents) {
     if (MODULE_BUILD_START_HOOKS.includes(event.action)) {
-      this.module_build_hook_events.set(`${event.action}_${event.call_id}`, event)
+      this.module_build_hook_events.set(event.call_id, event)
     }
     else if (MODULE_BUILD_END_HOOKS.includes(event.action)) {
-      const start_event_name = `${event.action.replace('End', 'Start')}_${event.call_id}`
-      const start = this.module_build_hook_events.get(start_event_name)
+      const start = this.module_build_hook_events.get(event.call_id)
       const module_id = event.action === 'HookResolveIdCallEnd' ? event.resolved_id! : (event as HookLoadCallEnd | HookTransformCallEnd).module_id
       if (start) {
         const info = {
@@ -106,7 +105,6 @@ export class RolldownEventsManager {
       return
     }
 
-    this.interpretSourceRefs(event, 'source')
     this.interpretSourceRefs(event, 'content')
     this.recordModuleBuildMetrics(event as ModuleBuildHookEvents)
 
