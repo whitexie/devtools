@@ -93,6 +93,7 @@ onMounted(async () => {
     fileType: getFileTypeFromName(mod.id).name,
     imports: mod.imports ?? [],
     importers: mod.importers ?? [],
+    buildMetrics: mod.build_metrics,
   }))
   session.buildDuration = summary.build_duration
   isLoading.value = false
