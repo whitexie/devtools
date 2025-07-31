@@ -306,6 +306,9 @@ function handleDragingScroll() {
   const SCROLLBAR_THICKNESS = 20
 
   useEventListener(container, 'mousedown', (e) => {
+    if (e.button === 2) {
+      return
+    }
     // prevent dragging when clicking on scrollbar
     const rect = container.value!.getBoundingClientRect()
     const distRight = rect.right - e.clientX
