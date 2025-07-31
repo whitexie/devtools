@@ -45,7 +45,6 @@ const links = shallowRef<Link[]>([])
 const nodesMap = shallowReactive(new Map<string, HierarchyNode<Node>>())
 const linksMap = shallowReactive(new Map<string, Link>())
 
-const expandedNodes = shallowReactive(new Set<string>())
 const collapsedNodes = shallowReactive(new Set<string>())
 
 const isUpdating = ref(false)
@@ -114,7 +113,7 @@ function calculateGraph() {
         rootModules.value.forEach(x => seen.add(x))
         return rootModules.value.map(x => ({
           module: x,
-          expanded: !collapsedNodes.has(x.id),
+          expanded: !collapsedNodes.has(x.id), // 简化：未折叠即为展开
           hasChildren: x.imports.length > 0 && calculateHasChildren(x),
         }))
       }
@@ -137,7 +136,7 @@ function calculateGraph() {
           return {
             module,
             import: x,
-            expanded: !collapsedNodes.has(module.id),
+            expanded: !collapsedNodes.has(module.id), // 简化：未折叠即为展开
             hasChildren: module.imports.length > 0 && calculateHasChildren(module),
           }
         })
@@ -223,11 +222,9 @@ function toggleNode(id: string) {
 
   if (collapsedNodes.has(id)) {
     collapsedNodes.delete(id)
-    expandedNodes.add(id)
   }
   else {
     collapsedNodes.add(id)
-    expandedNodes.delete(id)
   }
 
   calculateGraph()
@@ -252,11 +249,6 @@ function expandAll() {
   isUpdating.value = true
 
   collapsedNodes.clear()
-  props.modules.forEach((module) => {
-    if (module.imports.length > 0) {
-      expandedNodes.add(module.id)
-    }
-  })
   calculateGraph()
 
   setTimeout(() => {
@@ -270,13 +262,8 @@ function collapseAll() {
 
   isUpdating.value = true
 
-  expandedNodes.clear()
-  rootModules.value.forEach((module) => {
-    expandedNodes.add(module.id)
-  })
-
   props.modules.forEach((module) => {
-    if (module.importers.length > 0 && !rootModules.value.includes(module)) {
+    if (module.imports.length > 0) {
       collapsedNodes.add(module.id)
     }
   })
