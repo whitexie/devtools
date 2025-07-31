@@ -235,6 +235,10 @@ function toggleNode(id: string) {
   if (nodePosition) {
     nextTick(() => {
       focusOn(id, true)
+
+      setTimeout(() => {
+        lastActionNodeId.value = null
+      }, 1000)
     })
   }
 
