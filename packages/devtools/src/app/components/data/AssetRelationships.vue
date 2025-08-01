@@ -22,7 +22,7 @@ type LinkPoint = 'importer-start' | 'importer-end' | 'import-start' | 'import-en
 const MAX_LINKS = 20
 const SPACING = {
   width: 400,
-  height: 50,
+  height: 35,
   padding: 4,
   marginX: 8,
   border: 1,

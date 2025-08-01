@@ -34,7 +34,7 @@ const moduleViewTypes = [
     icon: 'i-carbon-list',
   },
   {
-    label: 'DetailedList',
+    label: 'Detailed List',
     value: 'detailed-list',
     icon: 'i-carbon-list-boxes',
   },

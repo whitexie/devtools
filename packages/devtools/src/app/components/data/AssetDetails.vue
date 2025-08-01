@@ -94,7 +94,7 @@ function openInEditor() {
       </div>
     </template>
 
-    <div flex="~ col gap-4" pl2>
+    <div flex="~ col gap-4">
       <div flex="~ col gap-2">
         <div op50>
           Chunks

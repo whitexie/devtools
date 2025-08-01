@@ -104,6 +104,7 @@ function unselectToggle() {
         flex="~ items-center gap-1"
         select-none
         hover="bg-active"
+        title="Reverse Selection"
         @click="reverseSelect"
       >
         <div text-xs op50>
@@ -115,6 +116,7 @@ function unselectToggle() {
         flex="~ items-center gap-1"
         select-none
         hover="bg-active"
+        :title="model.selected?.length === 0 ? 'Select All' : 'Unselect All'"
         @click="unselectToggle"
       >
         <div text-xs op50>
