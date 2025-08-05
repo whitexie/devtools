@@ -187,7 +187,7 @@ onMounted(() => {
         <template v-for="(importer, i) of importers" :key="importer.id">
           <DisplayModuleId
             :id="importer!.id"
-            hover="bg-active" block px2 p1 bg-base
+            hover="bg-active" block px2 p1 bg-base ws-nowrap
             z-graph-node
             border="~ base rounded"
             :link="true"
@@ -222,7 +222,7 @@ onMounted(() => {
         <template v-for="(_import, i) of module.imports" :key="_import.id">
           <DisplayModuleId
             :id="_import!.module_id"
-            hover="bg-active" block px2 p1 bg-base
+            hover="bg-active" block px2 p1 bg-base ws-nowrap
             z-graph-node
             border="~ base rounded"
             :link="true"
