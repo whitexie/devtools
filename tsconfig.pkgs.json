@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "isolatedDeclarations": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "packages/devtools/src/**/*.ts",
+    "packages/devtools-rpc/src/**/*.ts"
+  ]
+}
