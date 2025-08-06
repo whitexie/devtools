@@ -288,7 +288,7 @@ function generateLink(link: Link) {
 }
 
 function getLinkColor(_link: Link) {
-  return 'stroke-#8882'
+  return 'stroke-#8885'
 }
 
 function handleDragingScroll() {
@@ -297,9 +297,6 @@ function handleDragingScroll() {
   const SCROLLBAR_THICKNESS = 20
 
   useEventListener(container, 'mousedown', (e) => {
-    if (e.button === 2) {
-      return
-    }
     // prevent dragging when clicking on scrollbar
     const rect = container.value!.getBoundingClientRect()
     const distRight = rect.right - e.clientX
@@ -313,7 +310,7 @@ function handleDragingScroll() {
     x = container.value!.scrollLeft + e.pageX
     y = container.value!.scrollTop + e.pageY
   })
-
+  useEventListener(container, 'contextmenu', e => e.preventDefault())
   useEventListener('mouseleave', () => isGrabbing.value = false)
   useEventListener('mouseup', () => isGrabbing.value = false)
   useEventListener('mousemove', (e) => {
@@ -366,17 +363,6 @@ onMounted(() => {
           />
         </g>
       </svg>
-      <!-- <svg pointer-events-none absolute left-0 top-0 z-graph-link-active :width="width" :height="height">
-      <g>
-        <path
-          v-for="link of links"
-          :key="link.id"
-          :d="generateLink(link)!"
-          fill="none"
-          class="stroke-primary:75"
-        />
-      </g>
-    </svg> -->
       <template
         v-for="node of nodes"
         :key="node.data.module.id"
@@ -384,7 +370,7 @@ onMounted(() => {
         <template v-if="node.data.module.id !== '~root'">
           <div
             absolute
-            class="group"
+            class="group z-graph-node flex gap-1 items-center"
             :style="{
               left: `${node.x}px`,
               top: `${node.y}px`,
@@ -394,12 +380,9 @@ onMounted(() => {
             <div
               flex="~ items-center gap-1"
               bg-glass
-              class="rounded hover:bg-active block px2 p1 z-graph-node"
-              :class="[
-                node.data.module.id === lastActionNodeId
-                  ? 'border-primary border-2 shadow-[0_0_12px_rgba(59,130,246,0.5)]'
-                  : 'border ~ base rounded',
-              ]"
+              border="~ base rounded"
+              class="group-hover:bg-active block px2 p1"
+              :class="{ 'border-flow-active shadow-[0_0_12px_rgba(59,130,246,0.5)]': node.data.module.id === lastActionNodeId }"
               :style="{
                 minWidth: graphRender === 'normal' ? `${SPACING.width}px` : undefined,
                 maxWidth: '400px',
@@ -419,28 +402,30 @@ onMounted(() => {
             </div>
 
             <!-- Expand/Collapse Button -->
-            <button
-              v-if="node.data.hasChildren"
-              w-4
-              h-4
-              rounded-full
-              flex="items-center justify-center"
-              text-xs
-              border="~ active"
-              class="absolute z-10 hidden group-hover:flex top-1/2 right-0 translate-y-[-50%] cursor-pointer"
-              :disabled="isUpdating"
-              :class="{ 'cursor-not-allowed': isUpdating, 'hover:bg-active': !isUpdating }"
-              :title="node.data.expanded ? 'Collapse' : 'Expand'"
-              @click.stop="toggleNode(node.data.module.id)"
-            >
-              <div
-                class="text-primary"
-                :class="[
-                  node.data.expanded ? 'i-ph-minus' : 'i-ph-plus',
-                ]"
-                transition="transform duration-200"
-              />
-            </button>
+            <div class="w-4">
+              <button
+                v-if="node.data.hasChildren"
+                w-4
+                h-4
+                rounded-full
+                flex="items-center justify-center"
+                text-xs
+                border="~ active"
+                class="flex cursor-pointer z-graph-node-active bg-base"
+                :disabled="isUpdating"
+                :class="{ 'cursor-not-allowed': isUpdating, 'hover:bg-active': !isUpdating }"
+                :title="node.data.expanded ? 'Collapse' : 'Expand'"
+                @click.stop="toggleNode(node.data.module.id)"
+              >
+                <div
+                  class="text-primary"
+                  :class="[
+                    node.data.expanded ? 'i-ph-minus' : 'i-ph-plus',
+                  ]"
+                  transition="transform duration-200"
+                />
+              </button>
+            </div>
           </div>
         </template>
       </template>
