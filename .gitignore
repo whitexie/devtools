@@ -11,3 +11,4 @@ packages/devtools-vite/src/public/fonts
 packages/devtools-vite/src/app/public/fonts
 packages/devtools-vite/runtime
 .rolldown
+*.tsbuildinfo

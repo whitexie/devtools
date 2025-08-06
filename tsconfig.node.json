@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "noEmit": true,
+    "isolatedDeclarations": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "**/tsdown.config.ts"
+  ]
+}

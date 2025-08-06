@@ -11,5 +11,5 @@ export default defineConfig({
   clean: false,
   target: 'esnext',
   fixedExtension: true,
-  dts: { isolatedDeclarations: true },
+  dts: true,
 })
