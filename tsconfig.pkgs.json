@@ -1,13 +1,9 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "noEmit": true,
-    "isolatedDeclarations": true,
-    "skipLibCheck": true
+    "isolatedDeclarations": true
   },
   "include": [
     "packages/devtools/src/**/*.ts",

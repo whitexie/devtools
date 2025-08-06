@@ -27,6 +27,7 @@ export default defineNuxtConfig({
 
   alias: {
     '@vitejs/devtools-rpc': fileURLToPath(new URL('../../devtools-rpc/src', import.meta.url)),
+    '@vitejs/devtools-kit': fileURLToPath(new URL('../../devtools-kit/src', import.meta.url)),
   },
 
   logLevel: 'verbose',

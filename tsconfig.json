@@ -1,14 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "noEmit": true
-  },
-  "paths": {
-    "@vitejs/devtools-kit": ["./packages/devtools-kit/src"]
-  },
   "references": [
     { "path": "./packages/devtools-vite/src/.nuxt/tsconfig.app.json" },
     { "path": "./packages/devtools-vite/src/.nuxt/tsconfig.server.json" },

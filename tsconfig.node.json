@@ -1,12 +1,7 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "isolatedDeclarations": false,
-    "skipLibCheck": true
+    "isolatedDeclarations": false
   },
   "include": [
     "**/tsdown.config.ts"
