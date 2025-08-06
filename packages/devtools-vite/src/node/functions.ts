@@ -1,5 +1,5 @@
+import type { RpcContext } from '@vitejs/devtools-kit'
 import type { ServerFunctions } from './rpc/index'
-import type { RpcContext } from './rpc/types'
 import { rpcFunctions } from './rpc/index'
 
 export interface CreateServerFunctionsOptions extends RpcContext {

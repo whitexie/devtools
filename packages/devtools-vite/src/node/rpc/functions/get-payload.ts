@@ -1,4 +1,4 @@
-import { defineRpcFunction } from '../utils'
+import { defineRpcFunction } from '@vitejs/devtools-kit'
 
 export const getPayload = defineRpcFunction({
   name: 'vite:get-payload',

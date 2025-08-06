@@ -1,9 +1,11 @@
-import { defineRpcFunction } from '../utils'
+import { defineRpcFunction } from '@vitejs/devtools-kit'
+import { getLogsManager } from '../utils'
 
 export const rolldownGetModuleRawEvents = defineRpcFunction({
   name: 'vite:rolldown:get-module-raw-events',
   type: 'query',
-  setup: ({ manager }) => {
+  setup: (context) => {
+    const manager = getLogsManager(context)
     return {
       handler: async ({ session, module }: { session: string, module: string }) => {
         const reader = await manager.loadSession(session)

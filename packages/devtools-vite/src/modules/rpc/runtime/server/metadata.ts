@@ -11,7 +11,10 @@ consola.restoreAll()
 const ws = createWsServer({
   cwd: process.cwd(),
   mode: 'dev',
-  manager: new RolldownLogsManager(join(process.cwd(), '.rolldown')),
+  // TODO: redesign how the manager is passed
+  meta: {
+    manager: new RolldownLogsManager(join(process.cwd(), '.rolldown')),
+  },
 }).then((ws) => {
   // Warm up the payload
   setTimeout(() => {

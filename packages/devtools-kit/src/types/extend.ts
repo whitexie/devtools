@@ -1,6 +1,5 @@
-export interface DevToolsPluginOptions {
-  setup: () => void | Promise<void>
-}
+import type { DevToolsPluginOptions } from './vite'
+import 'vite'
 
 // Extend Vite's Plugin interface
 declare module 'vite' {

@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import './types'
+import '@vitejs/devtools-kit'
 
 export function ViteDevTools(): Plugin {
   return {
@@ -7,10 +7,6 @@ export function ViteDevTools(): Plugin {
     enforce: 'post',
     configureServer(_server) {
       // console.log(server)
-    },
-    sharedDuringBuild: true,
-    buildStart() {
-      // console.log('buildStart')
     },
   }
 }

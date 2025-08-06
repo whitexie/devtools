@@ -1,9 +1,11 @@
-import { defineRpcFunction } from '../utils'
+import { defineRpcFunction } from '@vitejs/devtools-kit'
+import { getLogsManager } from '../utils'
 
 export const rolldownGetSessionSummary = defineRpcFunction({
   name: 'vite:rolldown:get-session-summary',
   type: 'query',
-  setup: async ({ manager }) => {
+  setup: async (context) => {
+    const manager = getLogsManager(context)
     return {
       handler: async ({ session }: { session: string }) => {
         const reader = await manager.loadSession(session)

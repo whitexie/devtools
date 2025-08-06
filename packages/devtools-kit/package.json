@@ -35,6 +35,7 @@
     "vite": "catalog:build"
   },
   "devDependencies": {
-    "tsdown": "catalog:build"
+    "tsdown": "catalog:build",
+    "vite": "catalog:build"
   }
 }

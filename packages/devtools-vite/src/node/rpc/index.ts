@@ -1,4 +1,4 @@
-import type { DefinitionsToFunctions, FilterDefinitions } from './types'
+import type { RpcDefinitionsFilter, RpcDefinitionsToFunctions } from '@vitejs/devtools-kit'
 import { getPayload } from './functions/get-payload'
 import { openInEditor } from './functions/open-in-editor'
 import { openInFinder } from './functions/open-in-finder'
@@ -27,10 +27,10 @@ export const rpcFunctions = [
   rolldownGetAssetDetails,
 ] as const
 
-export type ServerFunctions = DefinitionsToFunctions<typeof rpcFunctions>
+export type ServerFunctions = RpcDefinitionsToFunctions<typeof rpcFunctions>
 
-export type ServerFunctionsStatic = DefinitionsToFunctions<
-  FilterDefinitions<typeof rpcFunctions, 'static'>
+export type ServerFunctionsStatic = RpcDefinitionsToFunctions<
+  RpcDefinitionsFilter<typeof rpcFunctions, 'static'>
 >
 
 export type ServerFunctionsDump = {

@@ -1,4 +1,4 @@
-import type { RolldownLogsManager } from '../rolldown/logs-manager'
+import type { EntriesToObject, Thenable } from './utils'
 
 /**
  * Type of the RPC function,
@@ -7,8 +7,6 @@ import type { RolldownLogsManager } from '../rolldown/logs-manager'
  * - query: A function that queries a resource
  */
 export type RpcFunctionType = 'static' | 'action' | 'query'
-
-export type Thenable<T> = T | Promise<T>
 
 export interface RpcFunctionSetupResult<
   ARGS extends any[],
@@ -33,39 +31,16 @@ export interface RpcFunctionDefinition<
 export interface RpcContext {
   cwd: string
   mode: 'dev' | 'build'
-  manager: RolldownLogsManager
+  meta?: any
 }
 
-export type EntriesToObject<T extends readonly [string, any][]> = {
-  [K in T[number] as K[0]]: K[1]
-}
-
-export type DefinitionsToFunctions<T extends readonly RpcFunctionDefinition<any, any, any>[]> = EntriesToObject<{
+export type RpcDefinitionsToFunctions<T extends readonly RpcFunctionDefinition<any, any, any>[]> = EntriesToObject<{
   [K in keyof T]: [T[K]['name'], Awaited<ReturnType<T[K]['setup']>>['handler']]
 }>
 
-export type FilterDefinitions<
+export type RpcDefinitionsFilter<
   T extends readonly RpcFunctionDefinition<any, any, any>[],
   Type extends RpcFunctionType,
 > = {
   [K in keyof T]: T[K] extends { type: Type } ? T[K] : never
 }
-
-// type a = DefinitionsToFunctions<
-//   FilterDefinitions<[
-//     {
-//       name: 'a'
-//       type: 'static'
-//       setup: () => ({
-//         handler: () => void
-//       })
-//     },
-//     {
-//       name: 'b'
-//       type: 'action'
-//       setup: () => ({
-//         handler: (a: string) => void
-//       })
-//     },
-//   ], 'action' | 'static'>
-// >

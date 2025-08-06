@@ -35,6 +35,7 @@
     "vite": "catalog:build"
   },
   "devDependencies": {
+    "@vitejs/devtools-kit": "workspace:*",
     "tsdown": "catalog:build"
   }
 }

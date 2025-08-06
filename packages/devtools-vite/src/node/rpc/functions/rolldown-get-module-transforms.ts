@@ -1,11 +1,13 @@
 import type { RolldownModuleTransformInfo } from '~~/shared/types'
+import { defineRpcFunction } from '@vitejs/devtools-kit'
 import { diffLines } from 'diff'
-import { defineRpcFunction } from '../utils'
+import { getLogsManager } from '../utils'
 
 export const rolldownGetModuleTransforms = defineRpcFunction({
   name: 'vite:rolldown:get-module-transforms',
   type: 'query',
-  setup: ({ manager }) => {
+  setup: (context) => {
+    const manager = getLogsManager(context)
     return {
       handler: async ({ session, module }: { session: string, module: string }) => {
         const reader = await manager.loadSession(session)

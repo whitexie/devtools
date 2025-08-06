@@ -1,9 +1,11 @@
-import { defineRpcFunction } from '../utils'
+import { defineRpcFunction } from '@vitejs/devtools-kit'
+import { getLogsManager } from '../utils'
 
 export const rolldownGetAssetDetails = defineRpcFunction({
   name: 'vite:rolldown:get-asset-details',
   type: 'query',
-  setup: ({ manager }) => {
+  setup: (context) => {
+    const manager = getLogsManager(context)
     return {
       handler: async ({ session, id }: { session: string, id: string }) => {
         const reader = await manager.loadSession(session)

@@ -37,7 +37,10 @@ cli
       .then(async r => await r.createServerFunctions({
         cwd,
         mode: 'build',
-        manager: new RolldownLogsManager(join(cwd, '.rolldown')),
+        // TODO: redesign how the manager is passed
+        meta: {
+          manager: new RolldownLogsManager(join(cwd, '.rolldown')),
+        },
       }))
     const rpcDump: ServerFunctionsDump = {
       'vite:get-payload': await rpc['vite:get-payload'](),
@@ -93,7 +96,10 @@ cli
     const { server, rpc } = await createHostServer({
       cwd: options.root,
       mode: 'dev',
-      manager: new RolldownLogsManager(join(options.root, '.rolldown')),
+      // TODO: redesign how the manager is passed
+      meta: {
+        manager: new RolldownLogsManager(join(options.root, '.rolldown')),
+      },
     })
 
     // Warm up the payload
