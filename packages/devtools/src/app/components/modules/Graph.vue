@@ -40,6 +40,9 @@ const width = ref(window.innerWidth)
 const height = ref(window.innerHeight)
 const nodesRefMap = shallowReactive(new Map<string, HTMLDivElement>())
 
+const childToParentMap = shallowReactive(new Map<string, string>())
+const isFirstCalculateGraph = ref(true)
+
 const nodes = shallowRef<HierarchyNode<Node>[]>([])
 const links = shallowRef<Link[]>([])
 const nodesMap = shallowReactive(new Map<string, HierarchyNode<Node>>())
@@ -96,25 +99,21 @@ function calculateGraph() {
   height.value = window.innerHeight
 
   const seen = new Set<ModuleListItem>()
-  const referencedModuleIds = new Set<string>()
-
-  const calculateHasChildren = (x: ModuleListItem) => (x.imports.some((imp) => {
-    const r = !referencedModuleIds.has(imp.module_id)
-    if (r) {
-      referencedModuleIds.add(imp.module_id)
-    }
-    return r && modulesMap.value.has(imp.module_id)
-  }))
-
   const root = hierarchy<Node>(
     { module: { id: '~root' } } as any,
     (parent) => {
       if (parent.module.id === '~root') {
-        rootModules.value.forEach(x => seen.add(x))
+        rootModules.value.forEach((x) => {
+          seen.add(x)
+
+          if (isFirstCalculateGraph.value) {
+            childToParentMap.set(x.id, '~root')
+          }
+        })
         return rootModules.value.map(x => ({
           module: x,
           expanded: !collapsedNodes.has(x.id), // 简化：未折叠即为展开
-          hasChildren: x.imports.length > 0 && calculateHasChildren(x),
+          hasChildren: false,
         }))
       }
 
@@ -131,29 +130,44 @@ function calculateGraph() {
             return undefined
 
           seen.add(module)
-          referencedModuleIds.add(module.id)
+
+          if (isFirstCalculateGraph.value) {
+            childToParentMap.set(module.id, parent.module.id)
+          }
 
           return {
             module,
             import: x,
-            expanded: !collapsedNodes.has(module.id), // 简化：未折叠即为展开
-            hasChildren: module.imports.length > 0 && calculateHasChildren(module),
+            expanded: !collapsedNodes.has(module.id),
+            hasChildren: false,
           }
         })
         .filter(x => x !== undefined)
+
       return modules
     },
   )
+
+  if (isFirstCalculateGraph.value) {
+    isFirstCalculateGraph.value = false
+  }
 
   // Calculate the layout
   const layout = tree<Node>()
     .nodeSize([SPACING.height, SPACING.width + SPACING.gap])
   layout(root)
 
-  // Rotate the graph from top-down to left-right
   const _nodes = root.descendants()
+
   for (const node of _nodes) {
+    // Rotate the graph from top-down to left-right
     [node.x, node.y] = [node.y! - SPACING.width, node.x!]
+
+    if (node.data.module.imports) {
+      node.data.hasChildren = node.data.module.imports
+        ?.filter(subNode => childToParentMap.get(subNode.module_id) === node.data.module.id)
+        .length > 0
+    }
   }
 
   // Offset the graph and adding margin
@@ -329,6 +343,14 @@ onMounted(() => {
     () => [props.modules, graphRender.value],
     calculateGraph,
     { immediate: true },
+  )
+
+  watch(
+    () => props.modules.length,
+    () => {
+      isFirstCalculateGraph.value = true
+      childToParentMap.clear()
+    },
   )
 })
 </script>
