@@ -126,6 +126,10 @@ function calculateGraph() {
           if (seen.has(module))
             return undefined
 
+          // Check if the module is a child of the current parent
+          if (childToParentMap.has(module.id) && childToParentMap.get(module.id) !== parent.module.id)
+            return undefined
+
           seen.add(module)
 
           if (isFirstCalculateGraph.value) {
@@ -365,17 +369,19 @@ onMounted(() => {
   handleDraggingScroll()
 
   watch(
-    () => [props.modules, graphRender.value],
-    calculateGraph,
+    () => props.modules,
+    () => {
+      isFirstCalculateGraph.value = true
+      collapsedNodes.clear()
+      childToParentMap.clear()
+      calculateGraph()
+    },
     { immediate: true },
   )
 
   watch(
-    () => props.modules.length,
-    () => {
-      isFirstCalculateGraph.value = true
-      childToParentMap.clear()
-    },
+    () => graphRender.value,
+    calculateGraph,
   )
 })
 </script>
