@@ -40,6 +40,9 @@ const width = ref(window.innerWidth)
 const height = ref(window.innerHeight)
 const nodesRefMap = shallowReactive(new Map<string, HTMLDivElement>())
 
+const collapsedNodes = shallowReactive(new Set<string>())
+const isUpdating = ref(false)
+const lastActionNodeId = ref<string | null>(null)
 const childToParentMap = shallowReactive(new Map<string, string>())
 const isFirstCalculateGraph = ref(true)
 
@@ -47,12 +50,6 @@ const nodes = shallowRef<HierarchyNode<Node>[]>([])
 const links = shallowRef<Link[]>([])
 const nodesMap = shallowReactive(new Map<string, HierarchyNode<Node>>())
 const linksMap = shallowReactive(new Map<string, Link>())
-
-const collapsedNodes = shallowReactive(new Set<string>())
-
-const isUpdating = ref(false)
-
-const lastActionNodeId = ref<string | null>(null)
 
 const ZOOM_MIN = 0.4
 const ZOOM_MAX = 2
@@ -223,16 +220,49 @@ function focusOn(id: string, animated = true) {
   })
 }
 
+function adjustScrollPositionAfterToggle(id: string, beforePosition: { x: number, y: number }) {
+  // Ensure this runs after the nextTick inside calculateGraph completes (width and height are computed)
+  nextTick(() => {
+    nextTick(() => {
+      const newNode = nodesRefMap.get(id)
+
+      if (newNode && beforePosition && container.value) {
+        const containerRect = container.value.getBoundingClientRect()
+        const newRect = newNode.getBoundingClientRect()
+
+        const viewportDiffX = newRect.left - containerRect.left - beforePosition.x
+        const viewportDiffY = newRect.top - containerRect.top - beforePosition.y
+
+        container.value.scrollLeft += viewportDiffX
+        container.value.scrollTop += viewportDiffY
+      }
+
+      setTimeout(() => {
+        lastActionNodeId.value = null
+      }, 300)
+    })
+  })
+}
+
 function toggleNode(id: string) {
   if (isUpdating.value)
     return
 
   isUpdating.value = true
-
-  const nodeBefore = nodesMap.get(id)
-  const nodePosition = nodeBefore ? { x: nodeBefore.x, y: nodeBefore.y } : null
-
   lastActionNodeId.value = id
+
+  const node = nodesRefMap.get(id)
+  let beforePosition: null | { x: number, y: number } = null
+
+  // Record position relative to the scroll container to avoid drift after reflow
+  if (node && container.value) {
+    const containerRect = container.value.getBoundingClientRect()
+    const rect = node.getBoundingClientRect()
+    beforePosition = {
+      x: rect.left - containerRect.left,
+      y: rect.top - containerRect.top,
+    }
+  }
 
   if (collapsedNodes.has(id)) {
     collapsedNodes.delete(id)
@@ -243,14 +273,9 @@ function toggleNode(id: string) {
 
   calculateGraph()
 
-  if (nodePosition) {
-    nextTick(() => {
-      focusOn(id, true)
-
-      setTimeout(() => {
-        lastActionNodeId.value = null
-      }, 1000)
-    })
+  // Adjust scroll position after layout changes
+  if (beforePosition) {
+    adjustScrollPositionAfterToggle(id, beforePosition)
   }
 
   isUpdating.value = false
