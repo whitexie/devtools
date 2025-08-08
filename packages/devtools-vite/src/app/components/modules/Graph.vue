@@ -240,10 +240,6 @@ function adjustScrollPositionAfterToggle(id: string, beforePosition: { x: number
         container.value.scrollLeft += viewportDiffX
         container.value.scrollTop += viewportDiffY
       }
-
-      setTimeout(() => {
-        lastActionNodeId.value = null
-      }, 300)
     })
   })
 }
@@ -283,6 +279,7 @@ function toggleNode(id: string) {
   }
 
   isUpdating.value = false
+  lastActionNodeId.value = null
 }
 
 function expandAll() {
@@ -442,7 +439,6 @@ onMounted(() => {
                 bg-glass
                 border="~ base rounded"
                 class="group-hover:bg-active block px2 p1"
-                :class="{ 'border-flow-active shadow-[0_0_12px_rgba(59,130,246,0.5)]': node.data.module.id === lastActionNodeId }"
                 :style="{
                   minWidth: graphRender === 'normal' ? `${SPACING.width}px` : undefined,
                   maxWidth: '400px',
