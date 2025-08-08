@@ -210,7 +210,9 @@ function calculateGraph() {
     height.value = (container.value!.scrollHeight / scale.value + SPACING.margin)
     const moduleId = rootModules.value?.[0]?.id
     if (!lastActionNodeId.value && moduleId) {
-      focusOn(moduleId, false)
+      nextTick(() => {
+        focusOn(moduleId, false)
+      })
     }
   })
 }
