@@ -40,11 +40,10 @@ const width = ref(window.innerWidth)
 const height = ref(window.innerHeight)
 const nodesRefMap = shallowReactive(new Map<string, HTMLDivElement>())
 
-const collapsedNodes = shallowReactive(new Set<string>())
 const isUpdating = ref(false)
-const lastActionNodeId = ref<string | null>(null)
-const childToParentMap = shallowReactive(new Map<string, string>())
 const isFirstCalculateGraph = ref(true)
+const collapsedNodes = shallowReactive(new Set<string>())
+const childToParentMap = shallowReactive(new Map<string, string>())
 
 const nodes = shallowRef<HierarchyNode<Node>[]>([])
 const links = shallowRef<Link[]>([])
@@ -90,7 +89,7 @@ const createLinkVertical = linkVertical()
   .x(d => d[0])
   .y(d => d[1])
 
-function calculateGraph() {
+function calculateGraph(focusOnFirstRooeNode = true) {
   // Unset the canvas size, and recalculate again after nodes are rendered
   width.value = window.innerWidth
   height.value = window.innerHeight
@@ -109,7 +108,7 @@ function calculateGraph() {
         })
         return rootModules.value.map(x => ({
           module: x,
-          expanded: !collapsedNodes.has(x.id), // 简化：未折叠即为展开
+          expanded: !collapsedNodes.has(x.id),
           hasChildren: false,
         }))
       }
@@ -209,7 +208,7 @@ function calculateGraph() {
     width.value = (container.value!.scrollWidth / scale.value + SPACING.margin)
     height.value = (container.value!.scrollHeight / scale.value + SPACING.margin)
     const moduleId = rootModules.value?.[0]?.id
-    if (!lastActionNodeId.value && moduleId) {
+    if (focusOnFirstRooeNode && moduleId) {
       nextTick(() => {
         focusOn(moduleId, false)
       })
@@ -249,9 +248,7 @@ function adjustScrollPositionAfterToggle(id: string, beforePosition: { x: number
 function toggleNode(id: string) {
   if (isUpdating.value)
     return
-
   isUpdating.value = true
-  lastActionNodeId.value = id
 
   const node = nodesRefMap.get(id)
   let beforePosition: null | { x: number, y: number } = null
@@ -273,7 +270,7 @@ function toggleNode(id: string) {
     collapsedNodes.add(id)
   }
 
-  calculateGraph()
+  calculateGraph(false)
 
   // Adjust scroll position after layout changes
   if (beforePosition) {
@@ -281,7 +278,6 @@ function toggleNode(id: string) {
   }
 
   isUpdating.value = false
-  lastActionNodeId.value = null
 }
 
 function expandAll() {
@@ -380,7 +376,7 @@ onMounted(() => {
 
   watch(
     () => graphRender.value,
-    calculateGraph,
+    () => calculateGraph(),
   )
 })
 </script>
